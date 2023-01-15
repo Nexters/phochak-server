@@ -1,1 +1,19 @@
-
+spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+---
+spring:
+  profiles:
+    active: local
+  datasource:
+    url: jdbc:mysql://localhost:3306/phochak
+    username: phochak
+    password: qpdjrmflftm
+---
+spring:
+  profiles:
+    active: real
+  datasource:
+    url: jdbc:mysql://realdb_address
+    username: realdb_username
+    password: realdb_password
