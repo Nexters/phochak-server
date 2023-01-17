@@ -19,7 +19,7 @@ public class CustomExceptionHandler {
         return ResponseEntity.ok().body(ExceptionResponseDto.builder()
                 .resCode(e.getResCode().getCode())
                 .resMessage(e.getResCode().getMessage())
-                .detail(e.getDetail())
+                .resDetail(e.getDetail())
                 .build());
     }
 
@@ -32,7 +32,10 @@ public class CustomExceptionHandler {
         log.error("Internal Error Message: " + e.getMessage());
         log.error(stacktraceAsString);
 
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionResponseDto.builder()
+                .resCode(ResCode.INTERNAL_SERVER_ERROR.getCode())
+                .resMessage(ResCode.INTERNAL_SERVER_ERROR.getMessage())
+                .build());
     }
 
 }

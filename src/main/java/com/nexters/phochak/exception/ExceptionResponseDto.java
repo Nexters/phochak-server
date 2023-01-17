@@ -10,12 +10,12 @@ public class ExceptionResponseDto {
 
     private String resMessage;
 
-    private String detail = " ";
+    private String resDetail;
 
     @Builder
-    public ExceptionResponseDto(String resCode, String resMessage, String detail) {
+    public ExceptionResponseDto(String resCode, String resMessage, String resDetail) {
         this.resCode = resCode;
         this.resMessage = resMessage;
-        this.detail = detail;
+        this.resDetail = resDetail;
     }
 }
