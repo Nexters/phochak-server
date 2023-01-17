@@ -29,8 +29,8 @@ public class CustomExceptionHandler {
         e.printStackTrace(new PrintWriter(sw));
         String stacktraceAsString = sw.toString();
 
-        log.error("Internal Error Message: " + e.getMessage());
-        log.error(stacktraceAsString);
+        log.error("Internal Error Message: {}", e.getMessage());
+        log.error(stacktraceAsString, e);
 
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionResponseDto.builder()
                 .resCode(ResCode.INTERNAL_SERVER_ERROR.getCode())
