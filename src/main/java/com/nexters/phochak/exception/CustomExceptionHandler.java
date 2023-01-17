@@ -23,4 +23,16 @@ public class CustomExceptionHandler {
                 .build());
     }
 
+    @ExceptionHandler(RuntimeException.class)
+    protected ResponseEntity<ExceptionResponseDto> handleCustomInternalErrorException(RuntimeException e) {
+        StringWriter sw = new StringWriter();
+        e.printStackTrace(new PrintWriter(sw));
+        String stacktraceAsString = sw.toString();
+
+        log.error("Internal Error Message: " + e.getMessage());
+        log.error(stacktraceAsString);
+
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+    }
+
 }
