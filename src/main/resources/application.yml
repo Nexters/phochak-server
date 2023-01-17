@@ -24,4 +24,4 @@ spring:
     password: realdb_password
   jpa:
     hibernate:
-      ddl-auto: none
+      ddl-auto: validate
