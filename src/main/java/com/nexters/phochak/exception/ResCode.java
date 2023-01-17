@@ -17,7 +17,7 @@ public enum ResCode {
     //P5xx: 파일 예외
 
     private final String code;
-    private final String message;
+    private String message;
 
     ResCode(String code, String message) {
         this.code = code;
@@ -32,4 +32,7 @@ public enum ResCode {
         return message;
     }
 
+    public void setCustomMessage(String customMessage) {
+        this.message = customMessage;
+    }
 }

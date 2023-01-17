@@ -6,16 +6,13 @@ import lombok.Getter;
 @Getter
 public class ExceptionResponseDto {
 
-    private String resCode;
+    private final String resCode;
 
-    private String resMessage;
-
-    private String resDetail;
+    private final String resMessage;
 
     @Builder
     public ExceptionResponseDto(String resCode, String resMessage, String resDetail) {
         this.resCode = resCode;
         this.resMessage = resMessage;
-        this.resDetail = resDetail;
     }
 }

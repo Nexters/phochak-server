@@ -6,7 +6,7 @@ package com.nexters.phochak.exception;
  */
 public class PhochakException extends Exception {
 
-    private ResCode resCode;
+    private final ResCode resCode;
     private String detail;
 
     public PhochakException(ResCode resCode) {
@@ -14,10 +14,10 @@ public class PhochakException extends Exception {
         this.resCode = resCode;
     }
 
-    public PhochakException(ResCode resCode, String detail) {
+    public PhochakException(ResCode resCode, String customMessage) {
         super(resCode.getMessage());
         this.resCode = resCode;
-        this.detail = detail;
+        resCode.setCustomMessage(customMessage);
     }
 
     public ResCode getResCode() {
