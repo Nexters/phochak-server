@@ -4,7 +4,7 @@ package com.nexters.phochak.exception;
  * 서비스 최상위 Exception.
  * 해당 클래스 상속 후 에러 코드 및 메시지 정의
  */
-public class PhochakException extends Exception {
+public class PhochakException extends RuntimeException {
 
     private final ResCode resCode;
     private String detail;

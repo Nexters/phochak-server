@@ -23,8 +23,8 @@ public class CustomExceptionHandler {
                 .build());
     }
 
-    @ExceptionHandler(RuntimeException.class)
-    protected ResponseEntity<ExceptionResponseDto> handleCustomInternalErrorException(RuntimeException e) {
+    @ExceptionHandler(Exception.class)
+    protected ResponseEntity<ExceptionResponseDto> handleCustomInternalErrorException(Exception e) {
         StringWriter sw = new StringWriter();
         e.printStackTrace(new PrintWriter(sw));
         String stacktraceAsString = sw.toString();
