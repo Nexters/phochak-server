@@ -6,9 +6,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 @Slf4j
 @RestControllerAdvice
 public class CustomExceptionHandler {
@@ -25,13 +22,7 @@ public class CustomExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     protected ResponseEntity<ExceptionResponseDto> handleCustomInternalErrorException(Exception e) {
-        StringWriter sw = new StringWriter();
-        e.printStackTrace(new PrintWriter(sw));
-        String stacktraceAsString = sw.toString();
-
-        log.error("Internal Error Message: {}", e.getMessage());
-        log.error(stacktraceAsString, e);
-
+        log.error("Internal Error Message: {}", e.getMessage(), e);
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionResponseDto.builder()
                 .resCode(ResCode.INTERNAL_SERVER_ERROR.getCode())
                 .resMessage(ResCode.INTERNAL_SERVER_ERROR.getMessage())
