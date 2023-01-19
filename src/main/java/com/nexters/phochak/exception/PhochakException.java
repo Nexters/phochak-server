@@ -7,24 +7,25 @@ package com.nexters.phochak.exception;
 public class PhochakException extends RuntimeException {
 
     private final ResCode resCode;
-    private String detail;
+    private String customResMessage;
 
     public PhochakException(ResCode resCode) {
         super(resCode.getMessage());
         this.resCode = resCode;
     }
 
-    public PhochakException(ResCode resCode, String customMessage) {
+    public PhochakException(ResCode resCode, String customResMessage) {
         super(resCode.getMessage());
         this.resCode = resCode;
-        resCode.setCustomMessage(customMessage);
+        this.customResMessage = customResMessage;
     }
 
     public ResCode getResCode() {
         return resCode;
     }
 
-    public String getDetail() {
-        return detail;
+    public String getCustomResMessage() {
+        return customResMessage;
     }
+
 }

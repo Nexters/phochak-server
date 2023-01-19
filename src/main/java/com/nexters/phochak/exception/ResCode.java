@@ -32,7 +32,4 @@ public enum ResCode {
         return message;
     }
 
-    public void setCustomMessage(String customMessage) {
-        this.message = customMessage;
-    }
 }
