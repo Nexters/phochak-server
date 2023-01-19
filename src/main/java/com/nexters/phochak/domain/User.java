@@ -3,6 +3,7 @@ package com.nexters.phochak.domain;
 import javax.persistence.*;
 
 @Entity
+@Table(name = "`USER`")
 public class User {
 
     @Id
