@@ -1,4 +1,8 @@
 spring:
+  datasource:
+    driver-class-name: com.mysql.jdbc.Driver
+---
+spring:
   config:
     activate:
       on-profile: local
@@ -13,6 +17,18 @@ spring:
     properties:
       hibernate:
         format_sql: true
+# 카카오 OAUTH 관련 설정
+# TODO: 배포 환경별로 분리 필요, 운영에서는 secret key 적용하고 별도로 관리 필요 (애플 로그인이 어떻게 돼있는지 모름)
+kakao:
+  redirect_uri: http://localhost:8080/v1/login/kakao
+  client_id: 28e93f0db1f4c949133b2206f2ea7cd6
+  api_url:
+    token: https://kauth.kakao.com/oauth/token
+    information: https://kapi.kakao.com/v2/user/me
+
+logging:
+  level:
+    com.nexters.phochak: debug
 ---
 spring:
   config:
