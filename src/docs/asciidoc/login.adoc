@@ -1,0 +1,23 @@
+== 회원 APIs
+
+=== 로그인
+OAuth 2.0을 활용한 로그인 (및 회원가입) 을 진행한다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/user/login/http-request.adoc[]
+
+Path Parameters
+
+include::{snippets}/user/login/path-parameters.adoc[]
+
+Request Parameters
+
+include::{snippets}/user/login/request-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+include::{snippets}/user/login/http-response.adoc[]
+
