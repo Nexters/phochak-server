@@ -1,4 +1,4 @@
-package com.nexters.phochak.dto;
+package com.nexters.phochak.dto.response;
 
 import com.nexters.phochak.exception.ResCode;
 import lombok.Builder;
