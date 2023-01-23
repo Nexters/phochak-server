@@ -6,9 +6,10 @@ public enum ResCode {
     OK("P000", "정상 처리"),
 
     //P1xx: 서버 예외
-    INTERNAL_SERVER_ERROR("P100", "서버 에러 발생");
+    INTERNAL_SERVER_ERROR("P100", "서버 에러 발생"),
 
     //P2xx: 인증 예외
+    INVALID_INPUT("P200", "올바르지 않은 입력값");
 
     //P3xx: 유저 예외
 
@@ -17,7 +18,7 @@ public enum ResCode {
     //P5xx: 파일 예외
 
     private final String code;
-    private String message;
+    private final String message;
 
     ResCode(String code, String message) {
         this.code = code;
