@@ -12,6 +12,7 @@ public enum ResCode {
     INVALID_INPUT("P200", "올바르지 않은 입력값");
 
     //P3xx: 유저 예외
+    NOT_FOUND_USER("P300", "존재하지 않는 유저입니다");
 
     //P4xx: 게시글 예외
 
