@@ -25,7 +25,6 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private static final String NICKNAME_PREFIX = "여행자 ";
-    private static final String TOKEN_TYPE = "Bearer";
     private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
     private final UserRepository userRepository;
     private final JwtTokenService jwtTokenService;
@@ -74,7 +73,7 @@ public class UserServiceImpl implements UserService {
         TokenDto accessToken = jwtTokenService.generateAccessToken(userId);
 
         return LoginResponseDto.builder()
-                .tokenType(TOKEN_TYPE)
+                .tokenType(TokenDto.TOKEN_TYPE)
                 .accessToken(accessToken.getTokenString())
                 .expiresIn(accessToken.getExpiresIn())
                 .build();
