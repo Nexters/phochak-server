@@ -12,6 +12,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
 @Getter
 @Entity
@@ -29,6 +30,7 @@ public class User extends BaseTime {
     @Column(nullable = false, unique = true)
     private String providerId;
 
+    @Size(min = 1, max = 20)
     @Column(nullable = false, unique = true)
     private String nickname;
 
