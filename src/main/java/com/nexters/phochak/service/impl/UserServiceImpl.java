@@ -1,7 +1,6 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.JoinRequestDto;
 import com.nexters.phochak.dto.OAuthUserInformation;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.OAuthService;

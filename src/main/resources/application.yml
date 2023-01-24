@@ -1,12 +1,6 @@
 spring:
   datasource:
     driver-class-name: com.mysql.jdbc.Driver
----
-spring:
-  config:
-    activate:
-      on-profile: local
-  datasource:
     url: jdbc:mysql://localhost:3306/phochak
     username: phochak
     password: qpdjrmflftm
@@ -20,7 +14,7 @@ spring:
 # 카카오 OAUTH 관련 설정
 # TODO: 배포 환경별로 분리 필요, 운영에서는 secret key 적용하고 별도로 관리 필요 (애플 로그인이 어떻게 돼있는지 모름)
 kakao:
-  redirect_uri: http://localhost:8080/v1/login/kakao
+  redirect_uri: http://localhost:8080/v1/user/login/kakao
   client_id: 28e93f0db1f4c949133b2206f2ea7cd6
   api_url:
     token: https://kauth.kakao.com/oauth/token
@@ -29,15 +23,3 @@ kakao:
 logging:
   level:
     com.nexters.phochak: debug
----
-spring:
-  config:
-    activate:
-      on-profile: real
-  datasource:
-    url: jdbc:mysql://realdb_address
-    username: realdb_username
-    password: realdb_password
-  jpa:
-    hibernate:
-      ddl-auto: validate
