@@ -38,6 +38,13 @@ public class UserServiceImpl implements UserService {
         return user.getId();
     }
 
+    @Override
+    public void validateUser(Long userId) {
+        if (!userRepository.existsById(userId)) {
+            throw new PhochakException(ResCode.NOT_FOUND_USER);
+        }
+    }
+
     private User getOrCreateUser(OAuthUserInformation userInformation) {
         User user = null;
         Optional<User> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
