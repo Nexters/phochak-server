@@ -28,7 +28,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public Long login(String provider, String code) {
-        OAuthProviderEnum providerEnum = OAuthProviderEnum.valueOf(provider.toUpperCase());
+        OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
         OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
 
         OAuthUserInformation userInformation = oAuthService.requestUserInformation(code);
