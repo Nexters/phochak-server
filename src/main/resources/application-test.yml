@@ -13,3 +13,8 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+app:
+  resource:
+    local:
+      shorts: "app-resource/shorts/"
