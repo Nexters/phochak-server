@@ -19,5 +19,5 @@ include::{snippets}/user/login/request-parameters.adoc[]
 ==== 응답
 Response HTTP Example
 
+*정상*
 include::{snippets}/user/login/http-response.adoc[]
-
