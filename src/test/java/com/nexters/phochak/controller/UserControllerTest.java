@@ -84,10 +84,6 @@ class UserControllerTest extends RestDocs {
                                         fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
                                         fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.STRING).description("refresh token 유효기간(ms)")
                                 )
-                        // TODO: 로그인 완성 후 응답 mocking 필요
                 ));
     }
-
-
-    // TODO: provider enum 없을 때 예외처리 + 문서 작성
 }
