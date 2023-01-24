@@ -16,14 +16,17 @@ import org.springframework.util.StringUtils;
 
 import javax.servlet.http.HttpServletRequest;
 
+import static com.nexters.phochak.dto.TokenDto.TOKEN_TYPE;
+
 @Slf4j
 @RequiredArgsConstructor
 @Aspect
 @Component
 public class AuthAspect {
     public static final String AUTHORIZATION_HEADER = "Authorization";
-    private final JwtTokenService jwtTokenService;
+    public static final String WHITE_SPACE = " ";
     private final HttpServletRequest httpServletRequest;
+    private final JwtTokenService jwtTokenService;
     private final UserService userService;
 
     @Around("@annotation(com.nexters.phochak.auth.annotation.Auth)")
@@ -34,7 +37,9 @@ public class AuthAspect {
             throw new PhochakException(ResCode.TOKEN_NOT_FOUND);
         }
 
-        Long userId = null;
+        accessToken = parseToken(accessToken);
+
+        Long userId;
         try {
             userId = jwtTokenService.validateToken(accessToken);
         } catch (ExpiredJwtException e) {
@@ -50,9 +55,17 @@ public class AuthAspect {
             userService.validateUser(userId);
         } catch (PhochakException e) {
             log.warn("AuthAspect|Invalid User: {}", userId, e);
+            throw e;
         }
         UserContext.CONTEXT.set(userId);
 
         return joinPoint.proceed();
+    }
+
+    private static String parseToken(String accessToken) {
+        if (!accessToken.startsWith(TOKEN_TYPE + WHITE_SPACE)) {
+            throw new PhochakException(ResCode.INVALID_TOKEN);
+        }
+        return accessToken.substring(TOKEN_TYPE.length()).trim();
     }
 }

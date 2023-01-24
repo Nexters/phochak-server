@@ -71,7 +71,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                     .parseClaimsJws(token)
                     .getBody();
 
-        return (Long) claims.get("userId");
+        return Long.valueOf((String) claims.get("userId"));
     }
 
     @Override
