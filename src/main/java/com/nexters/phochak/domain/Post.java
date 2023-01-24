@@ -2,6 +2,7 @@ package com.nexters.phochak.domain;
 
 import com.nexters.phochak.specification.PostCategory;
 import lombok.Builder;
+import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
@@ -21,8 +22,11 @@ public class Post extends BaseTime {
     @JoinColumn(name="SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shorts shorts;
 
+    @Column(nullable = false)
+    @ColumnDefault("0")
     private Long view;
 
+    @Column(nullable = false)
     @Enumerated(EnumType.STRING)
     private PostCategory postCategory;
 
@@ -30,10 +34,10 @@ public class Post extends BaseTime {
     }
 
     @Builder
-    public Post(User user, Shorts shorts, Long view, PostCategory postCategory) {
+    public Post(User user, Shorts shorts, PostCategory postCategory) {
         this.user = user;
         this.shorts = shorts;
-        this.view = view;
         this.postCategory = postCategory;
+        this.view = 0L;
     }
 }

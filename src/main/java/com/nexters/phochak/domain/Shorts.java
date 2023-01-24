@@ -12,24 +12,18 @@ public class Shorts {
     @Column(name="SHORTS_ID")
     private Long id;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name="POST_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Post post;
+    @Column(nullable = false, unique = true)
+    private String shortsUrl;
 
-    private String videoUrl;
-
-    private String extension;
-
-    private Long length;
+    @Column(nullable = false, unique = true)
+    private String thumbnailUrl;
 
     public Shorts() {
     }
 
     @Builder
-    public Shorts(Post post, String videoUrl, String extension, Long length) {
-        this.post = post;
-        this.videoUrl = videoUrl;
-        this.extension = extension;
-        this.length = length;
+    public Shorts(String shortsUrl, String thumbnailUrl) {
+        this.shortsUrl = shortsUrl;
+        this.thumbnailUrl = thumbnailUrl;
     }
 }
