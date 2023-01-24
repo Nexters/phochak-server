@@ -14,6 +14,7 @@ import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
@@ -21,6 +22,7 @@ import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
@@ -35,9 +37,16 @@ public class UserServiceImpl implements UserService {
         OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
 
         OAuthUserInformation userInformation = oAuthService.requestUserInformation(code);
+
+        User user = getOrCreateUser(userInformation);
+
+        return createLoginResponse(user.getId());
+    }
+
+    private User getOrCreateUser(OAuthUserInformation userInformation) {
+        User user = null;
         Optional<User> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
 
-        User user = null;
         if (target.isPresent()) {
             user = target.orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
             log.info("UserServiceImpl|login(기존 회원): {}", userInformation);
@@ -55,7 +64,7 @@ public class UserServiceImpl implements UserService {
 
             user = userRepository.save(newUser);
         }
-        return createLoginResponse(user.getId());
+        return user;
     }
 
     private static String generateInitialNickname(OAuthUserInformation userInformation) {
