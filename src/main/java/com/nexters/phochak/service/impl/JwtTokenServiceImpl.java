@@ -7,6 +7,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.RefreshTokenRepository;
 import com.nexters.phochak.service.JwtTokenService;
+import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Value;
@@ -25,7 +26,7 @@ import java.util.Objects;
 public class JwtTokenServiceImpl implements JwtTokenService {
 
     private final RefreshTokenRepository refreshTokenRepository;
-    private final SecretKey secretKey;
+    private final String secretKey;
     private final long accessTokenExpireLength;
     private final long refreshTokenExpireLength;
 
@@ -34,13 +35,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                                @Value("${security.jwt.token.access-token-expire-length}") long accessTokenExpireLength,
                                @Value("${security.jwt.token.refresh-token-expire-length}") long refreshTokenExpireLength) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.secretKey = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
+        this.secretKey = secretKey;
         this.accessTokenExpireLength = accessTokenExpireLength;
         this.refreshTokenExpireLength = refreshTokenExpireLength;
-    }
-
-    public SecretKey getSecretKey() {
-        return secretKey;
     }
 
     @Override
@@ -66,11 +63,29 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .build();
     }
 
+    @Override
+    public Long validateToken(String token) {
+        Claims claims = Jwts.parserBuilder()
+                    .setSigningKey(secretKey.getBytes())
+                    .build()
+                    .parseClaimsJws(token)
+                    .getBody();
+
+        return (Long) claims.get("userId");
+    }
+
+    @Override
+    public TokenDto generateAccessToken(Long userId) {
+        return generateToken(userId, accessTokenExpireLength);
+    }
+
     private TokenDto generateToken(Long userId, Long expireLength) {
         // header 설정
         Map<String, Object> headers = new HashMap<>();
         headers.put("typ", "JWT");
         headers.put("alg", "HS512");
+
+        SecretKey key = Keys.hmacShaKeyFor(secretKey.getBytes(StandardCharsets.UTF_8));
 
         // payload 설정
         Map<String, String> payloads = new HashMap<>();
@@ -83,7 +98,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .setHeader(headers)
                 .setClaims(payloads)
                 .setExpiration(ext)
-                .signWith(this.secretKey)
+                .signWith(key)
                 .compact();
 
         return new TokenDto(jwt, String.valueOf(expireLength));
