@@ -4,6 +4,8 @@ import com.nexters.phochak.domain.User;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 
+import java.util.Optional;
+
 public interface UserRepository extends JpaRepository<User, Long> {
-    boolean existsByProviderAndProviderId(OAuthProviderEnum provider, String providerId);
+    Optional<User> findByProviderAndProviderId(OAuthProviderEnum provider, String providerId);
 }

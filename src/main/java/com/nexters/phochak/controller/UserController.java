@@ -1,5 +1,6 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.LoginRequestDto;
 import com.nexters.phochak.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class UserController {
     private final UserService userService;
 
     @GetMapping("login/{provider}")
-    public void login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
-        userService.login(provider, requestDto.getCode());
+    public LoginResponseDto login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
+        return userService.login(provider, requestDto.getCode());
     }
 }

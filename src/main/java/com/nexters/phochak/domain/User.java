@@ -2,6 +2,7 @@ package com.nexters.phochak.domain;
 
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -12,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 
+@Getter
 @Entity
 @Table(name = "`USER`")
 public class User {
