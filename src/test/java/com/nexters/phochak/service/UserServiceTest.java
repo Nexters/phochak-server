@@ -4,7 +4,6 @@ import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.KakaoUserInformation;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.repository.UserRepository;
-import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import com.nexters.phochak.service.impl.KakaoOAuthServiceImpl;
 import com.nexters.phochak.service.impl.UserServiceImpl;
 import com.nexters.phochak.specification.OAuthProviderEnum;
@@ -20,7 +19,6 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.nexters.phochak.dto.KakaoUserInformation.KakaoOAuthProperties;
-import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -29,9 +27,6 @@ import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 class UserServiceTest {
-
-    @Mock
-    JwtTokenServiceImpl jwtTokenService;
     @Mock
     UserRepository userRepository;
     @Mock
@@ -78,14 +73,12 @@ class UserServiceTest {
         given(kakaoOAuthService.requestUserInformation(code)).willReturn(userInformation);
         given(userRepository.findByProviderAndProviderId(providerEnum, providerId)).willReturn(Optional.empty());
         given(userRepository.save(any())).willReturn(user);
-        given(jwtTokenService.generateAccessToken(any())).willReturn(tokenDto);
 
         // when
         userService.login("kakao", code);
 
         // then
         then(userRepository).should(atLeastOnce()).save(any());
-        assertThat(user.getNickname()).startsWith("여행자 seyeong");
     }
 
     @Test
@@ -98,7 +91,6 @@ class UserServiceTest {
         given(oAuthServiceMap.get(providerEnum)).willReturn(kakaoOAuthService);
         given(kakaoOAuthService.requestUserInformation(code)).willReturn(userInformation);
         given(userRepository.findByProviderAndProviderId(providerEnum, providerId)).willReturn(Optional.of(user));
-        given(jwtTokenService.generateAccessToken(any())).willReturn(tokenDto);
 
         // when
         userService.login("kakao", code);

@@ -2,12 +2,9 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.OAuthUserInformation;
-import com.nexters.phochak.dto.TokenDto;
-import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.UserRepository;
-import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.OAuthService;
 import com.nexters.phochak.service.UserService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
@@ -18,7 +15,6 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.util.Map;
-import java.util.Objects;
 import java.util.Optional;
 
 @Slf4j
@@ -29,10 +25,9 @@ public class UserServiceImpl implements UserService {
     private static final String NICKNAME_PREFIX = "여행자 ";
     private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
     private final UserRepository userRepository;
-    private final JwtTokenService jwtTokenService;
 
     @Override
-    public LoginResponseDto login(String provider, String code) {
+    public Long login(String provider, String code) {
         OAuthProviderEnum providerEnum = OAuthProviderEnum.valueOf(provider.toUpperCase());
         OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
 
@@ -40,7 +35,7 @@ public class UserServiceImpl implements UserService {
 
         User user = getOrCreateUser(userInformation);
 
-        return createLoginResponse(user.getId());
+        return user.getId();
     }
 
     private User getOrCreateUser(OAuthUserInformation userInformation) {
@@ -73,18 +68,5 @@ public class UserServiceImpl implements UserService {
             return NICKNAME_PREFIX + userInformation.getInitialNickname() + userInformation.getProviderId().substring(0, 6);
         }
         return NICKNAME_PREFIX + userInformation.getProviderId().substring(0, 6);
-    }
-
-    private LoginResponseDto createLoginResponse(Long userId) {
-        if (Objects.isNull(userId)) {
-            throw new PhochakException(ResCode.NOT_FOUND_USER);
-        }
-        TokenDto accessToken = jwtTokenService.generateAccessToken(userId);
-
-        return LoginResponseDto.builder()
-                .tokenType(TokenDto.TOKEN_TYPE)
-                .accessToken(accessToken.getTokenString())
-                .expiresIn(accessToken.getExpiresIn())
-                .build();
     }
 }

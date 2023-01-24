@@ -1,7 +1,5 @@
 package com.nexters.phochak.service;
 
-import com.nexters.phochak.dto.response.LoginResponseDto;
-
 public interface UserService {
 
     /**
@@ -10,5 +8,5 @@ public interface UserService {
      * @param provider
      * @param code
      */
-    LoginResponseDto login(String provider, String code);
+    Long login(String provider, String code);
 }
