@@ -10,9 +10,6 @@ import java.util.List;
 @Getter
 public class PostCreateRequestDto {
 
-    @NotBlank
-    private String title;
-
     private List<String> hashtags;
 
     @NotBlank
