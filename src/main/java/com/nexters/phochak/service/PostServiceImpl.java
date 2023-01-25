@@ -1,5 +1,6 @@
 package com.nexters.phochak.service;
 
+import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
@@ -12,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +22,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ShortsServiceImpl shortsService;
+    private final HashtagServiceImpl hashtagSerivce;
 
     @Override
     @Transactional
@@ -31,7 +34,7 @@ public class PostServiceImpl implements PostService {
                         .postCategory(postCreateRequestDto.getPostCategory())
                         .shorts(shorts)
                         .build();
-        //ToDo 해시태그 저장
+        hashtagSerivce.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
         postRepository.save(post);
     }
 }
