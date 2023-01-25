@@ -35,5 +35,7 @@ security:
 
 app:
   resource:
+    support:
+      shorts: "mp4", "mov", "avi", "wmv"
     local:
       shorts: "app-resource/shorts/"
