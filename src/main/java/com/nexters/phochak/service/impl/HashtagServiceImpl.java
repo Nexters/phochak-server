@@ -1,8 +1,9 @@
-package com.nexters.phochak.service;
+package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.repository.HashtagRepository;
+import com.nexters.phochak.service.HashtagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

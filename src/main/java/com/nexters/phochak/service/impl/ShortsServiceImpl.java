@@ -1,4 +1,4 @@
-package com.nexters.phochak.service;
+package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.repository.MediaFileRepository;

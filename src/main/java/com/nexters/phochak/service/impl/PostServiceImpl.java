@@ -1,6 +1,5 @@
-package com.nexters.phochak.service;
+package com.nexters.phochak.service.impl;
 
-import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
@@ -9,11 +8,11 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
+import com.nexters.phochak.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

@@ -1,6 +1,6 @@
 package com.nexters.phochak.domain;
 
-import com.nexters.phochak.specification.PostCategory;
+import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.Builder;
 import org.hibernate.annotations.ColumnDefault;
 
@@ -28,13 +28,13 @@ public class Post extends BaseTime {
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)
-    private PostCategory postCategory;
+    private PostCategoryEnum postCategory;
 
     public Post() {
     }
 
     @Builder
-    public Post(User user, Shorts shorts, PostCategory postCategory) {
+    public Post(User user, Shorts shorts, PostCategoryEnum postCategory) {
         this.user = user;
         this.shorts = shorts;
         this.postCategory = postCategory;
