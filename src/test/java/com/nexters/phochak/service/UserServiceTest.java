@@ -3,6 +3,8 @@ package com.nexters.phochak.service;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.KakaoUserInformation;
 import com.nexters.phochak.dto.TokenDto;
+import com.nexters.phochak.exception.PhochakException;
+import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.KakaoOAuthServiceImpl;
 import com.nexters.phochak.service.impl.UserServiceImpl;
@@ -19,6 +21,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.nexters.phochak.dto.KakaoUserInformation.KakaoOAuthProperties;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -97,6 +100,18 @@ class UserServiceTest {
 
         // then
         then(userRepository).should(never()).save(any());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 회원이면 NOT_FOUND_USER 예외가 발생한다")
+    void validateUser() {
+        // given
+        given(userRepository.existsById(1L)).willReturn(false);
+
+        // when & then
+        assertThatThrownBy(() -> userService.validateUser(1L))
+                .isInstanceOf(PhochakException.class)
+                .hasMessage(ResCode.NOT_FOUND_USER.getMessage());
     }
 
     static class MockUser extends User {
