@@ -27,11 +27,9 @@ public class PostServiceImpl implements PostService {
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = userRepository.getReferenceById(userId);
         Shorts shorts = shortsService.createShorts(postCreateRequestDto.getShorts());
-        System.out.println("++++++++++++++++");
-        System.out.println(PostCategoryEnum.valueOf(postCreateRequestDto.getPostCategory()));
         Post post = Post.builder()
                         .user(user)
-                        .postCategory(PostCategoryEnum.valueOf(postCreateRequestDto.getPostCategory()))
+                        .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getPostCategory()))
                         .shorts(shorts)
                         .build();
         hashtagService.createHashtagsByString(postCreateRequestDto.getHashtags(), post);

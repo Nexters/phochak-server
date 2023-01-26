@@ -10,11 +10,14 @@ import java.util.List;
 @Getter
 public class PostCreateRequestDto {
 
-    private MultipartFile shorts;
+    @NotNull
+    private final MultipartFile shorts;
 
-    private List<String> hashtags;
+    @NotNull
+    private final List<String> hashtags;
 
-    private String postCategory;
+    @NotBlank
+    private final String postCategory;
 
     public PostCreateRequestDto(MultipartFile shorts, List<String> hashtags, String postCategory) {
         this.shorts = shorts;
