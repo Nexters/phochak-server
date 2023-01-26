@@ -2,9 +2,15 @@ package com.nexters.phochak.dto;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexters.phochak.specification.OAuthProviderEnum;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.ToString;
 
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 @ToString
 @Getter
 public class KakaoUserInformation extends OAuthUserInformation {
@@ -31,9 +37,12 @@ public class KakaoUserInformation extends OAuthUserInformation {
         return provider;
     }
 
+    @Builder
+    @NoArgsConstructor
+    @AllArgsConstructor
     @ToString
     @Getter
-    static class KakaoOAuthProperties {
+    public static class KakaoOAuthProperties {
         private String nickname;
         @JsonProperty(value = "profile_image")
         private String profileImage;

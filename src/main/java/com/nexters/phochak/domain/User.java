@@ -2,6 +2,7 @@ package com.nexters.phochak.domain;
 
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -11,10 +12,12 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
+import javax.validation.constraints.Size;
 
+@Getter
 @Entity
 @Table(name = "`USER`")
-public class User {
+public class User extends BaseTime {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,6 +30,7 @@ public class User {
     @Column(nullable = false, unique = true)
     private String providerId;
 
+    @Size(min = 1, max = 20)
     @Column(nullable = false, unique = true)
     private String nickname;
 

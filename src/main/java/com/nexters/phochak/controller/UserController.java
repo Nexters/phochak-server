@@ -1,6 +1,8 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.LoginRequestDto;
+import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,9 +19,11 @@ import javax.validation.Valid;
 @RestController
 public class UserController {
     private final UserService userService;
+    private final JwtTokenService jwtTokenService;
 
     @GetMapping("login/{provider}")
-    public void login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
-        userService.login(provider, requestDto.getCode());
+    public LoginResponseDto login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
+        Long loginUserId = userService.login(provider, requestDto.getCode());
+        return jwtTokenService.createLoginResponse(loginUserId);
     }
 }

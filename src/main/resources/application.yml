@@ -11,6 +11,7 @@ spring:
     properties:
       hibernate:
         format_sql: true
+        show_sql: true
 # 카카오 OAUTH 관련 설정
 # TODO: 배포 환경별로 분리 필요, 운영에서는 secret key 적용하고 별도로 관리 필요 (애플 로그인이 어떻게 돼있는지 모름)
 kakao:
@@ -23,3 +24,10 @@ kakao:
 logging:
   level:
     com.nexters.phochak: debug
+
+security:
+  jwt:
+    token:
+      secret-key: 5da7665f9e4ee2fccdcdfb21073dca41d24fdb37830cdc47f487db830731248b1410fb0e75329db38be1d32445bdf6d305b5858e8aa5b0a549f877dc7ea83e55
+      access-token-expire-length: 30000 # 30s
+      refresh-token-expire-length: 604800000 # 1 week
