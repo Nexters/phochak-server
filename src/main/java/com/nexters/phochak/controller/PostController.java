@@ -1,14 +1,14 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.auth.UserContext;
+import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.CommonResponseDto;
 import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.service.PostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 
@@ -19,9 +19,11 @@ public class PostController {
 
     private final PostService postServiceImpl;
 
+    @Auth
     @PostMapping
-    public ResponseEntity<CommonResponseDto> createPost(@AuthenticatedUser LoginUser loginUser, @Valid PostCreateRequestDto postCreateRequestDto) {
-        postServiceImpl.create(loginUser, postCreateRequestDto);
+    public ResponseEntity<CommonResponseDto> createPost(@ModelAttribute @Valid PostCreateRequestDto postCreateRequestDto) {
+        Long userId = UserContext.getContext();
+        postServiceImpl.create(userId, postCreateRequestDto);
         return ResponseEntity.ok(new CommonResponseDto(ResCode.OK));
     }
 }

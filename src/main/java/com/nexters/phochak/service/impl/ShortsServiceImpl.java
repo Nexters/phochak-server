@@ -6,6 +6,7 @@ import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.MediaFileRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -14,21 +15,24 @@ import java.util.List;
 import java.util.Locale;
 
 @Service
+@Slf4j
 @RequiredArgsConstructor
 public class ShortsServiceImpl {
 
     private final ShortsRepository shortsRepository;
     private final MediaFileRepository mediaFileRepository;
 
-    @Value("app.resource.support.shorts")
-    private final List<String> supportedExtension;
+    @Value("${app.resource.support.shorts}")
+    private final List<String> SUPPORTED_EXTENSION_LIST;
 
-    public Shorts createShorts(MultipartFile multipartFile) {
-        String extension = getExtension(multipartFile);
+    public Shorts createShorts(MultipartFile shorts) {
+        String extension = getExtension(shorts);
         if(!isSupportedExtension(extension)) {
+            System.out.println("SUPPORTED_EXTENSION_LIST.toString() = " + SUPPORTED_EXTENSION_LIST.toString());
+            log.info("ShortsServiceImpl|Not supported video extension: {}", extension);
             throw new PhochakException(ResCode.NOT_SUPPORT_VIDEO_EXTENSION);
         }
-        String filePath = mediaFileRepository.uploadVideo(multipartFile);
+        String filePath = mediaFileRepository.uploadVideo(shorts, extension);
         //ToDo 썸네일 추가
         //ToDo 메타데이터 추출 가능 여부 확인
         return shortsRepository.save(
@@ -39,7 +43,7 @@ public class ShortsServiceImpl {
     }
 
     private boolean isSupportedExtension(String extension) {
-        return supportedExtension.contains(extension);
+        return SUPPORTED_EXTENSION_LIST.contains(extension);
     }
 
     private String getExtension(MultipartFile file) {

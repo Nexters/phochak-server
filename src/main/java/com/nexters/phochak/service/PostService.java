@@ -4,5 +4,5 @@ import com.nexters.phochak.dto.PostCreateRequestDto;
 
 public interface PostService {
 
-    void create(LoginUser loginUser, PostCreateRequestDto postCreateRequestDto);
+    void create(Long userId, PostCreateRequestDto postCreateRequestDto);
 }

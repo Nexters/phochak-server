@@ -1,21 +1,24 @@
 package com.nexters.phochak.dto;
 
-import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
 public class PostCreateRequestDto {
 
-    private List<String> hashtags;
-
-    @NotBlank
     private MultipartFile shorts;
 
-    @NotBlank
-    private PostCategoryEnum postCategory;
+    private List<String> hashtags;
 
+    private String postCategory;
+
+    public PostCreateRequestDto(MultipartFile shorts, List<String> hashtags, String postCategory) {
+        this.shorts = shorts;
+        this.hashtags = hashtags;
+        this.postCategory = postCategory;
+    }
 }

@@ -1,5 +1,6 @@
 package com.nexters.phochak.dto;
 
+import com.nexters.phochak.dto.response.Response;
 import com.nexters.phochak.exception.ResCode;
 import lombok.Getter;
 

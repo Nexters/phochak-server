@@ -4,11 +4,10 @@ import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.PostCreateRequestDto;
-import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.PostService;
+import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,19 +20,22 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ShortsServiceImpl shortsService;
-    private final HashtagServiceImpl hashtagSerivce;
+    private final HashtagServiceImpl hashtagService;
 
     @Override
     @Transactional
-    public void create(LoginUser loginUser, PostCreateRequestDto postCreateRequestDto) {
-        User user = userRepository.findById(loginUser.getUserId).orElseThrow(new PhochakException(ResCode.USER_NOT_VALID));
-        Shorts shorts = shortsService.createShorts(postCreateRequestDto.getMultipartFile());
+    public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
+        User user = userRepository.getReferenceById(userId);
+        Shorts shorts = shortsService.createShorts(postCreateRequestDto.getShorts());
+        System.out.println("++++++++++++++++");
+        System.out.println(PostCategoryEnum.valueOf(postCreateRequestDto.getPostCategory()));
         Post post = Post.builder()
                         .user(user)
-                        .postCategory(postCreateRequestDto.getPostCategory())
+                        .postCategory(PostCategoryEnum.valueOf(postCreateRequestDto.getPostCategory()))
                         .shorts(shorts)
                         .build();
-        hashtagSerivce.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
+        hashtagService.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
         postRepository.save(post);
     }
+
 }
