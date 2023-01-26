@@ -143,7 +143,7 @@ public class PostControllerTest {
     }
 
     @Test
-    @DisplayName("카테고리의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
+    @DisplayName("해시태그의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
     void HashtagOver30_InvalidInput() throws Exception {
         // given
         MockMultipartFile testVideo = new MockMultipartFile(

@@ -19,14 +19,14 @@ public class PostServiceImpl implements PostService {
 
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final ShortsServiceImpl shortsService;
+    private final ShortsService shortsService;
     private final HashtagServiceImpl hashtagService;
 
     @Override
     @Transactional
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = userRepository.getReferenceById(userId);
-        Shorts shorts = shortsService.createShorts(postCreateRequestDto.getShorts());
+        Shorts shorts = shortsService.createShorts(postCreateRequestDto);
         Post post = Post.builder()
                         .user(user)
                         .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getPostCategory()))

@@ -1,6 +1,7 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Shorts;
+import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.MediaFileRepository;
@@ -17,7 +18,7 @@ import java.util.Locale;
 @Service
 @Slf4j
 @RequiredArgsConstructor
-public class ShortsServiceImpl {
+public class ShortsServiceLocalStorage implements ShortsService {
 
     private final ShortsRepository shortsRepository;
     private final MediaFileRepository mediaFileRepository;
@@ -25,16 +26,17 @@ public class ShortsServiceImpl {
     @Value("${app.resource.support.shorts}")
     private final List<String> SUPPORTED_EXTENSION_LIST;
 
-    public Shorts createShorts(MultipartFile shorts) {
-        String extension = getExtension(shorts);
+    @Override
+    public Shorts createShorts(PostCreateRequestDto postCreateRequestDto) {
+        String extension = getExtension(postCreateRequestDto.getShorts());
         if(!isSupportedExtension(extension)) {
             System.out.println("SUPPORTED_EXTENSION_LIST.toString() = " + SUPPORTED_EXTENSION_LIST.toString());
             log.info("ShortsServiceImpl|Not supported video extension: {}", extension);
             throw new PhochakException(ResCode.NOT_SUPPORT_VIDEO_EXTENSION);
         }
-        String filePath = mediaFileRepository.uploadVideo(shorts, extension);
-        //ToDo 썸네일 추가
-        //ToDo 메타데이터 추출 가능 여부 확인
+        String filePath = mediaFileRepository.uploadVideo(postCreateRequestDto.getShorts(), extension);
+        //TODO 썸네일 추가
+        //TODO 메타데이터 추출 가능 여부 확인
         return shortsRepository.save(
                 Shorts.builder()
                     .shortsUrl(filePath)

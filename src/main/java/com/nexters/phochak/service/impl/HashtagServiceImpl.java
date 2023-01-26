@@ -9,6 +9,7 @@ import com.nexters.phochak.service.HashtagService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -20,6 +21,9 @@ public class HashtagServiceImpl implements HashtagService {
 
     @Override
     public List<Hashtag> createHashtagsByString(List<String> stringHashtagList, Post post) {
+        if(stringHashtagList.size() == 0) {
+            return Collections.emptyList();
+        }
         validateHashtag(stringHashtagList);
         List<Hashtag> hashtagList = stringHashtagList.stream().map(stringHashtag ->
                 Hashtag.builder()
