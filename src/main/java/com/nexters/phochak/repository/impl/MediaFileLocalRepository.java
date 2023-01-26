@@ -1,7 +1,8 @@
-package com.nexters.phochak.repository;
+package com.nexters.phochak.repository.impl;
 
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.repository.MediaFileRepository;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.web.multipart.MultipartFile;
