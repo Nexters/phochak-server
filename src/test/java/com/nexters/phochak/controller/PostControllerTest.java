@@ -22,6 +22,7 @@ import java.io.FileInputStream;
 
 import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.exception.ResCode.INVALID_INPUT;
+import static com.nexters.phochak.exception.ResCode.OK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -57,14 +58,11 @@ public class PostControllerTest {
     @AfterAll
     void removeTestVideo() {
         File deleteFolder = new File(shortsPath);
-
         if(deleteFolder.exists()){
             File[] deleteFolderList = deleteFolder.listFiles();
-
             for (File file : deleteFolderList) {
                 file.delete();
             }
-
             if(deleteFolderList.length == 0 && deleteFolder.isDirectory()){
                 deleteFolder.delete();
             }
@@ -87,7 +85,8 @@ public class PostControllerTest {
                 .param("postCategory", "RESTAURANT")
                 .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                 .header(AUTHORIZATION_HEADER, testToken)
-        ).andExpect(status().isOk());
+        ).andExpect(status().isOk())
+        .andExpect(jsonPath("$.resCode").value(OK.getCode()));
     }
 
     @Test
@@ -106,21 +105,21 @@ public class PostControllerTest {
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));;
+                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
 
         mockMvc.perform(multipart("/v1/post")
                         .file(testVideo)
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));;
+                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
 
         mockMvc.perform(multipart("/v1/post")
                         .file(testVideo)
                         .param("postCategory", "RESTAURANT")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));;
+                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
     }
 
     @Test
@@ -140,9 +139,34 @@ public class PostControllerTest {
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));;
+                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
     }
 
-    //TODO: 해시테그 정책 확정 후 테스트 추가
+    @Test
+    @DisplayName("카테고리의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
+    void HashtagOver30_InvalidInput() throws Exception {
+        // given
+        MockMultipartFile testVideo = new MockMultipartFile(
+                "shorts",
+                "test.mov",
+                "video/mov",
+                new FileInputStream("app-resource/test/dummy/test.mov"));
 
+        StringBuilder hashtagStringList = new StringBuilder("[");
+        for(int i=0;i<31;i++) {
+            hashtagStringList.append("\"해시태그").append(i).append("\",");
+        }
+        hashtagStringList.deleteCharAt(hashtagStringList.length() - 1);
+        hashtagStringList.append("]");
+        System.out.println("hashtagStringList = " + hashtagStringList);
+
+        // when, then
+        mockMvc.perform(multipart("/v1/post")
+                        .file(testVideo)
+                        .param("postCategory", "RESTAURANT")
+                        .param("hashtags", hashtagStringList.toString())
+                        .header(AUTHORIZATION_HEADER, testToken)
+                ).andExpect(status().isOk())
+                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+    }
 }
