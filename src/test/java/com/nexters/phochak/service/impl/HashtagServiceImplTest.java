@@ -62,7 +62,7 @@ class HashtagServiceImplTest {
         List<String> stringHashList = List.of("해시태 그1", " 해시태그2", "해시태그 3");
         Post post = new Post();
 
-        verify(hashtagRepository, times(1)).saveAll(ArgumentMatchers.any());
+        verify(hashtagRepository, times(0)).saveAll(ArgumentMatchers.any());
 
         //when, then
         assertThatThrownBy(() -> hashtagService.createHashtagsByString(stringHashList, post))
