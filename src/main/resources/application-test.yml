@@ -16,5 +16,8 @@ spring:
 
 app:
   resource:
+    support:
+      shorts: mp4, mov, avi, wmv
     local:
-      shorts: "app-resource/shorts/"
+      dummy: app-resource/test/dummy/
+      shorts: app-resource/test/shorts/
