@@ -5,10 +5,15 @@ import lombok.Builder;
 import lombok.Getter;
 
 @Getter
-public class ExceptionResponseDto extends Response {
+public class ExceptionResponseDto {
+
+    private final String resCode;
+
+    private final String resMessage;
 
     @Builder
     public ExceptionResponseDto(ResCode resCode, String customResMessage) {
-        super(resCode, customResMessage);
+        this.resCode = resCode.getCode();
+        this.resMessage = customResMessage == null ? resCode.getMessage() : customResMessage;
     }
 }
