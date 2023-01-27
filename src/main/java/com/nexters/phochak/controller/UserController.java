@@ -1,5 +1,6 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.LoginRequestDto;
 import com.nexters.phochak.service.JwtTokenService;
@@ -22,8 +23,8 @@ public class UserController {
     private final JwtTokenService jwtTokenService;
 
     @GetMapping("login/{provider}")
-    public LoginResponseDto login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
+    public CommonResponse<LoginResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
         Long loginUserId = userService.login(provider, requestDto.getCode());
-        return jwtTokenService.createLoginResponse(loginUserId);
+        return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
     }
 }
