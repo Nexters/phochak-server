@@ -30,8 +30,6 @@ public class ShortsServiceLocalStorage implements ShortsService {
     public Shorts createShorts(PostCreateRequestDto postCreateRequestDto) {
         String extension = getExtension(postCreateRequestDto.getShorts());
         if(!isSupportedExtension(extension)) {
-            System.out.println("SUPPORTED_EXTENSION_LIST.toString() = " + SUPPORTED_EXTENSION_LIST.toString());
-            log.info("ShortsServiceImpl|Not supported video extension: {}", extension);
             throw new PhochakException(ResCode.NOT_SUPPORT_VIDEO_EXTENSION);
         }
         String filePath = mediaFileRepository.uploadVideo(postCreateRequestDto.getShorts(), extension);

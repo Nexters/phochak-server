@@ -21,7 +21,6 @@ public class MediaFileLocalRepository implements MediaFileRepository {
     @Override
     public String uploadVideo(MultipartFile shorts, String extension) {
         Path filePath = Paths.get(shortsLocalPath + UUID.randomUUID() + "." + extension);
-        System.out.println("filePath = " + filePath);
         try {
             shorts.transferTo(filePath);
         } catch(IllegalStateException e) {

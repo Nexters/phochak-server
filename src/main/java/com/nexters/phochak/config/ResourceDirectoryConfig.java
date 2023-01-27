@@ -23,7 +23,6 @@ public class ResourceDirectoryConfig implements CommandLineRunner {
 
     @Override
     public void run(String... args) throws Exception {
-        System.out.println("RESOURCE_PATH = " + RESOURCE_PATH);
         try {
             Files.createDirectories(Paths.get(RESOURCE_PATH));
         } catch (IOException e) {
