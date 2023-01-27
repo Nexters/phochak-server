@@ -12,6 +12,8 @@ import com.nexters.phochak.service.PhochakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
+
 @Service
 @RequiredArgsConstructor
 public class PhochakServiceImpl implements PhochakService {
@@ -21,6 +23,7 @@ public class PhochakServiceImpl implements PhochakService {
     private final UserRepository userRepository;
 
     @Override
+    @Transactional
     public void addPhochak(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
@@ -34,4 +37,17 @@ public class PhochakServiceImpl implements PhochakService {
                 .build();
         phochakRepository.save(phochak);
     }
+
+    @Override
+    @Transactional
+    public void cancelPhochak(Long userId, Long postId) {
+        User user = userRepository.getReferenceById(userId);
+        Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+
+        Phochak phochak = phochakRepository.findOneByUserAndPost(user, post)
+                .orElseThrow(() -> new PhochakException(ResCode.ALREADY_PHOCHAKED));
+
+        phochakRepository.delete(phochak);
+    }
+
 }
