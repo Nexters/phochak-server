@@ -21,9 +21,9 @@ public class PostController {
 
     @Auth
     @PostMapping
-    public ResponseEntity<CommonResponseDto> createPost(@ModelAttribute @Valid PostCreateRequestDto postCreateRequestDto) {
+    public CommonResponseDto createPost(@ModelAttribute @Valid PostCreateRequestDto postCreateRequestDto) {
         Long userId = UserContext.getContext();
         postServiceImpl.create(userId, postCreateRequestDto);
-        return ResponseEntity.ok(new CommonResponseDto(ResCode.OK));
+        return new CommonResponseDto(ResCode.OK);
     }
 }
