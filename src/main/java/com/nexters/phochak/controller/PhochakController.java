@@ -2,9 +2,8 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
-import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.service.PhochakService;
-import com.nexters.phochak.dto.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,17 +16,17 @@ public class PhochakController {
 
     @Auth
     @PostMapping
-    public CommonResponseDto<Void> addPhochak(@PathVariable Long postId) {
+    public CommonResponse<Void> addPhochak(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         phochakService.addPhochak(userId, postId);
-        return new CommonResponseDto(ResCode.OK);
+        return new CommonResponse<>();
     }
 
     @Auth
     @DeleteMapping
-    public CommonResponseDto<Void> cancelPhochak(@PathVariable Long postId) {
+    public CommonResponse<Void> cancelPhochak(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         phochakService.cancelPhochak(userId, postId);
-        return new CommonResponseDto(ResCode.OK);
+        return new CommonResponse<>();
     }
 }
