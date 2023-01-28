@@ -1,0 +1,23 @@
+spring:
+  datasource:
+    url: ${datasource_url}
+    username: ${datasource_username}
+    password: ${datasource_password}
+  jpa:
+    generate-ddl: true
+    hibernate:
+      ddl-auto: create # 일단 테스트용으로 create 사용, 이후 ddl 만들면 validate 로 수정 필요
+
+kakao:
+  redirect_uri: ${server_address}/v1/user/login/kakao
+  client_id: ${kakao_client_id}
+  api_url:
+    token: https://kauth.kakao.com/oauth/token
+    information: https://kapi.kakao.com/v2/user/me
+
+security:
+  jwt:
+    token:
+      secret-key: ${oauth_secret_key}
+      access-token-expire-length: ${access_token_expire_length}
+      refresh-token-expire-length: ${refresh_token_expire_length}
