@@ -6,6 +6,7 @@ import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
+import com.nexters.phochak.service.HashtagService;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.RequiredArgsConstructor;
@@ -20,7 +21,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ShortsService shortsService;
-    private final HashtagServiceImpl hashtagService;
+    private final HashtagService hashtagService;
 
     @Override
     @Transactional

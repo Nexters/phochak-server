@@ -7,7 +7,6 @@ import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.service.PostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
