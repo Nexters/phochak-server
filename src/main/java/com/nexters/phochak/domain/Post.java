@@ -2,11 +2,13 @@ package com.nexters.phochak.domain;
 
 import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.Builder;
+import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
 
 @Entity
+@Getter
 public class Post extends BaseTime {
 
     @Id
