@@ -55,10 +55,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .build());
 
         return LoginResponseDto.builder()
-                .tokenType(TokenDto.TOKEN_TYPE)
-                .accessToken(accessToken.getTokenString())
+                .accessToken(createTokenStringForResponse(accessToken))
                 .expiresIn(accessToken.getExpiresIn())
-                .refreshToken(refreshToken.getTokenString())
+                .refreshToken(createTokenStringForResponse(refreshToken))
                 .refreshTokenExpiresIn(refreshToken.getExpiresIn())
                 .build();
     }
@@ -102,5 +101,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .compact();
 
         return new TokenDto(jwt, String.valueOf(expireLength));
+    }
+
+    private static String createTokenStringForResponse(TokenDto accessToken) {
+        return TokenDto.TOKEN_TYPE + " " + accessToken.getTokenString();
     }
 }
