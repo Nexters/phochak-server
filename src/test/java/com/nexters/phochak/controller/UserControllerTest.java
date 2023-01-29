@@ -78,11 +78,13 @@ class UserControllerTest extends RestDocs {
                                         parameterWithName("code").description("Authorization code")
                                 ),
                                 responseFields(
-                                        fieldWithPath("tokenType").type(JsonFieldType.STRING).description("토큰 타입"),
-                                        fieldWithPath("accessToken").type(JsonFieldType.STRING).description("access token"),
-                                        fieldWithPath("expiresIn").type(JsonFieldType.STRING).description("access token 유효기간(ms)"),
-                                        fieldWithPath("refreshToken").type(JsonFieldType.STRING).description("refresh token"),
-                                        fieldWithPath("refreshTokenExpiresIn").type(JsonFieldType.STRING).description("refresh token 유효기간(ms)")
+                                        fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                        fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("data.tokenType").type(JsonFieldType.STRING).description("토큰 타입"),
+                                        fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("access token"),
+                                        fieldWithPath("data.expiresIn").type(JsonFieldType.STRING).description("access token 유효기간(ms)"),
+                                        fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("refresh token"),
+                                        fieldWithPath("data.refreshTokenExpiresIn").type(JsonFieldType.STRING).description("refresh token 유효기간(ms)")
                                 )
                 ));
     }

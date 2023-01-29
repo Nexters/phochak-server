@@ -15,11 +15,12 @@ public enum ResCode {
     EXPIRED_TOKEN("P203", "만료된 토큰입니다"),
 
     //P3xx: 유저 예외
-    NOT_FOUND_USER("P300", "존재하지 않는 유저입니다");
+    NOT_FOUND_USER("P300", "존재하지 않는 유저입니다"),
 
     //P4xx: 게시글 예외
+    NOT_SUPPORT_VIDEO_EXTENSION("P450", "지원하지 않는 영상 확장자"),
+    INVALID_VIDEO_FORMAT("P451", "잘못되거나 알 수 없는 영상 형식");
 
-    //P5xx: 파일 예외
 
     private final String code;
     private final String message;

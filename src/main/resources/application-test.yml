@@ -13,3 +13,11 @@ spring:
     console:
       enabled: true
       path: /h2-console
+
+app:
+  resource:
+    support:
+      shorts: mp4, mov, avi, wmv
+    local:
+      dummy: app-resource/test/dummy/
+      shorts: app-resource/test/shorts/
