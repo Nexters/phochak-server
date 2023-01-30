@@ -1,6 +1,6 @@
 package com.nexters.phochak.service;
 
-import com.nexters.phochak.dto.PostCreateRequestDto;
+import com.nexters.phochak.dto.request.PostCreateRequestDto;
 
 public interface PostService {
 

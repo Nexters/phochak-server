@@ -3,7 +3,7 @@ package com.nexters.phochak.service.impl;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.PostCreateRequestDto;
+import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.HashtagService;

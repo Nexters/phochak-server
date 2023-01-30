@@ -1,4 +1,4 @@
-package com.nexters.phochak.dto;
+package com.nexters.phochak.dto.request;
 
 import lombok.Getter;
 import org.springframework.web.multipart.MultipartFile;

@@ -2,7 +2,7 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.LoginResponseDto;
-import com.nexters.phochak.dto.LoginRequestDto;
+import com.nexters.phochak.dto.request.LoginRequestDto;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
 import lombok.RequiredArgsConstructor;
