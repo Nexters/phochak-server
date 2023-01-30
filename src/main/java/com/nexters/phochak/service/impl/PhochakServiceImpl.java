@@ -45,7 +45,7 @@ public class PhochakServiceImpl implements PhochakService {
         Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
 
         Phochak phochak = phochakRepository.findOneByUserAndPost(user, post)
-                .orElseThrow(() -> new PhochakException(ResCode.ALREADY_PHOCHAKED));
+                .orElseThrow(() -> new PhochakException(ResCode.NOT_PHOCHAKED));
 
         phochakRepository.delete(phochak);
     }
