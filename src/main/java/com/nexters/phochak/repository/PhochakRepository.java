@@ -10,5 +10,5 @@ import java.util.Optional;
 public interface PhochakRepository extends JpaRepository<Phochak, Long> {
     boolean existsByUserAndPost(User user, Post post);
 
-    Optional<Phochak> findOneByUserAndPost(User user, Post post);
+    Optional<Phochak> findByUserAndPost(User user, Post post);
 }

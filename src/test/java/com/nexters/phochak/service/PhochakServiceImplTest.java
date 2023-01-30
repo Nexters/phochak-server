@@ -78,7 +78,7 @@ class PhochakServiceImplTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.findOneByUserAndPost(user, post)).willReturn(Optional.of(phochak));
+        given(phochakRepository.findByUserAndPost(user, post)).willReturn(Optional.of(phochak));
 
         //then
         phochakService.cancelPhochak(0L, 0L);
@@ -96,7 +96,7 @@ class PhochakServiceImplTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.findOneByUserAndPost(user, post)).willReturn(Optional.empty());
+        given(phochakRepository.findByUserAndPost(user, post)).willReturn(Optional.empty());
 
         //when, then
         assertThrows(PhochakException.class, () -> {

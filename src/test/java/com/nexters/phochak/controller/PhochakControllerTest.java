@@ -85,7 +85,7 @@ class PhochakControllerTest extends RestDocs {
     @DisplayName("포착하기 요청 API - 포착하기 성공")
     void addPhochak() throws Exception {
         //given
-        User user = userRepository.findOneByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        User user = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Shorts shorts = Shorts.builder()
                 .shortsUrl("shortsUrl")
                 .thumbnailUrl("thumbnailUrl")
@@ -125,7 +125,7 @@ class PhochakControllerTest extends RestDocs {
     @DisplayName("포착 취소하기 요청 API - 포착 취소하기 성공")
     void cancelPhochak() throws Exception {
         //given
-        User user = userRepository.findOneByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        User user = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Shorts shorts = Shorts.builder()
                 .shortsUrl("shortsUrl")
                 .thumbnailUrl("thumbnailUrl")
