@@ -1,0 +1,24 @@
+== 포착하기 APIs
+
+=== 포착하기 / 포착 취소하기
+포착하기 / 포착취소하기 기능을 제공한다.
+
+==== 포착하기 요청
+HTTP Example
+
+include::{snippets}/post/{postId}/phochak/post/http-request.adoc[]
+
+==== 포착 취소하기 요청
+HTTP Example
+
+include::{snippets}/post/{postId}/phochak/delete/http-request.adoc[]
+
+Path Parameters
+
+include::{snippets}/post/{postId}/phochak/post/path-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/{postId}/phochak/post/http-response.adoc[]
