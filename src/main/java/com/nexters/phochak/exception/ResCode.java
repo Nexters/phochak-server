@@ -13,6 +13,7 @@ public enum ResCode {
     TOKEN_NOT_FOUND("P201", "토큰을 찾을 수 없습니다(로그인 되지 않은 사용자입니다.)"),
     INVALID_TOKEN("P202", "올바르지 않은 토큰입니다"),
     EXPIRED_TOKEN("P203", "만료된 토큰입니다"),
+    INVALID_APPLE_TOKEN("P204", "올바르지 않은 apple identifyToken입니다"),
 
     //P3xx: 유저 예외
     NOT_FOUND_USER("P300", "존재하지 않는 유저입니다"),

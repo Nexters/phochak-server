@@ -23,11 +23,6 @@ public class KakaoUserInformation extends OAuthUserInformation {
     private KakaoOAuthProperties properties;
 
     @Override
-    public String getInitialNickname() {
-        return properties.getNickname();
-    }
-
-    @Override
     public String getInitialProfileImage() {
         return properties.thumbnailImage;
     }

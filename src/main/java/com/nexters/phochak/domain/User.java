@@ -18,6 +18,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "`USER`")
 public class User extends BaseTime {
+    public static final int NICKNAME_MAX_SIZE = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -30,7 +31,7 @@ public class User extends BaseTime {
     @Column(nullable = false, unique = true)
     private String providerId;
 
-    @Size(min = 1, max = 20)
+    @Size(min = 1, max = NICKNAME_MAX_SIZE)
     @Column(nullable = false, unique = true)
     private String nickname;
 

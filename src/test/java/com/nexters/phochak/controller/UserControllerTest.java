@@ -1,7 +1,6 @@
 package com.nexters.phochak.controller;
 
 import com.nexters.phochak.docs.RestDocs;
-import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.service.UserService;
 import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
@@ -53,11 +52,10 @@ class UserControllerTest extends RestDocs {
         String code = "testCode";
 
         LoginResponseDto response = LoginResponseDto.builder()
-                .tokenType(TokenDto.TOKEN_TYPE)
-                .accessToken("access token")
-                .expiresIn("access token lifetime")
-                .refreshToken("refresh token")
-                .refreshTokenExpiresIn("refresh token lifetime")
+                .accessToken("Bearer {jwt}")
+                .expiresIn("access token lifetime(ms)")
+                .refreshToken("Bearer {jwt}")
+                .refreshTokenExpiresIn("refresh token lifetime(ms)")
                 .build();
 
         when(jwtTokenService.createLoginResponse(any())).thenReturn(response);
@@ -72,7 +70,7 @@ class UserControllerTest extends RestDocs {
                                 preprocessRequest(prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
-                                        parameterWithName("provider").description("OAuth 서비스 이름(ex. kakao, apple, naver")
+                                        parameterWithName("provider").description("OAuth 서비스 이름(ex. kakao, apple, naver)")
                                 ),
                                 requestParameters(
                                         parameterWithName("code").description("Authorization code")
@@ -80,7 +78,6 @@ class UserControllerTest extends RestDocs {
                                 responseFields(
                                         fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
                                         fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-                                        fieldWithPath("data.tokenType").type(JsonFieldType.STRING).description("토큰 타입"),
                                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("access token"),
                                         fieldWithPath("data.expiresIn").type(JsonFieldType.STRING).description("access token 유효기간(ms)"),
                                         fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("refresh token"),

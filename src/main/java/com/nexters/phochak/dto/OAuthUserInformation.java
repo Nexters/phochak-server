@@ -8,6 +8,5 @@ public abstract class OAuthUserInformation {
 
     private OAuthProviderEnum provider;
     private String providerId;
-    private String initialNickname;
     private String initialProfileImage;
 }

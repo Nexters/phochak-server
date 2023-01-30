@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class LoginResponseDto {
-    private String tokenType;
     private String accessToken;
     private String expiresIn;
     private String refreshToken;
