@@ -61,6 +61,10 @@ build {
 	dependsOn copyDocument
 }
 
+clean {
+	delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성 위치
+}
+
 dependencyManagement {
 	imports {
 		mavenBom "org.springframework.cloud:spring-cloud-dependencies:${springCloudVersion}"
@@ -74,10 +78,16 @@ dependencies {
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.29'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
+	implementation 'com.querydsl:querydsl-jpa'
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
+	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
+	// java.lang.NoClassDefFoundError(javax.annotation.Entity) 발생 대응
+	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
+	// java.lang.NoClassDefFoundError(javax.annotation.Generated) 발생 대응
+	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	testImplementation 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
