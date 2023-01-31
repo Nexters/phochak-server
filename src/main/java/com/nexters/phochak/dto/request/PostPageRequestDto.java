@@ -8,12 +8,12 @@ import javax.validation.constraints.NotNull;
 public class PostPageRequestDto {
     @NotNull
     private Long lastId;
-    private Integer pageSize;
+    private Long pageSize;
     @NotNull
     private String postSortCriteria;
     private Long lastCriteriaValue;
 
-    public PostPageRequestDto(Long lastId, Integer pageSize, String postSortCriteria, Long lastCriteriaValue) {
+    public PostPageRequestDto(Long lastId, Long pageSize, String postSortCriteria, Long lastCriteriaValue) {
         this.lastId = lastId;
         this.pageSize = pageSize;
         this.postSortCriteria = postSortCriteria;
