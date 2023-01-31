@@ -11,8 +11,7 @@ import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.PhochakService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import javax.transaction.Transactional;
+import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
