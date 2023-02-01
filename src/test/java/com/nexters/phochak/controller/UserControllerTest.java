@@ -73,7 +73,7 @@ class UserControllerTest extends RestDocs {
                                         parameterWithName("provider").description("OAuth 서비스 이름(ex. kakao, apple, naver)")
                                 ),
                                 requestParameters(
-                                        parameterWithName("token").description("token (Access token or Identify Token")
+                                        parameterWithName("token").description("token (Access token or Identify Token)")
                                 ),
                                 responseFields(
                                         fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
