@@ -6,6 +6,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.MediaFileRepository;
 import com.nexters.phochak.repository.ShortsRepository;
+import com.nexters.phochak.service.ShortsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;

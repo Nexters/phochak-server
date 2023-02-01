@@ -10,6 +10,8 @@ public interface PostService {
 
     void create(Long userId, PostCreateRequestDto postCreateRequestDto);
 
+    PostUploadKeyResponseDto generateUploadKey(Long userId, PostUploadKeyRequestDto postUploadKeyRequestDto);
+
     /**
      * 커서로부터 Page size만큼의 page를 가져온다.
      * @param customCursor

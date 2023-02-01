@@ -2,6 +2,9 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
+import com.nexters.phochak.dto.PostCreateRequestDto;
+import com.nexters.phochak.dto.PostUploadKeyRequestDto;
+import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.response.CommonPageResponse;
@@ -22,6 +25,13 @@ import java.util.List;
 public class PostController {
 
     private final PostService postService;
+
+    @Auth
+    @GetMapping("/upload-key")
+    public CommonResponse<PostUploadKeyResponseDto> generateUploadKey(PostUploadKeyRequestDto postUploadKeyRequestDto) {
+        Long userId = UserContext.getContext();
+        return new CommonResponse<>(postServiceImpl.generateUploadKey(userId, postUploadKeyRequestDto));
+    }
 
     @Auth
     @PostMapping
