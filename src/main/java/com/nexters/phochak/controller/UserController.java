@@ -24,7 +24,7 @@ public class UserController {
 
     @GetMapping("login/{provider}")
     public CommonResponse<LoginResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
-        Long loginUserId = userService.login(provider, requestDto.getCode());
+        Long loginUserId = userService.login(provider, requestDto.getToken());
         return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
     }
 }
