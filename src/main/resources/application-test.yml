@@ -21,3 +21,11 @@ app:
     local:
       dummy: app-resource/test/dummy/
       shorts: app-resource/test/shorts/
+
+ncp:
+  s3:
+    end-point: test
+    region-name: test
+    bucket-name: test
+    access-key: test
+    secret-key: test

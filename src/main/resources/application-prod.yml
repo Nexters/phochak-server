@@ -24,3 +24,11 @@ security:
       secret-key: ${oauth_secret_key}
       access-token-expire-length: ${access_token_expire_length}
       refresh-token-expire-length: ${refresh_token_expire_length}
+
+ncp:
+  s3:
+    end-point: ${s3_end_point}
+    region-name: ${s3_region_name}
+    bucket-name: ${s3_bucket_name}
+    access-key: ${s3_access_key}
+    secret-key: ${s3_secret_key}
