@@ -36,7 +36,7 @@ public class AppleOAuthServiceImpl implements OAuthService {
     }
 
     @Override
-    public OAuthUserInformation requestUserInformation(String authorizationCode) {
+    public OAuthUserInformation requestUserInformation(String token) {
         // jwt 복호화용 공개키 목록 가져오기
         String publicKeys = appleAuthKeyFeignClient.call();
 
@@ -45,7 +45,7 @@ public class AppleOAuthServiceImpl implements OAuthService {
         try {
             keys = objectMapper.readValue(publicKeys, Keys.class);
 
-            SignedJWT signedJWT = SignedJWT.parse(authorizationCode);
+            SignedJWT signedJWT = SignedJWT.parse(token);
 
             boolean isVerified = isVerifiedToken(keys, signedJWT);
 
@@ -56,12 +56,12 @@ public class AppleOAuthServiceImpl implements OAuthService {
                         .providerId(jwtClaimsSet.getSubject())
                         .build();
             } else {
-                log.warn("AppleOAuthServiceImpl|requestUserInformation 서명 검증 실패 : {}", authorizationCode);
+                log.warn("AppleOAuthServiceImpl|requestUserInformation 서명 검증 실패 : {}", token);
                 throw new PhochakException(ResCode.INVALID_APPLE_TOKEN);
             }
 
         } catch (JsonProcessingException | ParseException | JOSEException e) {
-            log.error("AppleOAuthServiceImpl|requestUserInformation Exception: {}", authorizationCode, e);
+            log.error("AppleOAuthServiceImpl|requestUserInformation Exception: {}", token, e);
             throw new PhochakException(ResCode.INTERNAL_SERVER_ERROR);
         }
     }

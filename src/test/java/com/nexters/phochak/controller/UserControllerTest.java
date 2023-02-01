@@ -49,7 +49,7 @@ class UserControllerTest extends RestDocs {
     @DisplayName("로그인 요청 API - 로그인 성공")
     void login() throws Exception {
         String provider = "kakao";
-        String code = "testCode";
+        String token = "testCode";
 
         LoginResponseDto response = LoginResponseDto.builder()
                 .accessToken("Bearer {jwt}")
@@ -63,7 +63,7 @@ class UserControllerTest extends RestDocs {
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/user/login/{provider}", provider)
-                                .param("code", code)
+                                .param("token", token)
                 )
                 .andExpect(status().isOk())
                 .andDo(document("user/login",
@@ -73,7 +73,7 @@ class UserControllerTest extends RestDocs {
                                         parameterWithName("provider").description("OAuth 서비스 이름(ex. kakao, apple, naver)")
                                 ),
                                 requestParameters(
-                                        parameterWithName("code").description("Authorization code")
+                                        parameterWithName("token").description("token (Access token or Identify Token)")
                                 ),
                                 responseFields(
                                         fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),

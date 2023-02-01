@@ -6,5 +6,5 @@ import com.nexters.phochak.specification.OAuthProviderEnum;
 public interface OAuthService {
     OAuthProviderEnum getOAuthProvider();
 
-    OAuthUserInformation requestUserInformation(String authorizationCode);
+    OAuthUserInformation requestUserInformation(String token);
 }

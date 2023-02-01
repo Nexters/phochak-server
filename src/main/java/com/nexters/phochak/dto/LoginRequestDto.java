@@ -9,5 +9,5 @@ import javax.validation.constraints.NotBlank;
 @AllArgsConstructor
 public class LoginRequestDto {
     @NotBlank
-    private String code;
+    private String token;
 }
