@@ -17,21 +17,17 @@ import java.util.Date;
 @Slf4j
 public class NCPRepositoryStorageRepository implements StorageBucketRepository {
 
-    @Value("${ncp.s3.end-point}")
-    private String endPoint;
-    @Value("${ncp.s3.region-name}")
-    private String regionName;
-    @Value("${ncp.s3.bucket-name}")
-    private String bucketName;
-    @Value("${ncp.s3.access-key}")
-    private String accessKey;
-    @Value("${ncp.s3.secret-key}")
-    private String secretKey;
+    final private String bucketName;
+    final private AmazonS3 s3Client;
 
-    static AmazonS3 s3Client;
-
-    public NCPRepositoryStorageRepository() {
-        s3Client = AmazonS3ClientBuilder.standard()
+    public NCPRepositoryStorageRepository(
+            @Value("${ncp.s3.end-point}") String endPoint,
+            @Value("${ncp.s3.region-name}") String regionName,
+            @Value("${ncp.s3.bucket-name}") String bucketName,
+            @Value("${ncp.s3.access-key}") String accessKey,
+            @Value("${ncp.s3.secret-key}") String secretKey) {
+        this.bucketName = bucketName;
+        this.s3Client = AmazonS3ClientBuilder.standard()
                 .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(endPoint, regionName))
                 .withCredentials(new AWSStaticCredentialsProvider(new BasicAWSCredentials(accessKey, secretKey)))
                 .build();

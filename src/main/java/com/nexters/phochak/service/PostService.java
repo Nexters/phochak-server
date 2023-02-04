@@ -10,6 +10,8 @@ public interface PostService {
 
     void create(Long userId, PostCreateRequestDto postCreateRequestDto);
 
+    PostUploadKeyResponseDto generateUploadKey(String fileExtension);
+    
     PostUploadKeyResponseDto generateUploadKey(Long userId, PostUploadKeyRequestDto postUploadKeyRequestDto);
 
     /**
