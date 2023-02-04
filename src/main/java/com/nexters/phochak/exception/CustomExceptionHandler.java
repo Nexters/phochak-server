@@ -7,6 +7,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
+import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
@@ -44,6 +45,16 @@ public class CustomExceptionHandler {
         return ResponseEntity.ok(ExceptionResponseDto.builder()
                 .resCode(ResCode.INVALID_INPUT)
                 .customResMessage(stringBuilder.toString())
+                .build());
+    }
+
+    @ExceptionHandler(MissingServletRequestParameterException.class)
+    protected ResponseEntity<ExceptionResponseDto> pathParamException(MissingServletRequestParameterException e, HttpServletRequest request) {
+        log.warn("[MissingServletRequestParameterException 발생] request url: {}", request.getRequestURI(), e);
+
+        return ResponseEntity.ok(ExceptionResponseDto.builder()
+                .resCode(ResCode.INVALID_INPUT)
+                .customResMessage("check this param: " + e.getParameterName())
                 .build());
     }
 
