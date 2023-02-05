@@ -3,17 +3,19 @@ package com.nexters.phochak.controller;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
-import com.nexters.phochak.dto.request.PostPageRequestDto;
+import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.response.CommonListResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.List;
 
+@Slf4j
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("/v1/post")
@@ -30,9 +32,8 @@ public class PostController {
     }
 
     @GetMapping
-    public CommonListResponse<PostPageResponseDto> getPostList(@Valid PostPageRequestDto postPageRequestDto) {
-        List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(
-                postPageRequestDto.getLastId(), postPageRequestDto.getPageSize(), postPageRequestDto.getPostSortCriteria(), postPageRequestDto.getLastCriteriaValue());
+    public CommonListResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor) {
+        List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor);
         return new CommonListResponse<>(nextCursorPage);
     }
 }
