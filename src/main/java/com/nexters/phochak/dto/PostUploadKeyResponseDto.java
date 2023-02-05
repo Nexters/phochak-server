@@ -8,11 +8,11 @@ public class PostUploadKeyResponseDto {
 
     private final String uploadUrl;
 
-    private final String objectName;
+    private final String key;
 
     @Builder
-    public PostUploadKeyResponseDto(String uploadUrl, String objectName) {
+    public PostUploadKeyResponseDto(String uploadUrl, String key) {
         this.uploadUrl = uploadUrl;
-        this.objectName = objectName;
+        this.key = key;
     }
 }

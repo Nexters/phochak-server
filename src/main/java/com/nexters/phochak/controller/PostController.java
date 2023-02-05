@@ -2,6 +2,7 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
+import com.nexters.phochak.dto.EncodingCallbackRequestDto;
 import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
@@ -10,6 +11,7 @@ import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
+import com.nexters.phochak.service.impl.NCPShortsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
@@ -23,13 +25,21 @@ import java.util.List;
 @RequestMapping("/v1/post")
 public class PostController {
 
+    private final NCPShortsService ncpShortsService;
     private final PostService postService;
 
-//    @Auth
+    @Auth
     @GetMapping("/upload-key")
     public CommonResponse<PostUploadKeyResponseDto> generateUploadKey(
             @RequestParam(name="file-extension") String fileExtension) {
         return new CommonResponse<>(postServiceImpl.generateUploadKey(fileExtension));
+    }
+
+    @PostMapping("/encoding-callback")
+    public void encodingCallback(@RequestBody EncodingCallbackRequestDto encodingCallbackRequestDto) {
+        if(encodingCallbackRequestDto.getStatus().equals("COMPLETE")) {
+            ncpShortsService.connectPost(encodingCallbackRequestDto);
+        }
     }
 
     @Auth

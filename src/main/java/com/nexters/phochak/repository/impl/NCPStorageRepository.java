@@ -15,12 +15,12 @@ import java.util.Date;
 
 @Repository
 @Slf4j
-public class NCPRepositoryStorageRepository implements StorageBucketRepository {
+public class NCPStorageRepository implements StorageBucketRepository {
 
     final private String bucketName;
     final private AmazonS3 s3Client;
 
-    public NCPRepositoryStorageRepository(
+    public NCPStorageRepository(
             @Value("${ncp.s3.end-point}") String endPoint,
             @Value("${ncp.s3.region-name}") String regionName,
             @Value("${ncp.s3.bucket-name}") String bucketName,
@@ -35,9 +35,11 @@ public class NCPRepositoryStorageRepository implements StorageBucketRepository {
 
     @Override
     public URL generatePresignedUrl(String objectName) {
-        Date signedUrlExpireSeconds = new Date();
-        signedUrlExpireSeconds.setTime(3600);
-        return s3Client.generatePresignedUrl(bucketName, objectName, signedUrlExpireSeconds);
+        Date expiration = new Date();
+        long expTimeMillis = expiration.getTime();
+        expTimeMillis += 1000 * 60 * 30; // 30분
+        expiration.setTime(expTimeMillis);
+        return s3Client.generatePresignedUrl(bucketName, objectName, expiration);
     }
 
     @Override

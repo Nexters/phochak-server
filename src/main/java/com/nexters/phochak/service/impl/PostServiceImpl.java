@@ -1,7 +1,6 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Post;
-import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
@@ -28,14 +27,15 @@ import java.util.List;
 public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final ShortsService shortsService;
     private final HashtagService hashtagService;
     private final StorageBucketRepository storageBucketRepository;
+    private final ShortsService shortsService;
 
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
-        String objectName = generateObjectName(fileExtension.toUpperCase(Locale.ROOT));
+        String key = generateObjectKey(fileExtension.toLowerCase(Locale.ROOT));
+        String objectName = key + "." + fileExtension;
         return PostUploadKeyResponseDto.builder()
-                .objectName(objectName)
+                .key(key)
                 .uploadUrl(storageBucketRepository.generatePresignedUrl(objectName).toString())
                 .build();
     }
@@ -44,13 +44,12 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = userRepository.getReferenceById(userId);
-        Shorts shorts = shortsService.createShorts(postCreateRequestDto);
         Post post = Post.builder()
                         .user(user)
                         .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getPostCategory()))
-                        .shorts(shorts)
                         .build();
         hashtagService.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
+        shortsService.connectShorts(postCreateRequestDto.getKey(), post);
         postRepository.save(post);
     }
 
@@ -60,8 +59,8 @@ public class PostServiceImpl implements PostService {
         return postRepository.findNextPageByCursor(customCursor);
     }
     
-    private String generateObjectName(String fileExtension) {
-        return UUID.randomUUID() + "." + fileExtension;
+    
+    private String generateObjectKey(String fileExtension) {
+        return UUID.randomUUID().toString();
     }
-
 }

@@ -19,6 +19,9 @@ public class Shorts {
     private Long id;
 
     @Column(nullable = false, unique = true)
+    private String key;
+
+    @Column(nullable = false, unique = true)
     private String shortsUrl;
 
     @Column(nullable = false, unique = true)
@@ -30,6 +33,7 @@ public class Shorts {
     @Builder
     public Shorts(Long id, String shortsUrl, String thumbnailUrl) {
         this.id = id;
+        this.key = key;
         this.shortsUrl = shortsUrl;
         this.thumbnailUrl = thumbnailUrl;
     }

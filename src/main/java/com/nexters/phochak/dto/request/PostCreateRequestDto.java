@@ -11,7 +11,7 @@ import java.util.List;
 public class PostCreateRequestDto {
 
     @NotNull
-    private final MultipartFile shorts;
+    private final String key;
 
     @NotNull
     private final List<String> hashtags;
@@ -19,8 +19,8 @@ public class PostCreateRequestDto {
     @NotBlank
     private final String postCategory;
 
-    public PostCreateRequestDto(MultipartFile shorts, List<String> hashtags, String postCategory) {
-        this.shorts = shorts;
+    public PostCreateRequestDto(String key, List<String> hashtags, String postCategory) {
+        this.key = key;
         this.hashtags = hashtags;
         this.postCategory = postCategory;
     }

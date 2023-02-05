@@ -1,7 +1,7 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Shorts;
-import com.nexters.phochak.dto.request.PostCreateRequestDto;
+import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.MediaFileRepository;
