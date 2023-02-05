@@ -44,7 +44,7 @@ public class PostController {
 
     @Auth
     @PostMapping
-    public CommonResponse<Void> createPost(@ModelAttribute @Valid PostCreateRequestDto postCreateRequestDto) {
+    public CommonResponse<Void> createPost(@RequestBody @Valid PostCreateRequestDto postCreateRequestDto) {
         Long userId = UserContext.getContext();
         postService.create(userId, postCreateRequestDto);
         return new CommonResponse<>();
