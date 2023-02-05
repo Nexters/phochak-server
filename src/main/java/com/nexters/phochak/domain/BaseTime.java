@@ -1,5 +1,6 @@
 package com.nexters.phochak.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
@@ -14,9 +15,11 @@ import java.time.LocalDateTime;
 @EntityListeners(AuditingEntityListener.class)
 public class BaseTime {
 
+    @JsonIgnore
     @CreatedDate
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @LastModifiedDate
     private LocalDateTime updatedAt;
 }
