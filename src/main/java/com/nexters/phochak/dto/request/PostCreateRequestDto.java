@@ -1,23 +1,25 @@
 package com.nexters.phochak.dto.request;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PostCreateRequestDto {
 
     @NotNull
-    private final String key;
+    private String key;
 
     @NotNull
-    private final List<String> hashtags;
+    private List<String> hashtags;
 
     @NotBlank
-    private final String postCategory;
+    private String postCategory;
 
     public PostCreateRequestDto(String key, List<String> hashtags, String postCategory) {
         this.key = key;

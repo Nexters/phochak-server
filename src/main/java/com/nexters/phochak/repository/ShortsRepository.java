@@ -7,5 +7,5 @@ import java.util.Optional;
 
 public interface ShortsRepository extends JpaRepository<Shorts, Long> {
 
-    Optional<Shorts> findByKey(String key);
+    Optional<Shorts> findByUploadKey(String uploadKey);
 }

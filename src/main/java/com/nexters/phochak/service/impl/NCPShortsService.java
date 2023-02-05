@@ -11,6 +11,7 @@ import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.ShortsState;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
@@ -22,8 +23,8 @@ public class NCPShortsService implements ShortsService {
     private final PostRepository postRepository;
 
     @Override
-    public void connectShorts(String key, Post post) {
-        Optional<Shorts> optionalShorts = shortsRepository.findByKey(key);
+    public void connectShorts(String uploadKey, Post post) {
+        Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
         if(optionalShorts.isPresent()) {
             // case: 인코딩이 먼저 끝나있는 경우
@@ -33,10 +34,10 @@ public class NCPShortsService implements ShortsService {
             post.updateShortsState(ShortsState.OK);
         } else {
             // case: 인코딩이 끝나지 않은 경우
-            String shortsFileName = generateShortsFileName(key);
-            String thumbnailFileName = generateThumbnailsFileName(key);
+            String shortsFileName = generateShortsFileName(uploadKey);
+            String thumbnailFileName = generateThumbnailsFileName(uploadKey);
             Shorts shorts = Shorts.builder()
-                            .key(key)
+                            .uploadKey(uploadKey)
                             .shortsUrl(shortsFileName)
                             .thumbnailUrl(thumbnailFileName)
                             .build();
@@ -46,10 +47,11 @@ public class NCPShortsService implements ShortsService {
     }
 
     @Override
+    @Transactional
     public void connectPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
-        String key = getKeyFromFilePath(encodingCallbackRequestDto.getFilePath());
+        String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.getFilePath());
 
-        Optional<Shorts> optionalShorts = shortsRepository.findByKey(key);
+        Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
         if(optionalShorts.isPresent()) {
             // case: 포스트 생성이 먼저된 경우
@@ -61,10 +63,10 @@ public class NCPShortsService implements ShortsService {
             post.updateShortsState(ShortsState.OK);
         } else {
             // case: 포스트 생성이 되지 않은 경우
-            String shortsFileName = generateShortsFileName(key);
-            String thumbnailFileName = generateThumbnailsFileName(key);
+            String shortsFileName = generateShortsFileName(uploadKey);
+            String thumbnailFileName = generateThumbnailsFileName(uploadKey);
             Shorts shorts = Shorts.builder()
-                    .key(key)
+                    .uploadKey(uploadKey)
                     .shortsUrl(shortsFileName)
                     .thumbnailUrl(thumbnailFileName)
                     .build();
@@ -76,12 +78,12 @@ public class NCPShortsService implements ShortsService {
         return filePath.substring(filePath.lastIndexOf("/")+1, filePath.indexOf("_"));
     }
 
-    private String generateThumbnailsFileName(String key) {
-        return "https://avvyxbbcswfn15804294.cdn.ntruss.com/hls/DtbTiSqB73qTBrez5H4IJg__/shorts/"+key+"_encoded.mp4/index.m3u8";
+    private String generateThumbnailsFileName(String uploadKey) {
+        return "https://avvyxbbcswfn15804294.cdn.ntruss.com/hls/DtbTiSqB73qTBrez5H4IJg__/shorts/" + uploadKey + "_encoded.mp4/index.m3u8";
     }
 
-    private String generateShortsFileName(String key) {
-        return "https://kr.object.ncloudstorage.com/phochak-shorts/thumbnail/shorts/"+key+"_01.jpg";
+    private String generateShortsFileName(String uploadKey) {
+        return "https://kr.object.ncloudstorage.com/phochak-shorts/thumbnail/shorts/" + uploadKey + "_01.jpg";
     }
 
 

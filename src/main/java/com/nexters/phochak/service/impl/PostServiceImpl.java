@@ -33,10 +33,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
-        String key = generateObjectKey();
-        String objectName = key + "." + fileExtension.toLowerCase();
+        String uploadKey = generateObjectUploadKey();
+        String objectName = uploadKey + "." + fileExtension.toLowerCase();
         return PostUploadKeyResponseDto.builder()
-                .key(key)
+                .uploadKey(uploadKey)
                 .uploadUrl(storageBucketRepository.generatePresignedUrl(objectName).toString())
                 .build();
     }
@@ -49,9 +49,9 @@ public class PostServiceImpl implements PostService {
                         .user(user)
                         .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getPostCategory()))
                         .build();
+        postRepository.save(post);
         hashtagService.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
         shortsService.connectShorts(postCreateRequestDto.getKey(), post);
-        postRepository.save(post);
     }
 
     @Override
@@ -60,7 +60,7 @@ public class PostServiceImpl implements PostService {
         return postRepository.findNextPageByCursor(customCursor);
     }
     
-    private String generateObjectKey() {
+    private String generateObjectUploadKey() {
         return UUID.randomUUID().toString();
     }
 }
