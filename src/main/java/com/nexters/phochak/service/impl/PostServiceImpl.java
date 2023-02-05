@@ -31,9 +31,10 @@ public class PostServiceImpl implements PostService {
     private final StorageBucketRepository storageBucketRepository;
     private final ShortsService shortsService;
 
+    @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
-        String key = generateObjectKey(fileExtension.toLowerCase(Locale.ROOT));
-        String objectName = key + "." + fileExtension;
+        String key = generateObjectKey();
+        String objectName = key + "." + fileExtension.toLowerCase();
         return PostUploadKeyResponseDto.builder()
                 .key(key)
                 .uploadUrl(storageBucketRepository.generatePresignedUrl(objectName).toString())
@@ -59,8 +60,7 @@ public class PostServiceImpl implements PostService {
         return postRepository.findNextPageByCursor(customCursor);
     }
     
-    
-    private String generateObjectKey(String fileExtension) {
+    private String generateObjectKey() {
         return UUID.randomUUID().toString();
     }
 }

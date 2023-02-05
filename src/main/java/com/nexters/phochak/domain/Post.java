@@ -60,7 +60,7 @@ public class Post extends BaseTime {
 
     @Builder
     public Post(User user, Shorts shorts, PostCategoryEnum postCategory) {
-        this.shortsState = ShortsState.INPROGRESS;
+        this.shortsState = ShortsState.IN_PROGRESS;
         this.user = user;
         this.shorts = shorts;
         this.postCategory = postCategory;

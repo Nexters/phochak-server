@@ -4,5 +4,5 @@ public enum ShortsState {
 
     OK,
     FAIL,
-    INPROGRESS;
+    IN_PROGRESS;
 }
