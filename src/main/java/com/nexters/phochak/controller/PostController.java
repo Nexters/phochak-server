@@ -11,6 +11,7 @@ import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
+import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.service.impl.NCPShortsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -25,7 +26,7 @@ import java.util.List;
 @RequestMapping("/v1/post")
 public class PostController {
 
-    private final NCPShortsService ncpShortsService;
+    private final ShortsService shortsService;
     private final PostService postService;
 
     @Auth
@@ -38,7 +39,7 @@ public class PostController {
     @PostMapping("/encoding-callback")
     public void encodingCallback(@RequestBody EncodingCallbackRequestDto encodingCallbackRequestDto) {
         if(encodingCallbackRequestDto.getStatus().equals("COMPLETE")) {
-            ncpShortsService.connectPost(encodingCallbackRequestDto);
+            shortsService.connectPost(encodingCallbackRequestDto);
         }
     }
 
