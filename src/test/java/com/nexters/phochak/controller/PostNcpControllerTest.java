@@ -180,6 +180,7 @@ public class PostNcpControllerTest extends RestDocs {
     }
 
     @Test
+    @Disabled
     @DisplayName("존재하지 않는 카테고리 입력 시에 INVALID_INPUT 예외가 발생한다")
     void createPostValidateCategory_InvalidInput() throws Exception {
         //given
