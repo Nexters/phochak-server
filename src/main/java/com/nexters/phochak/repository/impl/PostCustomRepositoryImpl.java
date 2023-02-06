@@ -42,8 +42,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .orderBy(orderById(customCursor.getPostSortCriteria()))
                 .fetch();
 
-        result.forEach(p -> log.debug("view: {}", p.getId()));
-
         return result.stream()
                 .map(PostPageResponseDto::from)
                 .collect(Collectors.toList());
