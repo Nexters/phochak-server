@@ -8,7 +8,7 @@ import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.impl.NCPShortsService;
 import com.nexters.phochak.specification.PostCategoryEnum;
-import com.nexters.phochak.specification.ShortsState;
+import com.nexters.phochak.specification.ShortsStateEnum;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -52,7 +52,7 @@ class NCPShortsServiceTest {
 
         //then
         Assertions.assertEquals(shorts, post.getShorts());
-        Assertions.assertEquals(ShortsState.OK, post.getShortsState());
+        Assertions.assertEquals(ShortsStateEnum.OK, post.getShortsStateEnum());
     }
 
     @Test
@@ -71,7 +71,7 @@ class NCPShortsServiceTest {
 
         //then
         verify(shortsRepository, times(1)).save(any());
-        Assertions.assertEquals(ShortsState.IN_PROGRESS, post.getShortsState());
+        Assertions.assertEquals(ShortsStateEnum.IN_PROGRESS, post.getShortsStateEnum());
     }
 
     @Test
@@ -93,7 +93,7 @@ class NCPShortsServiceTest {
         ncpShortsService.connectPost(encodingCallbackRequestDto);
 
         //then
-        Assertions.assertEquals(ShortsState.OK, post.getShortsState());
+        Assertions.assertEquals(ShortsStateEnum.OK, post.getShortsStateEnum());
     }
 
     @Test
@@ -114,6 +114,6 @@ class NCPShortsServiceTest {
 
         //then
         verify(shortsRepository, times(1)).save(any());
-        Assertions.assertEquals(ShortsState.IN_PROGRESS, post.getShortsState());
+        Assertions.assertEquals(ShortsStateEnum.IN_PROGRESS, post.getShortsStateEnum());
     }
 }

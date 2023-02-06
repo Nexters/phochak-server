@@ -1,6 +1,6 @@
 package com.nexters.phochak.specification;
 
-public enum ShortsState {
+public enum ShortsStateEnum {
 
     OK,
     FAIL,

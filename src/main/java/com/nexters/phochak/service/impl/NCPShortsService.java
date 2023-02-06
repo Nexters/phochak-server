@@ -8,7 +8,7 @@ import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.ShortsService;
-import com.nexters.phochak.specification.ShortsState;
+import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -31,7 +31,7 @@ public class NCPShortsService implements ShortsService {
             //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
             post.setShorts(shorts);
-            post.updateShortsState(ShortsState.OK);
+            post.updateShortsState(ShortsStateEnum.OK);
         } else {
             // case: 인코딩이 끝나지 않은 경우
             String shortsFileName = generateShortsFileName(uploadKey);
@@ -59,7 +59,7 @@ public class NCPShortsService implements ShortsService {
             Shorts shorts = optionalShorts.get();
             Post post = postRepository.findByShorts(shorts).orElseThrow(() ->
                     new PhochakException(ResCode.INTERNAL_SERVER_ERROR, "중복 쇼츠 데이터 발생"));
-            post.updateShortsState(ShortsState.OK);
+            post.updateShortsState(ShortsStateEnum.OK);
         } else {
             // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);

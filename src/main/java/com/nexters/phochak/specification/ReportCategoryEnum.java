@@ -1,4 +1,4 @@
 package com.nexters.phochak.specification;
 
-public enum ReportCategory {
+public enum ReportCategoryEnum {
 }
