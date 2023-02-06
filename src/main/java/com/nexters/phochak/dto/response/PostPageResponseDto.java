@@ -14,7 +14,6 @@ import lombok.Getter;
 @AllArgsConstructor(access = AccessLevel.PRIVATE)
 public class PostPageResponseDto {
     private long id;
-    private long userId;
     private User user;
     private Shorts shorts;
     private long view;
@@ -25,7 +24,6 @@ public class PostPageResponseDto {
         return PostPageResponseDto.builder()
                 .id(post.getId())
                 .user(post.getUser())
-                .userId(post.getUser().getId())
                 .shorts(post.getShorts())
                 .view(post.getView())
                 .postCategoryEnum(post.getPostCategory())

@@ -4,7 +4,7 @@ import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
-import com.nexters.phochak.dto.response.CommonListResponse;
+import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
@@ -32,8 +32,11 @@ public class PostController {
     }
 
     @GetMapping("/list")
-    public CommonListResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor) {
+    public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor) {
         List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor);
-        return new CommonListResponse<>(nextCursorPage);
+        if (nextCursorPage.size() < customCursor.getPageSize()) {
+            return new CommonPageResponse<>(nextCursorPage, true);
+        }
+        return new CommonPageResponse<>(nextCursorPage);
     }
 }

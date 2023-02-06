@@ -3,7 +3,7 @@
 === 게시글 불러오기
 조회 기준(포착순, 최신순, 조회순)에 따라 원하는 size만큼 게시글을 불러옵니다.
 
-==== 요청 (첫 요청)
+==== 첫 페이지 요청
 HTTP Example
 
 include::{snippets}/post/list/initial/http-request.adoc[]
@@ -18,7 +18,7 @@ Response HTTP Example
 *정상*
 include::{snippets}/post/list/initial/http-response.adoc[]
 
-==== 요청 (이후 요청)
+==== 이후 페이지 요청
 HTTP Example
 
 include::{snippets}/post/list/after/http-request.adoc[]
@@ -32,3 +32,18 @@ Response HTTP Example
 
 *정상*
 include::{snippets}/post/list/after/http-response.adoc[]
+
+==== 마지막 페이지 요청 (요청 페이지 크기 > 실제 데이터 개수)
+HTTP Example
+
+include::{snippets}/post/list/last/http-request.adoc[]
+
+Request Parameters
+
+include::{snippets}/post/list/last/request-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/list/last/http-response.adoc[]
