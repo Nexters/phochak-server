@@ -30,7 +30,6 @@ class NCPShortsServiceTest {
     @InjectMocks NCPShortsService ncpShortsService;
 
     @Mock ShortsRepository shortsRepository;
-    @Mock PostRepository postRepository;
 
     @Test
     @DisplayName("인코딩이 끝나있는 경우, 게시글을 shorts 객체와 연결한다")
@@ -52,7 +51,7 @@ class NCPShortsServiceTest {
 
         //then
         assertThat(post.getShorts()).isEqualTo(shorts);
-        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
+        assertThat(shorts.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
     }
 
     @Test
@@ -71,7 +70,6 @@ class NCPShortsServiceTest {
 
         //then
         verify(shortsRepository, times(1)).save(any());
-        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.IN_PROGRESS);
     }
 
     @Test
@@ -87,13 +85,12 @@ class NCPShortsServiceTest {
                 .build();
         Shorts shorts = new Shorts();
         given(shortsRepository.findByUploadKey(any())).willReturn(Optional.of(shorts));
-        given(postRepository.findByShorts(shorts)).willReturn(Optional.of(post));
 
         //when
         ncpShortsService.connectPost(encodingCallbackRequestDto);
 
         //then
-        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
+        assertThat(shorts.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
     }
 
     @Test
@@ -103,10 +100,6 @@ class NCPShortsServiceTest {
         EncodingCallbackRequestDto encodingCallbackRequestDto = EncodingCallbackRequestDto.builder()
                 .filePath("/shorts/UPLOADKEY_encoded.mov")
                 .build();
-        Post post = Post.builder()
-                .user(new User())
-                .postCategory(PostCategoryEnum.TOUR)
-                .build();
         given(shortsRepository.findByUploadKey(any())).willReturn(Optional.empty());
 
         //when
@@ -114,6 +107,5 @@ class NCPShortsServiceTest {
 
         //then
         verify(shortsRepository, times(1)).save(any());
-        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.IN_PROGRESS);
     }
 }

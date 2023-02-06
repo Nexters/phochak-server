@@ -39,8 +39,8 @@ public class NCPShortsService implements ShortsService {
             // case: 인코딩이 먼저 끝나있는 경우
             //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
+            shorts.updateShortsState(ShortsStateEnum.OK);
             post.setShorts(shorts);
-            post.updateShortsState(ShortsStateEnum.OK);
         } else {
             // case: 인코딩이 끝나지 않은 경우
             String shortsFileName = generateShortsFileName(uploadKey);
@@ -66,9 +66,7 @@ public class NCPShortsService implements ShortsService {
             // case: 포스트 생성이 먼저된 경우 -> 상태 변경
             //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
-            Post post = postRepository.findByShorts(shorts).orElseThrow(() ->
-                    new PhochakException(ResCode.INTERNAL_SERVER_ERROR, "중복 쇼츠 데이터 발생"));
-            post.updateShortsState(ShortsStateEnum.OK);
+            shorts.updateShortsState(ShortsStateEnum.OK);
         } else {
             // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);

@@ -1,7 +1,6 @@
 package com.nexters.phochak.domain;
 
 import com.nexters.phochak.specification.PostCategoryEnum;
-import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
@@ -41,9 +40,6 @@ public class Post extends BaseTime {
     @JoinColumn(name="SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shorts shorts;
 
-    @Enumerated(EnumType.STRING)
-    private ShortsStateEnum shortsStateEnum;
-
     @Column(nullable = false)
     @ColumnDefault("0")
     private Long view;
@@ -60,7 +56,6 @@ public class Post extends BaseTime {
 
     @Builder
     public Post(User user, Shorts shorts, PostCategoryEnum postCategory) {
-        this.shortsStateEnum = ShortsStateEnum.IN_PROGRESS;
         this.user = user;
         this.shorts = shorts;
         this.postCategory = postCategory;
@@ -71,7 +66,4 @@ public class Post extends BaseTime {
         this.shorts = shorts;
     }
 
-    public void updateShortsState(ShortsStateEnum shortsStateEnum) {
-        this.shortsStateEnum = shortsStateEnum;
-    }
 }
