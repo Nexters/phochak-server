@@ -23,13 +23,13 @@ public class NCPShortsService implements ShortsService {
     private final ShortsRepository shortsRepository;
     private final PostRepository postRepository;
     @Value("${ncp.shorts.streaming-url-prefix.head}")
-    private final String STREAMING_PREFIX_HEAD;
+    private String STREAMING_PREFIX_HEAD;
     @Value("${ncp.shorts.streaming-url-prefix.tail}")
-    private final String STREAMING_PREFIX_TAIL;
+    private String STREAMING_PREFIX_TAIL;
     @Value("${ncp.shorts.thumbnail-url-prefix.head}")
-    private final String THUMBNAIL_PREFIX_HEAD;
+    private String THUMBNAIL_PREFIX_HEAD;
     @Value("${ncp.shorts.thumbnail-url-prefix.tail}")
-    private final String THUMBNAIL_PREFIX_TAIL;
+    private String THUMBNAIL_PREFIX_TAIL;
 
     @Override
     public void connectShorts(String uploadKey, Post post) {

@@ -17,8 +17,8 @@ import java.util.Date;
 @Slf4j
 public class NCPStorageRepository implements StorageBucketRepository {
 
-    final private String bucketName;
-    final private AmazonS3 s3Client;
+    private final String bucketName;
+    private final AmazonS3 s3Client;
 
     public NCPStorageRepository(
             @Value("${ncp.s3.end-point}") String endPoint,
