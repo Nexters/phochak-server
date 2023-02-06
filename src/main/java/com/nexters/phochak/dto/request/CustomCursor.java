@@ -3,6 +3,7 @@ package com.nexters.phochak.dto.request;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.specification.PostSortCriteria;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -26,6 +27,7 @@ public class CustomCursor {
     private Integer lastCriteriaValue;
     private Boolean isInitialRequest;
 
+    @Builder
     public CustomCursor(Long lastId, Integer pageSize, PostSortCriteria postSortCriteria, Integer lastCriteriaValue, Boolean isInitialRequest) {
         this.lastId = lastId;
         this.pageSize = Objects.isNull(pageSize) ? DEFAULT_PAGE_SIZE : pageSize;
