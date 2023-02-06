@@ -51,7 +51,7 @@ public class PostServiceImpl implements PostService {
                         .build();
         postRepository.save(post);
         hashtagService.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
-        shortsService.connectShorts(postCreateRequestDto.getKey(), post);
+        shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
     }
 
     @Override

@@ -1,6 +1,7 @@
 package com.nexters.phochak.dto.request;
 
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -13,7 +14,7 @@ import java.util.List;
 public class PostCreateRequestDto {
 
     @NotNull
-    private String key;
+    private String uploadKey;
 
     @NotNull
     private List<String> hashtags;
@@ -21,8 +22,9 @@ public class PostCreateRequestDto {
     @NotBlank
     private String postCategory;
 
-    public PostCreateRequestDto(String key, List<String> hashtags, String postCategory) {
-        this.key = key;
+    @Builder
+    public PostCreateRequestDto(String uploadKey, List<String> hashtags, String postCategory) {
+        this.uploadKey = uploadKey;
         this.hashtags = hashtags;
         this.postCategory = postCategory;
     }
