@@ -46,3 +46,11 @@ ncp:
     bucket-name: test
     access-key: test
     secret-key: test
+  shorts:
+    streaming-url-prefix:
+      head: https://avvyxbbcswfn15804294.cdn.ntruss.com/hls/DtbTiSqB73qTBrez5H4IJg__/shorts/
+      tail: _encoded.mp4/index.m3u8
+    thumbnail-url-prefix:
+      head: https://kr.object.ncloudstorage.com/phochak-shorts/thumbnail/shorts/
+      tail: _01.jpg
+

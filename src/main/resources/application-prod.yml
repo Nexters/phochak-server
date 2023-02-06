@@ -32,3 +32,10 @@ ncp:
     bucket-name: ${s3_bucket_name}
     access-key: ${s3_access_key}
     secret-key: ${s3_secret_key}
+  shorts:
+    streaming-url-prefix:
+      head: https://avvyxbbcswfn15804294.cdn.ntruss.com/hls/DtbTiSqB73qTBrez5H4IJg__/shorts/
+      tail: _encoded.mp4/index.m3u8
+    thumbnail-url-prefix:
+      head: https://kr.object.ncloudstorage.com/phochak-shorts/thumbnail/shorts/
+      tail: _01.jpg

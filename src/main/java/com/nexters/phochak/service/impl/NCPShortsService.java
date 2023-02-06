@@ -10,6 +10,7 @@ import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,6 +22,14 @@ public class NCPShortsService implements ShortsService {
 
     private final ShortsRepository shortsRepository;
     private final PostRepository postRepository;
+    @Value("${ncp.shorts.streaming-url-prefix.head}")
+    private final String STREAMING_PREFIX_HEAD;
+    @Value("${ncp.shorts.streaming-url-prefix.tail}")
+    private final String STREAMING_PREFIX_TAIL;
+    @Value("${ncp.shorts.thumbnail-url-prefix.head}")
+    private final String THUMBNAIL_PREFIX_HEAD;
+    @Value("${ncp.shorts.thumbnail-url-prefix.tail}")
+    private final String THUMBNAIL_PREFIX_TAIL;
 
     @Override
     public void connectShorts(String uploadKey, Post post) {
@@ -78,11 +87,11 @@ public class NCPShortsService implements ShortsService {
     }
 
     private String generateThumbnailsFileName(String uploadKey) {
-        return "https://avvyxbbcswfn15804294.cdn.ntruss.com/hls/DtbTiSqB73qTBrez5H4IJg__/shorts/" + uploadKey + "_encoded.mp4/index.m3u8";
+        return THUMBNAIL_PREFIX_HEAD + uploadKey + THUMBNAIL_PREFIX_TAIL;
     }
 
     private String generateShortsFileName(String uploadKey) {
-        return "https://kr.object.ncloudstorage.com/phochak-shorts/thumbnail/shorts/" + uploadKey + "_01.jpg";
+        return STREAMING_PREFIX_HEAD + uploadKey + STREAMING_PREFIX_TAIL;
     }
 
 
