@@ -54,15 +54,14 @@ public class NCPShortsService implements ShortsService {
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
         if(optionalShorts.isPresent()) {
-            // case: 포스트 생성이 먼저된 경우
+            // case: 포스트 생성이 먼저된 경우 -> 상태 변경
             //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
             Post post = postRepository.findByShorts(shorts).orElseThrow(() ->
                     new PhochakException(ResCode.INTERNAL_SERVER_ERROR, "중복 쇼츠 데이터 발생"));
-            post.setShorts(shorts);
             post.updateShortsState(ShortsState.OK);
         } else {
-            // case: 포스트 생성이 되지 않은 경우
+            // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);
             Shorts shorts = Shorts.builder()

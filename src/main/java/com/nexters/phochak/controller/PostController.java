@@ -12,7 +12,6 @@ import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.ShortsService;
-import com.nexters.phochak.service.impl.NCPShortsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.*;
