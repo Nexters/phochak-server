@@ -9,7 +9,6 @@ import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.impl.NCPShortsService;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import com.nexters.phochak.specification.ShortsStateEnum;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,6 +18,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.times;
@@ -51,8 +51,8 @@ class NCPShortsServiceTest {
         ncpShortsService.connectShorts(uploadKey, post);
 
         //then
-        Assertions.assertEquals(shorts, post.getShorts());
-        Assertions.assertEquals(ShortsStateEnum.OK, post.getShortsStateEnum());
+        assertThat(post.getShorts()).isEqualTo(shorts);
+        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
     }
 
     @Test
@@ -71,7 +71,7 @@ class NCPShortsServiceTest {
 
         //then
         verify(shortsRepository, times(1)).save(any());
-        Assertions.assertEquals(ShortsStateEnum.IN_PROGRESS, post.getShortsStateEnum());
+        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.IN_PROGRESS);
     }
 
     @Test
@@ -93,7 +93,7 @@ class NCPShortsServiceTest {
         ncpShortsService.connectPost(encodingCallbackRequestDto);
 
         //then
-        Assertions.assertEquals(ShortsStateEnum.OK, post.getShortsStateEnum());
+        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
     }
 
     @Test
@@ -114,6 +114,6 @@ class NCPShortsServiceTest {
 
         //then
         verify(shortsRepository, times(1)).save(any());
-        Assertions.assertEquals(ShortsStateEnum.IN_PROGRESS, post.getShortsStateEnum());
+        assertThat(post.getShortsStateEnum()).isEqualTo(ShortsStateEnum.IN_PROGRESS);
     }
 }

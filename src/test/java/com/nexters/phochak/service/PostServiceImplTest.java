@@ -1,11 +1,8 @@
 package com.nexters.phochak.service;
 
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
-import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.StorageBucketRepository;
-import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.PostServiceImpl;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,6 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.net.MalformedURLException;
 import java.net.URL;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
@@ -37,7 +35,7 @@ class PostServiceImplTest {
         PostUploadKeyResponseDto result = postService.generateUploadKey("mov");
 
         //then
-        Assertions.assertNotNull(result.getUploadKey());
+        assertThat(result.getUploadKey()).isNotNull();
     }
 
 }
