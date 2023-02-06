@@ -44,7 +44,8 @@ public class User extends BaseTime {
     }
 
     @Builder
-    public User(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+    public User(Long id, OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+        this.id = id;
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;

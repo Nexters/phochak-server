@@ -1,6 +1,7 @@
 package com.nexters.phochak.domain;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,6 +9,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
+@Getter
 @Entity
 public class Shorts {
 
@@ -26,7 +28,8 @@ public class Shorts {
     }
 
     @Builder
-    public Shorts(String shortsUrl, String thumbnailUrl) {
+    public Shorts(Long id, String shortsUrl, String thumbnailUrl) {
+        this.id = id;
         this.shortsUrl = shortsUrl;
         this.thumbnailUrl = thumbnailUrl;
     }
