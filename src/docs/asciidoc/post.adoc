@@ -1,0 +1,34 @@
+== 게시글 APIs
+
+=== 게시글 불러오기
+조회 기준(포착순, 최신순, 조회순)에 따라 원하는 size만큼 게시글을 불러옵니다.
+
+==== 요청 (첫 요청)
+HTTP Example
+
+include::{snippets}/post/list/initial/http-request.adoc[]
+
+Request Parameters
+
+include::{snippets}/post/list/initial/request-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/list/initial/http-response.adoc[]
+
+==== 요청 (이후 요청)
+HTTP Example
+
+include::{snippets}/post/list/after/http-request.adoc[]
+
+Request Parameters
+
+include::{snippets}/post/list/after/request-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/list/after/http-response.adoc[]
