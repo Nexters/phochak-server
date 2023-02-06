@@ -31,6 +31,7 @@ public class PostController {
         return new CommonResponse<>();
     }
 
+    @Auth
     @GetMapping("/list")
     public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor) {
         List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor);
