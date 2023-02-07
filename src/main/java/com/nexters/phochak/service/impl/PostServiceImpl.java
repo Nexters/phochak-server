@@ -20,8 +20,6 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
-
-    public static final long DEFAULT_PAGE_SIZE = 5;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ShortsService shortsService;
