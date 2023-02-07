@@ -2,7 +2,7 @@ package com.nexters.phochak.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.docs.RestDocs;
-import com.nexters.phochak.domain.Phochak;
+import com.nexters.phochak.domain.Likes;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
@@ -17,7 +17,6 @@ import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import org.junit.jupiter.api.*;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -25,7 +24,6 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 
 import javax.transaction.Transactional;
@@ -50,13 +48,14 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
 @Transactional
-class PhochakControllerTest extends RestDocs {
+class LikesControllerTest extends RestDocs {
 
     @Autowired UserRepository userRepository;
     @Autowired JwtTokenService jwtTokenService;
     @Autowired ObjectMapper objectMapper;
     MockMvc mockMvc;
-    @Autowired PhochakController phochakController;
+    @Autowired
+    LikesController likesController;
 
     static String testToken;
     @Autowired
@@ -68,7 +67,7 @@ class PhochakControllerTest extends RestDocs {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = getMockMvcBuilder(restDocumentation, phochakController).build();
+        this.mockMvc = getMockMvcBuilder(restDocumentation, likesController).build();
         User user = User.builder()
                 .providerId("1234")
                 .provider(OAuthProviderEnum.KAKAO)
@@ -99,10 +98,10 @@ class PhochakControllerTest extends RestDocs {
         postRepository.save(post);
 
         //when, then
-        mockMvc.perform(post("/v1/post/{postId}/phochak/", post.getId()).header(AUTHORIZATION_HEADER, testToken))
+        mockMvc.perform(post("/v1/post/{postId}/likes/", post.getId()).header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(OK.getCode()))
-                .andDo(document("post/{postId}/phochak/post",
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("post/{postId}/likes/post",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -113,8 +112,8 @@ class PhochakControllerTest extends RestDocs {
                                         .description("JWT Access Token")
                         ),
                         responseFields(
-                                fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NULL).description("null")
                         )
                 ));
@@ -138,17 +137,17 @@ class PhochakControllerTest extends RestDocs {
                 .build();
         postRepository.save(post);
 
-        Phochak phochak = Phochak.builder()
+        Likes likes = Likes.builder()
                         .user(user)
                         .post(post)
                         .build();
-        phochakRepository.save(phochak);
+        phochakRepository.save(likes);
 
         //when, then
-        mockMvc.perform(delete("/v1/post/{postId}/phochak", post.getId()).header(AUTHORIZATION_HEADER, testToken))
+        mockMvc.perform(delete("/v1/post/{postId}/likes", post.getId()).header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(OK.getCode()))
-                .andDo(document("post/{postId}/phochak/delete",
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("post/{postId}/likes/delete",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
@@ -159,8 +158,8 @@ class PhochakControllerTest extends RestDocs {
                                         .description("JWT Access Token")
                         ),
                         responseFields(
-                                fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NULL).description("null")
                         )
                 ));

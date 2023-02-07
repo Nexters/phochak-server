@@ -15,4 +15,4 @@ include::login.adoc[]
 
 include::post.adoc[]
 
-include::phochak.adoc[]
+include::likes.adoc[]

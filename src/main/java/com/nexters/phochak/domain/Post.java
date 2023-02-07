@@ -49,7 +49,7 @@ public class Post extends BaseTime {
     private PostCategoryEnum postCategory;
 
     @OneToMany(mappedBy = "post")
-    private List<Phochak> phochaks;
+    private List<Likes> likes;
 
     public Post() {
     }

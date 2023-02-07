@@ -1,6 +1,6 @@
 package com.nexters.phochak.service;
 
-import com.nexters.phochak.domain.Phochak;
+import com.nexters.phochak.domain.Likes;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.exception.PhochakException;
@@ -24,7 +24,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class)
-class PhochakServiceImplTest {
+class LikesServiceImplTest {
 
     @InjectMocks PhochakServiceImpl phochakService;
 
@@ -74,11 +74,11 @@ class PhochakServiceImplTest {
         //given
         User user = new User();
         Post post = new Post();
-        Phochak phochak = new Phochak();
+        Likes likes = new Likes();
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.findByUserAndPost(user, post)).willReturn(Optional.of(phochak));
+        given(phochakRepository.findByUserAndPost(user, post)).willReturn(Optional.of(likes));
 
         //then
         phochakService.cancelPhochak(0L, 0L);

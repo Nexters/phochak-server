@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("v1/post/{postId}/phochak")
-public class PhochakController {
+@RequestMapping("v1/post/{postId}/likes")
+public class LikesController {
 
     private final PhochakService phochakService;
 
