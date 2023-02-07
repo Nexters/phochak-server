@@ -1,5 +1,6 @@
 package com.nexters.phochak.repository.impl;
 
+import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.QPost;
 import com.nexters.phochak.dto.request.CustomCursor;
@@ -7,7 +8,7 @@ import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostCustomRepository;
-import com.nexters.phochak.specification.PostSortCriteria;
+import com.nexters.phochak.specification.PostSortOption;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -35,44 +36,47 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         List<Post> result = queryFactory.selectFrom(post)
                 .join(post.user).fetchJoin()
                 .join(post.shorts).fetchJoin()
-                .join(post.phochaks).fetchJoin()
-                .where(filterByCursor(customCursor.getPostSortCriteria(), customCursor))
+                .join(post.likes).fetchJoin()
+                .where(filterByCursor(customCursor.getSortOption(), customCursor))
                 .limit(customCursor.getPageSize())
-                .orderBy(orderByPostSortCriteria(customCursor.getPostSortCriteria()))
-                .orderBy(orderById(customCursor.getPostSortCriteria()))
+                .orderBy(orderByPostSortOption(customCursor.getSortOption()))
+                .orderBy(orderById(customCursor.getSortOption()))
                 .fetch();
 
+        final Long userId = UserContext.CONTEXT.get();
+        log.debug("findNextPageByCursor: {}", userId);
+
         return result.stream()
-                .map(PostPageResponseDto::from)
+                .map(p -> PostPageResponseDto.from(p, userId))
                 .collect(Collectors.toList());
     }
 
-    private BooleanExpression filterByCursor(PostSortCriteria postSortCriteria, CustomCursor cursor) {
+    private BooleanExpression filterByCursor(PostSortOption postSortOption, CustomCursor cursor) {
         String cursorString = cursor.createCursorString();
-        if (postSortCriteria == PostSortCriteria.LATEST) {
+        if (postSortOption == PostSortOption.LATEST) {
             return post.id.lt(Long.valueOf(cursorString.substring(CRITERIA_PADDING)));
-        } else if (postSortCriteria == PostSortCriteria.VIEW) {
+        } else if (postSortOption == PostSortOption.VIEW) {
             return StringExpressions.lpad(post.view.stringValue(), CRITERIA_PADDING, ZERO)
                     .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
                     .lt(cursorString);
-        } else if (postSortCriteria == PostSortCriteria.PHOCHAK) {
-            return StringExpressions.lpad(post.phochaks.size().stringValue(), CRITERIA_PADDING, ZERO)
+        } else if (postSortOption == PostSortOption.PHOCHAK) {
+            return StringExpressions.lpad(post.likes.size().stringValue(), CRITERIA_PADDING, ZERO)
                     .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
                     .lt(cursorString);
         }
-        throw new PhochakException(ResCode.NOT_SUPPROTED_CRITERIA);
+        throw new PhochakException(ResCode.NOT_SUPPORTED_SORT_OPTION);
     }
 
-    private static OrderSpecifier orderByPostSortCriteria(PostSortCriteria postSortCriteria) {
-        if (postSortCriteria == PostSortCriteria.PHOCHAK) {
-            return post.phochaks.size().desc();
-        } else if (postSortCriteria == PostSortCriteria.VIEW) {
+    private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {
+        if (postSortOption == PostSortOption.PHOCHAK) {
+            return post.likes.size().desc();
+        } else if (postSortOption == PostSortOption.VIEW) {
             return post.view.desc();
         }
         return new OrderSpecifier(Order.ASC, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }
 
-    private static OrderSpecifier<Long> orderById(PostSortCriteria postSortCriteria) {
-        return postSortCriteria == PostSortCriteria.LATEST ? post.id.desc() : post.id.asc();
+    private static OrderSpecifier<Long> orderById(PostSortOption postSortOption) {
+        return postSortOption == PostSortOption.LATEST ? post.id.desc() : post.id.asc();
     }
 }

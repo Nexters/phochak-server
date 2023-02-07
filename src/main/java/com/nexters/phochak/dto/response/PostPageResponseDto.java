@@ -17,17 +17,19 @@ public class PostPageResponseDto {
     private User user;
     private Shorts shorts;
     private long view;
-    private PostCategoryEnum postCategoryEnum;
-    private long phochakCount;
+    private PostCategoryEnum category;
+    private long like;
+    private Boolean isLiked;
 
-    public static PostPageResponseDto from(Post post) {
+    public static PostPageResponseDto from(Post post, Long userId) {
         return PostPageResponseDto.builder()
                 .id(post.getId())
                 .user(post.getUser())
                 .shorts(post.getShorts())
                 .view(post.getView())
-                .postCategoryEnum(post.getPostCategory())
-                .phochakCount(post.getPhochaks().size())
+                .category(post.getPostCategory())
+                .like(post.getLikes().size())
+                .isLiked(post.getLikes().stream().anyMatch(likes -> likes.hasLikesByUser(userId)))
                 .build();
     }
 }
