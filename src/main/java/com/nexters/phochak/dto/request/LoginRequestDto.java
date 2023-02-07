@@ -1,4 +1,4 @@
-package com.nexters.phochak.dto;
+package com.nexters.phochak.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

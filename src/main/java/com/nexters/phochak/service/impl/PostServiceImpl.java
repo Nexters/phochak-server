@@ -3,7 +3,9 @@ package com.nexters.phochak.service.impl;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.PostCreateRequestDto;
+import com.nexters.phochak.dto.request.CustomCursor;
+import com.nexters.phochak.dto.request.PostCreateRequestDto;
+import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.HashtagService;
@@ -13,10 +15,11 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
-
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ShortsService shortsService;
@@ -36,4 +39,9 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor) {
+        return postRepository.findNextPageByCursor(customCursor);
+    }
 }

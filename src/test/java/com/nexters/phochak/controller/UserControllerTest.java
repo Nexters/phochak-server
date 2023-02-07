@@ -2,8 +2,8 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.dto.response.LoginResponseDto;
+import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
-import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -35,7 +35,7 @@ class UserControllerTest extends RestDocs {
     @Mock
     UserService userService;
     @Mock
-    JwtTokenServiceImpl jwtTokenService;
+    JwtTokenService jwtTokenService;
     @InjectMocks
     UserController userController;
     MockMvc mockMvc;
@@ -76,8 +76,8 @@ class UserControllerTest extends RestDocs {
                                         parameterWithName("token").description("token (Access token or Identify Token)")
                                 ),
                                 responseFields(
-                                        fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                        fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("access token"),
                                         fieldWithPath("data.expiresIn").type(JsonFieldType.STRING).description("access token 유효기간(ms)"),
                                         fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("refresh token"),

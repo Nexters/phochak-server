@@ -1,172 +1,258 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.TokenDto;
-import com.nexters.phochak.repository.UserRepository;
-import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
+import com.nexters.phochak.dto.request.CustomCursor;
+import com.nexters.phochak.dto.response.PostPageResponseDto;
+import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
-import org.junit.jupiter.api.*;
+import com.nexters.phochak.specification.PostCategoryEnum;
+import com.nexters.phochak.specification.PostSortOption;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.DisplayName;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.mock.web.MockMultipartFile;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
-import java.io.File;
-import java.io.FileInputStream;
+import java.util.List;
 
-import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
-import static com.nexters.phochak.exception.ResCode.INVALID_INPUT;
-import static com.nexters.phochak.exception.ResCode.OK;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@AutoConfigureRestDocs
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
-@TestInstance(TestInstance.Lifecycle.PER_CLASS)
-public class PostControllerTest {
+@ExtendWith(MockitoExtension.class)
+class PostControllerTest extends RestDocs {
 
-    @Autowired UserRepository userRepository;
-    @Autowired JwtTokenServiceImpl jwtTokenService;
-    @Autowired MockMvc mockMvc;
-    @Value("${app.resource.local.shorts}") String shortsPath;
+    @Mock
+    PostService postService;
 
-    static String testToken;
+    @InjectMocks
+    PostController postController;
 
-    @BeforeAll
-    void setUp() {
-        User user = User.builder()
-                        .providerId("1234")
-                        .provider(OAuthProviderEnum.KAKAO)
-                        .nickname("nickname")
-                        .profileImgUrl(null)
-                        .build();
-        userRepository.save(user);
-        TokenDto tokenDto = jwtTokenService.generateAccessToken(user.getId());
-        testToken = TokenDto.TOKEN_TYPE + " " + tokenDto.getTokenString();
-    }
+    MockMvc mockMvc;
 
-    @AfterAll
-    void removeTestVideo() {
-        File deleteFolder = new File(shortsPath);
-        if(deleteFolder.exists()){
-            File[] deleteFolderList = deleteFolder.listFiles();
-            for (File file : deleteFolderList) {
-                file.delete();
-            }
-            if(deleteFolderList.length == 0 && deleteFolder.isDirectory()){
-                deleteFolder.delete();
-            }
-        }
-    }
+    User user;
+    Shorts shorts;
+    PostPageResponseDto post1;
+    PostPageResponseDto post2;
 
-    @Test
-    @DisplayName("게시글 생성 성공")
-    void createPost_success() throws Exception {
-        // given
-        MockMultipartFile testVideo = new MockMultipartFile(
-                "shorts",
-                "test.mov",
-                "video/mov",
-                new FileInputStream("app-resource/test/dummy/test.mov"));
+    @BeforeEach
+    void setUp(RestDocumentationContextProvider restDocumentation) {
+        this.mockMvc = getMockMvcBuilder(restDocumentation, postController).build();
+        user = User.builder()
+                .id(3L)
+                .provider(OAuthProviderEnum.KAKAO)
+                .providerId("123456789")
+                .nickname("testUser")
+                .profileImgUrl("profileImage")
+                .build();
 
-        // when, then
-        mockMvc.perform(multipart("/v1/post")
-                .file(testVideo)
-                .param("postCategory", "RESTAURANT")
-                .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
-                .header(AUTHORIZATION_HEADER, testToken)
-        ).andExpect(status().isOk())
-        .andExpect(jsonPath("$.resCode").value(OK.getCode()));
+        shorts = Shorts.builder()
+                .id(1L)
+                .thumbnailUrl("thumbnail url")
+                .shortsUrl("shorts url")
+                .build();
+
+        post1 = PostPageResponseDto.builder()
+                .id(5L)
+                .user(user)
+                .shorts(shorts)
+                .view(5L)
+                .category(PostCategoryEnum.RESTAURANT)
+                .like(10L)
+                .isLiked(Boolean.TRUE)
+                .build();
+
+        post2 = PostPageResponseDto.builder()
+                .id(7L)
+                .user(user)
+                .shorts(shorts)
+                .view(12L)
+                .category(PostCategoryEnum.TOUR)
+                .like(21L)
+                .isLiked(Boolean.FALSE)
+                .build();
     }
 
     @Test
-    @DisplayName("게시글 작성 필수 파라미터가 없는 경우 INVALID_INPUT 예외가 발생한다")
-    void createPostValidateEssentialParameter_InvalidInput() throws Exception {
-        // given
-        MockMultipartFile testVideo = new MockMultipartFile(
-                "shorts",
-                "test.mov",
-                "video/mov",
-                new FileInputStream("app-resource/test/dummy/test.mov"));
+    @DisplayName("포스트 목록 조회 API - 첫 요청")
+    void getPostList_initial() throws Exception {
+        CustomCursor customCursor = CustomCursor.builder()
+                .sortOption(PostSortOption.LATEST)
+                .pageSize(2)
+                .build();
 
-        // when, then
-        mockMvc.perform(multipart("/v1/post")
-                        .param("postCategory", "RESTAURANT")
-                        .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
-                        .header(AUTHORIZATION_HEADER, testToken)
-                ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+        List<PostPageResponseDto> result = List.of(post2, post1);
 
-        mockMvc.perform(multipart("/v1/post")
-                        .file(testVideo)
-                        .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
-                        .header(AUTHORIZATION_HEADER, testToken)
-                ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+        when(postService.getNextCursorPage(any())).thenReturn(result);
 
-        mockMvc.perform(multipart("/v1/post")
-                        .file(testVideo)
-                        .param("postCategory", "RESTAURANT")
-                        .header(AUTHORIZATION_HEADER, testToken)
-                ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/post/list")
+                                .param("sortOption", customCursor.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                )
+                .andExpect(status().isOk())
+                .andDo(document("post/list/initial",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("pageSize").description("페이지 크기(default: 5)")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
+                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
+                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
+                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
+                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("포착(좋아요) 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                        )
+                ));
     }
 
     @Test
-    @DisplayName("존재하지 않는 카테고리 입력 시에 INVALID_INPUT 예외가 발생한다")
-    void createPostValidateCategory_InvalidInput() throws Exception {
-        // given
-        MockMultipartFile testVideo = new MockMultipartFile(
-                "shorts",
-                "test.mov",
-                "video/mov",
-                new FileInputStream("app-resource/test/dummy/test.mov"));
+    @DisplayName("포스트 목록 조회 API - 이후 요청")
+    void getPostList_after() throws Exception {
+        CustomCursor customCursor = CustomCursor.builder()
+                .pageSize(3)
+                .sortOption(PostSortOption.PHOCHAK)
+                .lastId(3L)
+                .sortValue(75)
+                .build();
 
-        // when, then
-        mockMvc.perform(multipart("/v1/post")
-                        .file(testVideo)
-                        .param("postCategory", "INVALIDCATEGORY")
-                        .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
-                        .header(AUTHORIZATION_HEADER, testToken)
-                ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+        PostPageResponseDto post3 = PostPageResponseDto.builder()
+                .id(17L)
+                .user(user)
+                .shorts(shorts)
+                .view(50L)
+                .category(PostCategoryEnum.TOUR)
+                .like(75L)
+                .isLiked(Boolean.TRUE)
+                .build();
+
+        List<PostPageResponseDto> result = List.of(post3, post2, post1);
+
+        when(postService.getNextCursorPage(any())).thenReturn(result);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/post/list")
+                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
+                                .param("lastId", String.valueOf(customCursor.getLastId()))
+                                .param("sortOption", customCursor.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                )
+                .andExpect(status().isOk())
+                .andDo(document("post/list/after",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("sortValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
+                                parameterWithName("lastId").description("마지막으로 받은 게시글 id(크거나 같은 id의 게시글만 페이지에 포함)"),
+                                parameterWithName("pageSize").description("페이지 크기(default: 5)")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
+                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
+                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
+                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
+                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                        )
+                ));
     }
 
     @Test
-    @DisplayName("해시태그의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
-    void HashtagOver30_InvalidInput() throws Exception {
-        // given
-        MockMultipartFile testVideo = new MockMultipartFile(
-                "shorts",
-                "test.mov",
-                "video/mov",
-                new FileInputStream("app-resource/test/dummy/test.mov"));
+    @DisplayName("포스트 목록 조회 API - 마지막 요청")
+    void getPostList_last() throws Exception {
+        CustomCursor customCursor = CustomCursor.builder()
+                .pageSize(5)
+                .sortOption(PostSortOption.VIEW)
+                .lastId(3L)
+                .sortValue(100)
+                .build();
 
-        StringBuilder hashtagStringList = new StringBuilder("[");
-        for(int i=0;i<31;i++) {
-            hashtagStringList.append("\"해시태그").append(i).append("\",");
-        }
-        hashtagStringList.deleteCharAt(hashtagStringList.length() - 1);
-        hashtagStringList.append("]");
-        System.out.println("hashtagStringList = " + hashtagStringList);
+        PostPageResponseDto post3 = PostPageResponseDto.builder()
+                .id(20L)
+                .user(user)
+                .shorts(shorts)
+                .view(63)
+                .category(PostCategoryEnum.RESTAURANT)
+                .like(28)
+                .isLiked(Boolean.TRUE)
+                .build();
 
-        // when, then
-        mockMvc.perform(multipart("/v1/post")
-                        .file(testVideo)
-                        .param("postCategory", "RESTAURANT")
-                        .param("hashtags", hashtagStringList.toString())
-                        .header(AUTHORIZATION_HEADER, testToken)
-                ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+        List<PostPageResponseDto> result = List.of(post3, post2, post1);
+
+        when(postService.getNextCursorPage(any())).thenReturn(result);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/post/list")
+                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
+                                .param("lastId", String.valueOf(customCursor.getLastId()))
+                                .param("sortOption", customCursor.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                )
+                .andExpect(status().isOk())
+                .andDo(document("post/list/last",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("sortValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
+                                parameterWithName("lastId").description("마지막으로 받은 게시글 id(크거나 같은 id의 게시글만 페이지에 포함)"),
+                                parameterWithName("pageSize").description("페이지 크기(default: 5)")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
+                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
+                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
+                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
+                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("포착(좋아요) 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                        )
+                ));
     }
 }

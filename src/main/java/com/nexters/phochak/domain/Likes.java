@@ -1,15 +1,18 @@
 package com.nexters.phochak.domain;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.*;
+import java.util.Objects;
 
+@Getter
 @Entity
-public class Phochak extends BaseTime {
+public class Likes extends BaseTime {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
-    @Column(name="PHOCHAK_ID")
+    @Column(name="LIKES_ID")
     private Long id;
 
     @ManyToOne(fetch = FetchType.LAZY)
@@ -20,12 +23,16 @@ public class Phochak extends BaseTime {
     @JoinColumn(name="POST_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Post post;
 
-    public Phochak() {
+    public Likes() {
     }
 
     @Builder
-    public Phochak(User user, Post post) {
+    public Likes(User user, Post post) {
         this.user = user;
         this.post = post;
+    }
+
+    public boolean hasLikesByUser(Long userId) {
+        return Objects.equals(this.user.getId(), userId);
     }
 }

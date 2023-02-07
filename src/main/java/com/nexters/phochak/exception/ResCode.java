@@ -22,6 +22,9 @@ public enum ResCode {
     NOT_FOUND_POST("P400", "존재하지 않는 게시글입니다"),
     ALREADY_PHOCHAKED("P410", "이미 포착된 게시글입니다"),
     NOT_PHOCHAKED("P411", "포착 하지 않은 게시글입니다"),
+    NOT_FOUND_SORT_VALUE("P412", "최신순이 아닌 경우 정렬기준의 값은 필수입니다"),
+    NOT_SUPPORTED_SORT_OPTION("P413", "지원하지 않는 정렬기준입니다"),
+    NOT_FOUND_SORT_OPTION("P414", "정렬 기준이 존재하지 않습니다"),
     NOT_SUPPORT_VIDEO_EXTENSION("P450", "지원하지 않는 영상 확장자"),
     INVALID_VIDEO_FORMAT("P451", "잘못되거나 알 수 없는 영상 형식");
 

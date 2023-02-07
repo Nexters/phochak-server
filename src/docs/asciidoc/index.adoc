@@ -13,4 +13,6 @@ endif::[]
 
 include::login.adoc[]
 
-include::phochak.adoc[]
+include::post.adoc[]
+
+include::likes.adoc[]

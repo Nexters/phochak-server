@@ -1,15 +1,13 @@
 package com.nexters.phochak.dto.response;
 
+import com.nexters.phochak.exception.ResCode;
 import lombok.Getter;
+import lombok.Setter;
 
-import static com.nexters.phochak.exception.ResCode.OK;
-
+@Setter
 @Getter
 public class CommonResponse<T> {
-
-    private final String resCode = OK.getCode();;
-
-    private final String resMessage = OK.getMessage();;
+    private StatusResponse status = new StatusResponse(ResCode.OK);
 
     private final T data;
 

@@ -1,5 +1,6 @@
 package com.nexters.phochak.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.Builder;
 import lombok.Getter;
@@ -25,9 +26,11 @@ public class User extends BaseTime {
     @Column(name = "USER_ID")
     private Long id;
 
+    @JsonIgnore
     @Enumerated(EnumType.STRING)
     private OAuthProviderEnum provider;
 
+    @JsonIgnore
     @Column(nullable = false, unique = true)
     private String providerId;
 
@@ -41,7 +44,8 @@ public class User extends BaseTime {
     }
 
     @Builder
-    public User(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+    public User(Long id, OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+        this.id = id;
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;

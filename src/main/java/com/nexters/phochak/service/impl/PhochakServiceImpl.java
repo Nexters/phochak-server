@@ -1,6 +1,6 @@
 package com.nexters.phochak.service.impl;
 
-import com.nexters.phochak.domain.Phochak;
+import com.nexters.phochak.domain.Likes;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.exception.PhochakException;
@@ -30,11 +30,11 @@ public class PhochakServiceImpl implements PhochakService {
             throw new PhochakException(ResCode.ALREADY_PHOCHAKED);
         }
 
-        Phochak phochak = Phochak.builder()
+        Likes likes = Likes.builder()
                 .user(user)
                 .post(post)
                 .build();
-        phochakRepository.save(phochak);
+        phochakRepository.save(likes);
     }
 
     @Override
@@ -43,10 +43,10 @@ public class PhochakServiceImpl implements PhochakService {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
 
-        Phochak phochak = phochakRepository.findByUserAndPost(user, post)
+        Likes likes = phochakRepository.findByUserAndPost(user, post)
                 .orElseThrow(() -> new PhochakException(ResCode.NOT_PHOCHAKED));
 
-        phochakRepository.delete(phochak);
+        phochakRepository.delete(likes);
     }
 
 }

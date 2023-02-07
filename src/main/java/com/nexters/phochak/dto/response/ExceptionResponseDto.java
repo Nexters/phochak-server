@@ -6,14 +6,10 @@ import lombok.Getter;
 
 @Getter
 public class ExceptionResponseDto {
-
-    private final String resCode;
-
-    private final String resMessage;
+    private StatusResponse status;
 
     @Builder
     public ExceptionResponseDto(ResCode resCode, String customResMessage) {
-        this.resCode = resCode.getCode();
-        this.resMessage = customResMessage == null ? resCode.getMessage() : customResMessage;
+        status = new StatusResponse(resCode.getCode(), customResMessage == null ? resCode.getMessage() : customResMessage);
     }
 }
