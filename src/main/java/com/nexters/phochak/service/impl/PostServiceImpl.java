@@ -8,7 +8,7 @@ import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.repository.PostRepository;
-import com.nexters.phochak.repository.StorageBucketRepository;
+import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.HashtagService;
 import com.nexters.phochak.service.PostService;
@@ -18,7 +18,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Locale;
 import java.util.UUID;
 import java.util.List;
 
@@ -28,7 +27,7 @@ public class PostServiceImpl implements PostService {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final HashtagService hashtagService;
-    private final StorageBucketRepository storageBucketRepository;
+    private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
 
     @Override
@@ -37,7 +36,7 @@ public class PostServiceImpl implements PostService {
         String objectName = uploadKey + "." + fileExtension.toLowerCase();
         return PostUploadKeyResponseDto.builder()
                 .uploadKey(uploadKey)
-                .uploadUrl(storageBucketRepository.generatePresignedUrl(objectName).toString())
+                .uploadUrl(storageBucketClient.generatePresignedUrl(objectName).toString())
                 .build();
     }
 

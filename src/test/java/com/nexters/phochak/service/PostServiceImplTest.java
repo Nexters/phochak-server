@@ -1,7 +1,7 @@
 package com.nexters.phochak.service;
 
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
-import com.nexters.phochak.repository.StorageBucketRepository;
+import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.service.impl.PostServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -23,13 +23,14 @@ class PostServiceImplTest {
 
     @InjectMocks PostServiceImpl postService;
 
-    @Mock StorageBucketRepository storageBucketRepository;
+    @Mock
+    StorageBucketClient storageBucketClient;
 
     @Test
     @DisplayName("Presigned URL과 UploadKey 생성에 성공한다")
     void generateUploadKey() throws MalformedURLException {
         //given
-        given(storageBucketRepository.generatePresignedUrl(any())).willReturn(new URL("http://test.com"));
+        given(storageBucketClient.generatePresignedUrl(any())).willReturn(new URL("http://test.com"));
 
         //when
         PostUploadKeyResponseDto result = postService.generateUploadKey("mov");

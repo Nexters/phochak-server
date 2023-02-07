@@ -1,11 +1,11 @@
-package com.nexters.phochak.repository.impl;
+package com.nexters.phochak.client.impl;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.nexters.phochak.repository.StorageBucketRepository;
+import com.nexters.phochak.client.StorageBucketClient;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
@@ -15,12 +15,12 @@ import java.util.Date;
 
 @Repository
 @Slf4j
-public class NCPStorageRepository implements StorageBucketRepository {
+public class NCPStorageClient implements StorageBucketClient {
 
     private final String bucketName;
     private final AmazonS3 s3Client;
 
-    public NCPStorageRepository(
+    public NCPStorageClient(
             @Value("${ncp.s3.end-point}") String endPoint,
             @Value("${ncp.s3.region-name}") String regionName,
             @Value("${ncp.s3.bucket-name}") String bucketName,
