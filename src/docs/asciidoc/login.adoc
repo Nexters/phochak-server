@@ -21,3 +21,7 @@ Response HTTP Example
 
 *정상*
 include::{snippets}/user/login/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/user/login/response-fields.adoc[]

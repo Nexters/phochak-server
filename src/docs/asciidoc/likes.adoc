@@ -22,3 +22,7 @@ Response HTTP Example
 
 *정상*
 include::{snippets}/post/{postId}/likes/post/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/{postId}/likes/post/response-fields.adoc[]
