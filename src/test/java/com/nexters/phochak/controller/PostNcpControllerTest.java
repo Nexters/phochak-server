@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
+import com.nexters.phochak.exception.CustomExceptionHandler;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import com.nexters.phochak.specification.OAuthProviderEnum;
@@ -38,6 +39,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -58,7 +60,9 @@ public class PostNcpControllerTest extends RestDocs {
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
-        this.mockMvc = getMockMvcBuilder(restDocumentation, postController).build();
+        this.mockMvc = getMockMvcBuilder(restDocumentation, postController)
+                .setControllerAdvice(CustomExceptionHandler.class)
+                .build();
         User user = User.builder()
                 .providerId("1234")
                 .provider(OAuthProviderEnum.KAKAO)
@@ -136,7 +140,6 @@ public class PostNcpControllerTest extends RestDocs {
     }
 
     @Test
-    @Disabled
     @DisplayName("게시글 작성 필수 파라미터가 없는 경우 INVALID_INPUT 예외가 발생한다")
     void createPostValidateEssentialParameter_InvalidInput() throws Exception {
         //given
@@ -147,8 +150,10 @@ public class PostNcpControllerTest extends RestDocs {
         // when, then
         mockMvc.perform(post("/v1/post")
                         .content(objectMapper.writeValueAsString(body))
+                        .characterEncoding("utf-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
+                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
 
@@ -162,7 +167,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .content(objectMapper.writeValueAsString(body))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
 
         //given
@@ -175,7 +180,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .content(objectMapper.writeValueAsString(body))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
-                .andExpect(status().isBadRequest())
+                .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
     }
 
