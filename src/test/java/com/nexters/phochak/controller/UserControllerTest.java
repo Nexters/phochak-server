@@ -19,6 +19,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -67,13 +68,13 @@ class UserControllerTest extends RestDocs {
                 )
                 .andExpect(status().isOk())
                 .andDo(document("user/login",
-                                preprocessRequest(prettyPrint()),
+                                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                                 preprocessResponse(prettyPrint()),
                                 pathParameters(
-                                        parameterWithName("provider").description("OAuth 서비스 이름(ex. kakao, apple, naver)")
+                                        parameterWithName("provider").description("(필수) OAuth 서비스 이름(ex. kakao, apple, naver)")
                                 ),
                                 requestParameters(
-                                        parameterWithName("token").description("token (Access token or Identify Token)")
+                                        parameterWithName("token").description("(필수) token (Access token or Identify Token)")
                                 ),
                                 responseFields(
                                         fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),

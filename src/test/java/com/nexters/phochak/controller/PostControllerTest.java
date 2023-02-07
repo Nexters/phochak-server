@@ -23,9 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.util.List;
 
+import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
@@ -45,7 +49,6 @@ class PostControllerTest extends RestDocs {
     PostController postController;
 
     MockMvc mockMvc;
-
     User user;
     Shorts shorts;
     PostPageResponseDto post1;
@@ -106,14 +109,18 @@ class PostControllerTest extends RestDocs {
                                 .get("/v1/post/list")
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                )
+                                .header(AUTHORIZATION_HEADER, "testToken"))
                 .andExpect(status().isOk())
                 .andDo(document("post/list/initial",
-                        preprocessRequest(prettyPrint()),
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
-                                parameterWithName("pageSize").description("페이지 크기(default: 5)")
+                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
@@ -128,7 +135,7 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
-                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("포착(좋아요) 수"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
                                 fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
                         )
                 ));
@@ -139,7 +146,7 @@ class PostControllerTest extends RestDocs {
     void getPostList_after() throws Exception {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
-                .sortOption(PostSortOption.PHOCHAK)
+                .sortOption(PostSortOption.LIKE)
                 .lastId(3L)
                 .sortValue(75)
                 .build();
@@ -165,16 +172,21 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .header(AUTHORIZATION_HEADER, "testToken")
                 )
                 .andExpect(status().isOk())
                 .andDo(document("post/list/after",
-                        preprocessRequest(prettyPrint()),
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
-                                parameterWithName("sortValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
-                                parameterWithName("lastId").description("마지막으로 받은 게시글 id(크거나 같은 id의 게시글만 페이지에 포함)"),
-                                parameterWithName("pageSize").description("페이지 크기(default: 5)")
+                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
+                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
@@ -226,16 +238,21 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .header(AUTHORIZATION_HEADER, "testToken")
                 )
                 .andExpect(status().isOk())
                 .andDo(document("post/list/last",
-                        preprocessRequest(prettyPrint()),
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
-                                parameterWithName("sortValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
-                                parameterWithName("lastId").description("마지막으로 받은 게시글 id(크거나 같은 id의 게시글만 페이지에 포함)"),
-                                parameterWithName("pageSize").description("페이지 크기(default: 5)")
+                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
+                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
@@ -250,7 +267,7 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
-                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("포착(좋아요) 수"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
                                 fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
                         )
                 ));

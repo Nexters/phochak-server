@@ -4,7 +4,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 
 public enum PostSortOption {
-    LATEST, PHOCHAK, VIEW;
+    LATEST, LIKE, VIEW;
 
     public static PostSortOption nameOf(String name) {
         for (PostSortOption target : PostSortOption.values()) {

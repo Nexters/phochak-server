@@ -8,14 +8,13 @@ HTTP Example
 
 include::{snippets}/post/{postId}/likes/post/http-request.adoc[]
 
-==== 포착 취소하기 요청
-HTTP Example
-
-include::{snippets}/post/{postId}/likes/delete/http-request.adoc[]
-
 Path Parameters
 
 include::{snippets}/post/{postId}/likes/post/path-parameters.adoc[]
+
+Request Headers
+
+include::{snippets}/post/{postId}/likes/post/request-headers.adoc[]
 
 ==== 응답
 Response HTTP Example
@@ -26,3 +25,26 @@ include::{snippets}/post/{postId}/likes/post/http-response.adoc[]
 Response Parameters
 
 include::{snippets}/post/{postId}/likes/post/response-fields.adoc[]
+
+==== 포착 취소하기 요청
+HTTP Example
+
+include::{snippets}/post/{postId}/likes/delete/http-request.adoc[]
+
+Path Parameters
+
+include::{snippets}/post/{postId}/likes/delete/path-parameters.adoc[]
+
+Request Headers
+
+include::{snippets}/post/{postId}/likes/delete/request-headers.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/{postId}/likes/delete/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/{postId}/likes/delete/response-fields.adoc[]

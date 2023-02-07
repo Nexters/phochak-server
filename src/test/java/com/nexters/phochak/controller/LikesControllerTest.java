@@ -102,14 +102,14 @@ class LikesControllerTest extends RestDocs {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
                 .andDo(document("post/{postId}/likes/post",
-                        preprocessRequest(prettyPrint()),
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("postId").description("해당 게시글 Id")
+                                parameterWithName("postId").description("(필수) 해당 게시글 Id")
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
-                                        .description("JWT Access Token")
+                                        .description("(필수) JWT Access Token")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
@@ -148,14 +148,14 @@ class LikesControllerTest extends RestDocs {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
                 .andDo(document("post/{postId}/likes/delete",
-                        preprocessRequest(prettyPrint()),
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         pathParameters(
-                                parameterWithName("postId").description("해당 게시글 Id")
+                                parameterWithName("postId").description("(필수) 해당 게시글 Id")
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
-                                        .description("JWT Access Token")
+                                        .description("(필수) JWT Access Token")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
