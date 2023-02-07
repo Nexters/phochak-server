@@ -18,6 +18,10 @@ Response HTTP Example
 *정상*
 include::{snippets}/post/list/initial/http-response.adoc[]
 
+Response Parameters
+
+include::{snippets}/post/list/after/response-fields.adoc[]
+
 ==== 이후 페이지 요청
 HTTP Example
 
@@ -33,6 +37,10 @@ Response HTTP Example
 *정상*
 include::{snippets}/post/list/after/http-response.adoc[]
 
+Response Parameters
+
+include::{snippets}/post/list/after/response-fields.adoc[]
+
 ==== 마지막 페이지 요청 (요청 페이지 크기 > 실제 데이터 개수)
 HTTP Example
 
@@ -47,3 +55,7 @@ Response HTTP Example
 
 *정상*
 include::{snippets}/post/list/last/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/list/after/response-fields.adoc[]
