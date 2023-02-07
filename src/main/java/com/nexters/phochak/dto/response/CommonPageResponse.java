@@ -1,20 +1,17 @@
 package com.nexters.phochak.dto.response;
 
+import com.nexters.phochak.exception.ResCode;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.List;
 
-import static com.nexters.phochak.exception.ResCode.OK;
-
+@Setter
 @Getter
 public class CommonPageResponse<T> {
-
-    private final String resCode = OK.getCode();
-
-    private final String resMessage = OK.getMessage();
-
-    private Boolean isLastPage;
+    private StatusResponse status = new StatusResponse(ResCode.OK);
     private final List<T> data;
+    private Boolean isLastPage;
 
     public CommonPageResponse() {
         this.data = null;
