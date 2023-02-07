@@ -8,7 +8,7 @@ import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import com.nexters.phochak.specification.PostCategoryEnum;
-import com.nexters.phochak.specification.PostSortCriteria;
+import com.nexters.phochak.specification.PostSortOption;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -73,8 +73,9 @@ class PostControllerTest extends RestDocs {
                 .user(user)
                 .shorts(shorts)
                 .view(5L)
-                .postCategoryEnum(PostCategoryEnum.RESTAURANT)
-                .phochakCount(10L)
+                .category(PostCategoryEnum.RESTAURANT)
+                .like(10L)
+                .isLiked(Boolean.TRUE)
                 .build();
 
         post2 = PostPageResponseDto.builder()
@@ -82,8 +83,9 @@ class PostControllerTest extends RestDocs {
                 .user(user)
                 .shorts(shorts)
                 .view(12L)
-                .postCategoryEnum(PostCategoryEnum.TOUR)
-                .phochakCount(21L)
+                .category(PostCategoryEnum.TOUR)
+                .like(21L)
+                .isLiked(Boolean.FALSE)
                 .build();
     }
 
@@ -91,8 +93,7 @@ class PostControllerTest extends RestDocs {
     @DisplayName("포스트 목록 조회 API - 첫 요청")
     void getPostList_initial() throws Exception {
         CustomCursor customCursor = CustomCursor.builder()
-                .isInitialRequest(true)
-                .postSortCriteria(PostSortCriteria.LATEST)
+                .sortOption(PostSortOption.LATEST)
                 .pageSize(2)
                 .build();
 
@@ -103,8 +104,7 @@ class PostControllerTest extends RestDocs {
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("isInitialRequest", String.valueOf(customCursor.getIsInitialRequest()))
-                                .param("postSortCriteria", customCursor.getPostSortCriteria().name())
+                                .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
                 )
                 .andExpect(status().isOk())
@@ -112,13 +112,12 @@ class PostControllerTest extends RestDocs {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("isInitialRequest").description("첫 요청 여부 (true/false)"),
-                                parameterWithName("postSortCriteria").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
                                 parameterWithName("pageSize").description("페이지 크기(default: 5)")
                         ),
                         responseFields(
-                                fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
                                 fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
                                 fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
@@ -128,8 +127,9 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
-                                fieldWithPath("data[].postCategoryEnum").type(JsonFieldType.STRING).description("게시글 카테고리"),
-                                fieldWithPath("data[].phochakCount").type(JsonFieldType.NUMBER).description("포착(좋아요) 수")
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("포착(좋아요) 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
                         )
                 ));
     }
@@ -139,10 +139,9 @@ class PostControllerTest extends RestDocs {
     void getPostList_after() throws Exception {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
-                .isInitialRequest(false)
-                .postSortCriteria(PostSortCriteria.PHOCHAK)
+                .sortOption(PostSortOption.PHOCHAK)
                 .lastId(3L)
-                .lastCriteriaValue(75)
+                .sortValue(75)
                 .build();
 
         PostPageResponseDto post3 = PostPageResponseDto.builder()
@@ -150,8 +149,9 @@ class PostControllerTest extends RestDocs {
                 .user(user)
                 .shorts(shorts)
                 .view(50L)
-                .postCategoryEnum(PostCategoryEnum.TOUR)
-                .phochakCount(75L)
+                .category(PostCategoryEnum.TOUR)
+                .like(75L)
+                .isLiked(Boolean.TRUE)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
@@ -161,10 +161,9 @@ class PostControllerTest extends RestDocs {
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("isInitialRequest", String.valueOf(customCursor.getIsInitialRequest()))
-                                .param("lastCriteriaValue", String.valueOf(customCursor.getLastCriteriaValue()))
+                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("postSortCriteria", customCursor.getPostSortCriteria().name())
+                                .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
                 )
                 .andExpect(status().isOk())
@@ -172,15 +171,14 @@ class PostControllerTest extends RestDocs {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("isInitialRequest").description("첫 요청 여부 (true/false)"),
-                                parameterWithName("postSortCriteria").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
-                                parameterWithName("lastCriteriaValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
+                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("sortValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
                                 parameterWithName("lastId").description("마지막으로 받은 게시글 id(크거나 같은 id의 게시글만 페이지에 포함)"),
                                 parameterWithName("pageSize").description("페이지 크기(default: 5)")
                         ),
                         responseFields(
-                                fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
                                 fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
                                 fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
@@ -190,8 +188,9 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
-                                fieldWithPath("data[].postCategoryEnum").type(JsonFieldType.STRING).description("게시글 카테고리"),
-                                fieldWithPath("data[].phochakCount").type(JsonFieldType.NUMBER).description("포착(좋아요) 수")
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
                         )
                 ));
     }
@@ -201,10 +200,9 @@ class PostControllerTest extends RestDocs {
     void getPostList_last() throws Exception {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(5)
-                .isInitialRequest(false)
-                .postSortCriteria(PostSortCriteria.VIEW)
+                .sortOption(PostSortOption.VIEW)
                 .lastId(3L)
-                .lastCriteriaValue(100)
+                .sortValue(100)
                 .build();
 
         PostPageResponseDto post3 = PostPageResponseDto.builder()
@@ -212,8 +210,9 @@ class PostControllerTest extends RestDocs {
                 .user(user)
                 .shorts(shorts)
                 .view(63)
-                .postCategoryEnum(PostCategoryEnum.RESTAURANT)
-                .phochakCount(28)
+                .category(PostCategoryEnum.RESTAURANT)
+                .like(28)
+                .isLiked(Boolean.TRUE)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
@@ -223,10 +222,9 @@ class PostControllerTest extends RestDocs {
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("isInitialRequest", String.valueOf(customCursor.getIsInitialRequest()))
-                                .param("lastCriteriaValue", String.valueOf(customCursor.getLastCriteriaValue()))
+                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("postSortCriteria", customCursor.getPostSortCriteria().name())
+                                .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
                 )
                 .andExpect(status().isOk())
@@ -234,15 +232,14 @@ class PostControllerTest extends RestDocs {
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("isInitialRequest").description("첫 요청 여부 (true/false)"),
-                                parameterWithName("postSortCriteria").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
-                                parameterWithName("lastCriteriaValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
+                                parameterWithName("sortOption").description("게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("sortValue").description("마지막으로 받은 정렬 기준 값(작거나 같은 값만 페이지에 포함), LATEST의 경우에는 nullable"),
                                 parameterWithName("lastId").description("마지막으로 받은 게시글 id(크거나 같은 id의 게시글만 페이지에 포함)"),
                                 parameterWithName("pageSize").description("페이지 크기(default: 5)")
                         ),
                         responseFields(
-                                fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
                                 fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
                                 fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
@@ -252,8 +249,9 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
-                                fieldWithPath("data[].postCategoryEnum").type(JsonFieldType.STRING).description("게시글 카테고리"),
-                                fieldWithPath("data[].phochakCount").type(JsonFieldType.NUMBER).description("포착(좋아요) 수")
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("포착(좋아요) 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
                         )
                 ));
     }

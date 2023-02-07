@@ -90,7 +90,7 @@ class PostControllerIntegration {
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(OK.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
     }
 
     @Test
@@ -109,21 +109,21 @@ class PostControllerIntegration {
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
 
         mockMvc.perform(multipart("/v1/post")
                         .file(testVideo)
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
 
         mockMvc.perform(multipart("/v1/post")
                         .file(testVideo)
                         .param("postCategory", "RESTAURANT")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 
     @Test
@@ -143,7 +143,7 @@ class PostControllerIntegration {
                         .param("hashtags", "[\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 
     @Test
@@ -171,6 +171,6 @@ class PostControllerIntegration {
                         .param("hashtags", hashtagStringList.toString())
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 }

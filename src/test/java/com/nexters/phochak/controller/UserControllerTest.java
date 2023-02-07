@@ -76,8 +76,8 @@ class UserControllerTest extends RestDocs {
                                         parameterWithName("token").description("token (Access token or Identify Token)")
                                 ),
                                 responseFields(
-                                        fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                        fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                         fieldWithPath("data.accessToken").type(JsonFieldType.STRING).description("access token"),
                                         fieldWithPath("data.expiresIn").type(JsonFieldType.STRING).description("access token 유효기간(ms)"),
                                         fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("refresh token"),
