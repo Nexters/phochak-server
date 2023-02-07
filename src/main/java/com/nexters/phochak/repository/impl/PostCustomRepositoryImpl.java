@@ -59,7 +59,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
             return StringExpressions.lpad(post.view.stringValue(), CRITERIA_PADDING, ZERO)
                     .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
                     .lt(cursorString);
-        } else if (postSortOption == PostSortOption.PHOCHAK) {
+        } else if (postSortOption == PostSortOption.LIKE) {
             return StringExpressions.lpad(post.likes.size().stringValue(), CRITERIA_PADDING, ZERO)
                     .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
                     .lt(cursorString);
@@ -68,7 +68,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {
-        if (postSortOption == PostSortOption.PHOCHAK) {
+        if (postSortOption == PostSortOption.LIKE) {
             return post.likes.size().desc();
         } else if (postSortOption == PostSortOption.VIEW) {
             return post.view.desc();

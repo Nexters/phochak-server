@@ -12,6 +12,10 @@ Request Parameters
 
 include::{snippets}/post/list/initial/request-parameters.adoc[]
 
+Request Headers
+
+include::{snippets}/post/list/last/request-headers.adoc[]
+
 ==== 응답
 Response HTTP Example
 
@@ -31,6 +35,10 @@ Request Parameters
 
 include::{snippets}/post/list/after/request-parameters.adoc[]
 
+Request Headers
+
+include::{snippets}/post/list/last/request-headers.adoc[]
+
 ==== 응답
 Response HTTP Example
 
@@ -49,6 +57,10 @@ include::{snippets}/post/list/last/http-request.adoc[]
 Request Parameters
 
 include::{snippets}/post/list/last/request-parameters.adoc[]
+
+Request Headers
+
+include::{snippets}/post/list/last/request-headers.adoc[]
 
 ==== 응답
 Response HTTP Example
