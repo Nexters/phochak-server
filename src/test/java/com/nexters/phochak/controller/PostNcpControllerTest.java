@@ -153,7 +153,6 @@ public class PostNcpControllerTest extends RestDocs {
                         .characterEncoding("utf-8")
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
-                .andDo(print())
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
 
