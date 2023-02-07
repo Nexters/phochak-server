@@ -159,7 +159,6 @@ public class PostLocalStorageControllerTest {
         }
         hashtagStringList.deleteCharAt(hashtagStringList.length() - 1);
         hashtagStringList.append("]");
-        System.out.println("hashtagStringList = " + hashtagStringList);
 
         // when, then
         mockMvc.perform(multipart("/v1/post")
