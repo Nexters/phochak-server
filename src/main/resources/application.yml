@@ -12,6 +12,7 @@ spring:
       hibernate:
         format_sql: true
         show_sql: true
+        default_batch_fetch_size: 1000
 # 카카오 OAUTH 관련 설정
 # TODO: 배포 환경별로 분리 필요, 운영에서는 secret key 적용하고 별도로 관리 필요 (애플 로그인이 어떻게 돼있는지 모름)
 kakao:
