@@ -67,6 +67,7 @@ class PostControllerTest extends RestDocs {
 
         shorts = Shorts.builder()
                 .id(1L)
+                .uploadKey("key")
                 .thumbnailUrl("thumbnail url")
                 .shortsUrl("shorts url")
                 .build();
@@ -131,6 +132,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
                                 fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.uploadKey").type(JsonFieldType.STRING).description("업로드 키"),
+                                fieldWithPath("data[].shorts.shortsStateEnum").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태"),
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
@@ -197,6 +200,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
                                 fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.uploadKey").type(JsonFieldType.STRING).description("업로드 키"),
+                                fieldWithPath("data[].shorts.shortsStateEnum").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태"),
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
@@ -263,6 +268,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
                                 fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.uploadKey").type(JsonFieldType.STRING).description("업로드 키"),
+                                fieldWithPath("data[].shorts.shortsStateEnum").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태"),
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
