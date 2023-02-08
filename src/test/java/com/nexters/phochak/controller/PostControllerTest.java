@@ -153,7 +153,7 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
-                .lastId(3L)
+                .lastId(20L)
                 .sortValue(75)
                 .build();
 
