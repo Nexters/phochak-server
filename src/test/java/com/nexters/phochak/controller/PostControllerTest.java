@@ -71,6 +71,9 @@ class PostControllerTest extends RestDocs {
                 .shortsUrl("shorts url")
                 .build();
 
+        List<String> hashtags1 = List.of("해시태그1", "해시태그2");
+        List<String> hashtags2 = List.of("해시태그2", "해시태그3");
+
         post1 = PostPageResponseDto.builder()
                 .id(5L)
                 .user(user)
@@ -79,6 +82,7 @@ class PostControllerTest extends RestDocs {
                 .category(PostCategoryEnum.RESTAURANT)
                 .like(10L)
                 .isLiked(Boolean.TRUE)
+                .hashtags(hashtags1)
                 .build();
 
         post2 = PostPageResponseDto.builder()
@@ -89,6 +93,7 @@ class PostControllerTest extends RestDocs {
                 .category(PostCategoryEnum.TOUR)
                 .like(21L)
                 .isLiked(Boolean.FALSE)
+                .hashtags(hashtags2)
                 .build();
     }
 
@@ -133,6 +138,7 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
@@ -147,9 +153,11 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
-                .lastId(3L)
+                .lastId(20L)
                 .sortValue(75)
                 .build();
+
+        List<String> hashtags = List.of("해시태그4", "해시태그5");
 
         PostPageResponseDto post3 = PostPageResponseDto.builder()
                 .id(17L)
@@ -159,6 +167,7 @@ class PostControllerTest extends RestDocs {
                 .category(PostCategoryEnum.TOUR)
                 .like(75L)
                 .isLiked(Boolean.TRUE)
+                .hashtags(hashtags)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
@@ -199,6 +208,7 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
@@ -217,6 +227,8 @@ class PostControllerTest extends RestDocs {
                 .sortValue(100)
                 .build();
 
+        List<String> hashtags = List.of("해시태그4", "해시태그5");
+
         PostPageResponseDto post3 = PostPageResponseDto.builder()
                 .id(20L)
                 .user(user)
@@ -225,6 +237,7 @@ class PostControllerTest extends RestDocs {
                 .category(PostCategoryEnum.RESTAURANT)
                 .like(28)
                 .isLiked(Boolean.TRUE)
+                .hashtags(hashtags)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
@@ -265,6 +278,7 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
                                 fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
                                 fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),

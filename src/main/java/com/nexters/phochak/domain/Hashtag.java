@@ -1,9 +1,11 @@
 package com.nexters.phochak.domain;
 
 import lombok.Builder;
+import lombok.Getter;
 
 import javax.persistence.*;
 
+@Getter
 @Entity
 @Table(indexes = @Index(name = "idx_hashtag", columnList = "tag"))
 public class Hashtag {
