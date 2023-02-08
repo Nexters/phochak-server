@@ -5,7 +5,6 @@ import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
-import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.client.StorageBucketClient;

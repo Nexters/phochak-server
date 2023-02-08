@@ -1,6 +1,7 @@
-package com.nexters.phochak.controller;
+package com.nexters.phochak.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.controller.PostController;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
@@ -10,7 +11,6 @@ import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -48,13 +48,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
 @Transactional
-public class PostNcpControllerTest extends RestDocs {
+public class PostNcpIntegrationTest extends RestDocs {
 
     @Autowired UserRepository userRepository;
     @Autowired JwtTokenServiceImpl jwtTokenService;
-    @Autowired PostController postController;
+    @Autowired
+    PostController postController;
     @Autowired ObjectMapper objectMapper;
-    @Value("${app.resource.local.shorts}") String shortsPath;
     MockMvc mockMvc;
     static String testToken;
 
@@ -83,7 +83,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .queryParam("file-extension", "mov")
                         .header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(OK.getCode()))
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
                 .andDo(document("post/upload-key/GET",
                         preprocessRequest(prettyPrint()),
                         preprocessResponse(prettyPrint()),
@@ -95,8 +95,8 @@ public class PostNcpControllerTest extends RestDocs {
                                         .description("JWT Access Token")
                         ),
                         responseFields(
-                                fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                                fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data.uploadUrl").type(JsonFieldType.STRING).description("파일 업로드 URL"),
                                 fieldWithPath("data.uploadKey").type(JsonFieldType.STRING).description("업로드 키")
                         )
@@ -118,7 +118,7 @@ public class PostNcpControllerTest extends RestDocs {
             .contentType(MediaType.APPLICATION_JSON)
             .header(AUTHORIZATION_HEADER, testToken))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.resCode").value(OK.getCode()))
+            .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
             .andDo(document("post/POST",
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -132,8 +132,8 @@ public class PostNcpControllerTest extends RestDocs {
                                 .description("JWT Access Token")
                 ),
                 responseFields(
-                        fieldWithPath("resCode").type(JsonFieldType.STRING).description("응답 코드"),
-                        fieldWithPath("resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data").type(JsonFieldType.NULL).description("null")
                 )
         ));
@@ -154,7 +154,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
 
         //given
         body = new HashMap<>();
@@ -167,7 +167,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
 
         //given
         body = new HashMap<>();
@@ -180,7 +180,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 
     @Test
@@ -199,7 +199,7 @@ public class PostNcpControllerTest extends RestDocs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 
     @Test
@@ -223,6 +223,6 @@ public class PostNcpControllerTest extends RestDocs {
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
-                .andExpect(jsonPath("$.resCode").value(INVALID_INPUT.getCode()));
+                .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 }

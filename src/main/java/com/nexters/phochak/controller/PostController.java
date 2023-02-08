@@ -3,7 +3,6 @@ package com.nexters.phochak.controller;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.EncodingCallbackRequestDto;
-import com.nexters.phochak.dto.PostCreateRequestDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
@@ -32,7 +31,7 @@ public class PostController {
     @GetMapping("/upload-key")
     public CommonResponse<PostUploadKeyResponseDto> generateUploadKey(
             @RequestParam(name="file-extension") String fileExtension) {
-        return new CommonResponse<>(postServiceImpl.generateUploadKey(fileExtension));
+        return new CommonResponse<>(postService.generateUploadKey(fileExtension));
     }
 
     @PostMapping("/encoding-callback")

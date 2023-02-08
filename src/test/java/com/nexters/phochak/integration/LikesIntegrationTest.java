@@ -1,6 +1,7 @@
-package com.nexters.phochak.controller;
+package com.nexters.phochak.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.controller.LikesController;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.domain.Likes;
 import com.nexters.phochak.domain.Post;
@@ -48,7 +49,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
 @Transactional
-class LikesControllerTest extends RestDocs {
+class LikesIntegrationTest extends RestDocs {
 
     @Autowired UserRepository userRepository;
     @Autowired JwtTokenService jwtTokenService;
@@ -85,6 +86,7 @@ class LikesControllerTest extends RestDocs {
         //given
         User user = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Shorts shorts = Shorts.builder()
+                .uploadKey("key")
                 .shortsUrl("shortsUrl")
                 .thumbnailUrl("thumbnailUrl")
                 .build();
@@ -125,6 +127,7 @@ class LikesControllerTest extends RestDocs {
         //given
         User user = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Shorts shorts = Shorts.builder()
+                .uploadKey("key")
                 .shortsUrl("shortsUrl")
                 .thumbnailUrl("thumbnailUrl")
                 .build();

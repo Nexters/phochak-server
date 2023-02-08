@@ -4,13 +4,8 @@ import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 
-@Getter
 @Entity
 @Getter
 public class Shorts {
@@ -21,6 +16,7 @@ public class Shorts {
     private Long id;
 
     @Enumerated(EnumType.STRING)
+    @Column(nullable = false, unique = true)
     private ShortsStateEnum shortsStateEnum;
 
     @Column(nullable = false, unique = true)
