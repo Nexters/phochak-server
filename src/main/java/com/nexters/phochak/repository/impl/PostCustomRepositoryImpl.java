@@ -37,6 +37,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .join(post.user).fetchJoin()
                 .join(post.shorts).fetchJoin()
                 .join(post.likes).fetchJoin()
+                .join(post.hashtags)
                 .where(filterByCursor(customCursor.getSortOption(), customCursor))
                 .limit(customCursor.getPageSize())
                 .orderBy(orderByPostSortOption(customCursor.getSortOption()))

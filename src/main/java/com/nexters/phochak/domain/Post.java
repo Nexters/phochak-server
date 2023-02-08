@@ -26,7 +26,6 @@ import java.util.List;
 @Getter
 @Entity
 public class Post extends BaseTime {
-
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
     @Column(name="POST_ID")
@@ -50,6 +49,9 @@ public class Post extends BaseTime {
 
     @OneToMany(mappedBy = "post")
     private List<Likes> likes;
+
+    @OneToMany(mappedBy = "post")
+    private List<Hashtag> hashtags;
 
     public Post() {
     }
