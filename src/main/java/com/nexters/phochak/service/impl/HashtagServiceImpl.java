@@ -35,9 +35,6 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     private void validateHashtag(List<String> stringHashtagList) {
-        if(stringHashtagList.size() > 30) {
-            throw new PhochakException(ResCode.INVALID_INPUT, "해시태그는 30개 미만이여야 합니다.");
-        }
         for(String tag : stringHashtagList) {
             if(tag.contains(" ")) {
                 throw new PhochakException(ResCode.INVALID_INPUT, "해시태그에 공백이 존재합니다.");
