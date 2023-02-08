@@ -20,7 +20,7 @@ public class HashtagServiceImpl implements HashtagService {
     private final HashtagRepository hashtagRepository;
 
     @Override
-    public List<Hashtag> createHashtagsByString(List<String> stringHashtagList, Post post) {
+    public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, Post post) {
         if(stringHashtagList.size() == 0) {
             return Collections.emptyList();
         }

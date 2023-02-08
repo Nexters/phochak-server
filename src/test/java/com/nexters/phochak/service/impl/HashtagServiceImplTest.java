@@ -35,7 +35,7 @@ class HashtagServiceImplTest {
         Post post = new Post();
 
         //when
-        hashtagService.createHashtagsByString(stringHashList, post);
+        hashtagService.saveHashtagsByString(stringHashList, post);
 
         //then
         verify(hashtagRepository, times(1)).saveAll(ArgumentMatchers.any());
@@ -49,7 +49,7 @@ class HashtagServiceImplTest {
         Post post = new Post();
 
         //when
-        hashtagService.createHashtagsByString(stringHashList, post);
+        hashtagService.saveHashtagsByString(stringHashList, post);
 
         //then
         verify(hashtagRepository, never()).saveAll(ArgumentMatchers.any());
@@ -63,7 +63,7 @@ class HashtagServiceImplTest {
         Post post = new Post();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.createHashtagsByString(stringHashList, post))
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
                 .isInstanceOf(PhochakException.class)
                 .hasMessage(ResCode.INVALID_INPUT.getMessage());
     }

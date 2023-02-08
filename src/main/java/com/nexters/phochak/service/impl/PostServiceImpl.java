@@ -48,7 +48,7 @@ public class PostServiceImpl implements PostService {
                         .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getPostCategory()))
                         .build();
         postRepository.save(post);
-        hashtagService.createHashtagsByString(postCreateRequestDto.getHashtags(), post);
+        hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), post);
         shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
     }
 
