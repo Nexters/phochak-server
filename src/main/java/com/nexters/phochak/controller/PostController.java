@@ -2,15 +2,23 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
+import com.nexters.phochak.dto.EncodingCallbackRequestDto;
+import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.service.PostService;
+import com.nexters.phochak.service.ShortsService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
 import java.util.List;
@@ -21,11 +29,26 @@ import java.util.List;
 @RequestMapping("/v1/post")
 public class PostController {
 
+    private final ShortsService shortsService;
     private final PostService postService;
 
     @Auth
+    @GetMapping("/upload-key")
+    public CommonResponse<PostUploadKeyResponseDto> generateUploadKey(
+            @RequestParam(name="file-extension") String fileExtension) {
+        return new CommonResponse<>(postService.generateUploadKey(fileExtension));
+    }
+
+    @PostMapping("/encoding-callback")
+    public void encodingCallback(@RequestBody EncodingCallbackRequestDto encodingCallbackRequestDto) {
+        if(encodingCallbackRequestDto.getStatus().equals("COMPLETE")) {
+            shortsService.connectPost(encodingCallbackRequestDto);
+        }
+    }
+
+    @Auth
     @PostMapping
-    public CommonResponse<Void> createPost(@ModelAttribute @Valid PostCreateRequestDto postCreateRequestDto) {
+    public CommonResponse<Void> createPost(@RequestBody @Valid PostCreateRequestDto postCreateRequestDto) {
         Long userId = UserContext.getContext();
         postService.create(userId, postCreateRequestDto);
         return new CommonResponse<>();

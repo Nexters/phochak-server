@@ -35,7 +35,7 @@ class HashtagServiceImplTest {
         Post post = new Post();
 
         //when
-        hashtagService.createHashtagsByString(stringHashList, post);
+        hashtagService.saveHashtagsByString(stringHashList, post);
 
         //then
         verify(hashtagRepository, times(1)).saveAll(ArgumentMatchers.any());
@@ -49,7 +49,7 @@ class HashtagServiceImplTest {
         Post post = new Post();
 
         //when
-        hashtagService.createHashtagsByString(stringHashList, post);
+        hashtagService.saveHashtagsByString(stringHashList, post);
 
         //then
         verify(hashtagRepository, never()).saveAll(ArgumentMatchers.any());
@@ -63,24 +63,9 @@ class HashtagServiceImplTest {
         Post post = new Post();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.createHashtagsByString(stringHashList, post))
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
                 .isInstanceOf(PhochakException.class)
                 .hasMessage(ResCode.INVALID_INPUT.getMessage());
     }
 
-    @Test
-    @DisplayName("해시태그가 30개 이상이면 INVALID_INPUT 예외가 발생한다")
-    void createHashtagOver30_invalidInput() {
-        //given
-        List<String> stringHashList = new ArrayList<>();
-        for(int i=0;i<31;i++) {
-            stringHashList.add("해시태그"+i);
-        }
-        Post post = new Post();
-
-        //when, then
-        assertThatThrownBy(() -> hashtagService.createHashtagsByString(stringHashList, post))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.INVALID_INPUT.getMessage());
-    }
 }

@@ -63,4 +63,9 @@ public class Post extends BaseTime {
         this.postCategory = postCategory;
         this.view = 0L;
     }
+
+    public void setShorts(Shorts shorts) {
+        this.shorts = shorts;
+    }
+
 }

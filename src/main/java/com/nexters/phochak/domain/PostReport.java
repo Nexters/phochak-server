@@ -1,9 +1,20 @@
 package com.nexters.phochak.domain;
 
-import com.nexters.phochak.specification.ReportCategory;
+import com.nexters.phochak.specification.ReportCategoryEnum;
 import lombok.Builder;
 
-import javax.persistence.*;
+import javax.persistence.Column;
+import javax.persistence.ConstraintMode;
+import javax.persistence.Entity;
+import javax.persistence.EnumType;
+import javax.persistence.Enumerated;
+import javax.persistence.FetchType;
+import javax.persistence.ForeignKey;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 
 @Entity
 public class PostReport {
@@ -22,7 +33,7 @@ public class PostReport {
     private User reporter;
 
     @Enumerated(EnumType.STRING)
-    private ReportCategory reportCategory;
+    private ReportCategoryEnum reportCategoryEnum;
 
     private String title;
 
@@ -32,10 +43,10 @@ public class PostReport {
     }
 
     @Builder
-    public PostReport(Post post, User reporter, ReportCategory reportCategory, String title, String content) {
+    public PostReport(Post post, User reporter, ReportCategoryEnum reportCategoryEnum, String title, String content) {
         this.post = post;
         this.reporter = reporter;
-        this.reportCategory = reportCategory;
+        this.reportCategoryEnum = reportCategoryEnum;
         this.title = title;
         this.content = content;
     }

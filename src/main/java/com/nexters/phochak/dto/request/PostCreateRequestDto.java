@@ -1,26 +1,31 @@
 package com.nexters.phochak.dto.request;
 
+import lombok.Builder;
 import lombok.Getter;
-import org.springframework.web.multipart.MultipartFile;
+import lombok.NoArgsConstructor;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
 import java.util.List;
 
 @Getter
+@NoArgsConstructor
 public class PostCreateRequestDto {
 
     @NotNull
-    private final MultipartFile shorts;
+    private String uploadKey;
 
     @NotNull
-    private final List<String> hashtags;
+    @Size(max = 30)
+    private List<String> hashtags;
 
     @NotBlank
-    private final String postCategory;
+    private String postCategory;
 
-    public PostCreateRequestDto(MultipartFile shorts, List<String> hashtags, String postCategory) {
-        this.shorts = shorts;
+    @Builder
+    public PostCreateRequestDto(String uploadKey, List<String> hashtags, String postCategory) {
+        this.uploadKey = uploadKey;
         this.hashtags = hashtags;
         this.postCategory = postCategory;
     }

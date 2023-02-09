@@ -6,6 +6,6 @@ import com.nexters.phochak.domain.Post;
 import java.util.List;
 
 public interface HashtagService {
-    List<Hashtag> createHashtagsByString(List<String> stringHashtagList, Post post);
+    List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, Post post);
 
 }
