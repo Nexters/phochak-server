@@ -6,7 +6,9 @@ import lombok.Getter;
 
 @Getter
 public enum PostCategoryEnum {
-    RESTAURANT("RESTAURANT"), TOUR("TOUR");
+    RESTAURANT("RESTAURANT"),
+    TOUR("TOUR"),
+    CAFE("CAFE");
 
     private final String name;
 

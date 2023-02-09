@@ -123,7 +123,7 @@ public class PostNcpIntegrationTest extends RestDocs {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                        fieldWithPath("category").description("카테고리 ex) TOUR / RESTAURANT"),
+                        fieldWithPath("category").description("카테고리 ex) TOUR / RESTAURANT / CAFE"),
                         fieldWithPath("uploadKey").description("발급 받았던 업로드 키"),
                         fieldWithPath("hashtags").description("해시태그 배열 ex) [\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                 ),
