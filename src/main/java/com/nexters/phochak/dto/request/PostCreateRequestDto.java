@@ -21,12 +21,12 @@ public class PostCreateRequestDto {
     private List<String> hashtags;
 
     @NotBlank
-    private String postCategory;
+    private String category;
 
     @Builder
-    public PostCreateRequestDto(String uploadKey, List<String> hashtags, String postCategory) {
+    public PostCreateRequestDto(String uploadKey, List<String> hashtags, String category) {
         this.uploadKey = uploadKey;
         this.hashtags = hashtags;
-        this.postCategory = postCategory;
+        this.category = category;
     }
 }
