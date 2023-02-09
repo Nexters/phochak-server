@@ -121,7 +121,7 @@ class PostControllerTest extends RestDocs {
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (PHOCHAK/LATEST/VIEW)"),
+                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
                                 parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
                         ),
                         requestHeaders(
