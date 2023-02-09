@@ -2,6 +2,7 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.dto.response.LoginResponseDto;
+import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -47,7 +48,7 @@ class UserControllerTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("로그인 요청 API - 로그인 성공")
+    @DisplayName("유저 API - 로그인 성공")
     void login() throws Exception {
         String provider = "kakao";
         String token = "testCode";
@@ -86,4 +87,33 @@ class UserControllerTest extends RestDocs {
                                 )
                 ));
     }
+
+    @Test
+    @DisplayName("유저 API - 닉네임 중복확인")
+    void checkNicknameIsDuplicated() throws Exception {
+        String nickname = "여행자#123";
+        UserCheckResponseDto response = UserCheckResponseDto.of(true);
+
+        when(userService.checkNicknameIsDuplicated(any())).thenReturn(response);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/check/nickname")
+                                .param("nickname", nickname)
+                )
+                .andExpect(status().isOk())
+                .andDo(document("user/check/nickname",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("nickname").description("(필수) 중복확인하고자 하는 닉네임")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.isDuplicated").type(JsonFieldType.BOOLEAN).description("닉네임 중복여부")
+                        )
+                ));
+    }
+
 }
