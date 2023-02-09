@@ -22,7 +22,7 @@ public class Shorts {
     private Long id;
 
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = false, unique = false)
     private ShortsStateEnum shortsStateEnum;
 
     @Column(nullable = false, unique = true)
