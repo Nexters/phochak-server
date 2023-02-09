@@ -45,7 +45,7 @@ public class PostServiceImpl implements PostService {
         User user = userRepository.getReferenceById(userId);
         Post post = Post.builder()
                         .user(user)
-                        .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getPostCategory()))
+                        .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
                         .build();
         postRepository.save(post);
         hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), post);

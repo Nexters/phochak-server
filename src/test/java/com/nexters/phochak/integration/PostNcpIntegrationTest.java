@@ -109,7 +109,7 @@ public class PostNcpIntegrationTest extends RestDocs {
         //given
         Map<String, Object> body = new HashMap<>();
         body.put("uploadKey", "uploadKey");
-        body.put("postCategory", "RESTAURANT");
+        body.put("category", "RESTAURANT");
         body.put("hashtags", List.of("해시태그1", "해시태그2", "해시태그3"));
 
         // when, then
@@ -123,7 +123,7 @@ public class PostNcpIntegrationTest extends RestDocs {
                 preprocessRequest(prettyPrint()),
                 preprocessResponse(prettyPrint()),
                 requestFields(
-                        fieldWithPath("postCategory").description("카테고리 ex) TOUR / RESTAURANT"),
+                        fieldWithPath("category").description("카테고리 ex) TOUR / RESTAURANT / CAFE"),
                         fieldWithPath("uploadKey").description("발급 받았던 업로드 키"),
                         fieldWithPath("hashtags").description("해시태그 배열 ex) [\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
                 ),
@@ -144,7 +144,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     void createPostValidateEssentialParameter_InvalidInput() throws Exception {
         //given
         Map<String, Object> body = new HashMap<>();
-        body.put("postCategory", "RESTAURANT");
+        body.put("category", "RESTAURANT");
         body.put("hashtags", List.of("해시태그1", "해시태그2", "해시태그3"));
 
         // when, then
@@ -172,7 +172,7 @@ public class PostNcpIntegrationTest extends RestDocs {
         //given
         body = new HashMap<>();
         body.put("uploadKey", "uploadKey");
-        body.put("postCategory", "RESTAURANT");
+        body.put("category", "RESTAURANT");
 
         // when, then
         mockMvc.perform(post("/v1/post")
@@ -184,13 +184,12 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @Disabled
     @DisplayName("존재하지 않는 카테고리 입력 시에 INVALID_INPUT 예외가 발생한다")
     void createPostValidateCategory_InvalidInput() throws Exception {
         //given
         Map<String, Object> body = new HashMap<>();
         body.put("key", "key");
-        body.put("postCategory", "INVALIDCATEGORY");
+        body.put("category", "INVALIDCATEGORY");
         body.put("hashtags", List.of("해시태그1", "해시태그2", "해시태그3"));
 
         // when, then
@@ -198,12 +197,11 @@ public class PostNcpIntegrationTest extends RestDocs {
                         .content(objectMapper.writeValueAsString(body))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken)
-                ).andExpect(status().isBadRequest())
+                ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
     }
 
     @Test
-    @Disabled
     @DisplayName("해시태그의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
     void HashtagOver30_InvalidInput() throws Exception {
         //given
@@ -214,7 +212,7 @@ public class PostNcpIntegrationTest extends RestDocs {
 
         Map<String, Object> body = new HashMap<>();
         body.put("key", "key");
-        body.put("postCategory", "RESTAURANT");
+        body.put("category", "RESTAURANT");
         body.put("hashtags", hashtagList);
 
         // when, then
