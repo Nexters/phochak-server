@@ -56,7 +56,7 @@ class HashtagServiceImplTest {
     }
 
     @Test
-    @DisplayName("해시태그에 공백이 있으면 INVALID_INPUT 예외가 발생한다")
+    @DisplayName("해시태그에 공백이 있으면 SPACE_IN_HASHTAG 예외가 발생한다")
     void createHashtagWithSpace_invalidInput() {
         //given
         List<String> stringHashList = List.of("해시태 그1", " 해시태그2", "해시태그 3");
@@ -65,7 +65,7 @@ class HashtagServiceImplTest {
         //when, then
         assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
                 .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.INVALID_INPUT.getMessage());
+                .hasMessage(ResCode.SPACE_IN_HASHTAG.getMessage());
     }
 
 }

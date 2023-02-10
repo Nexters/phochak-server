@@ -24,6 +24,6 @@ public enum OAuthProviderEnum {
             }
         }
 
-        throw new PhochakException(ResCode.INVALID_INPUT, "지원하지 않는 provider code입니다.");
+        throw new PhochakException(ResCode.NOT_SUPPORTED_PROVIDER);
     }
 }

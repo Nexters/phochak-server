@@ -11,6 +11,8 @@ endif::[]
 
 = Phochak API 문서
 
+include::rescode.adoc[]
+
 include::login.adoc[]
 
 include::post.adoc[]

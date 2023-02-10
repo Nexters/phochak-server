@@ -18,6 +18,7 @@
 # Generated files
 .idea/**/contentModel.xml
 **/resources/static/docs
+src/docs/asciidoc/rescode.adoc
 
 # Sensitive or high-churn files
 .idea/**/dataSources/

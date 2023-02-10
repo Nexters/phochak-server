@@ -1,9 +1,15 @@
 == 포착하기 APIs
-
-=== 포착하기 / 포착 취소하기
 포착하기 / 포착취소하기 기능을 제공한다.
 
-==== 포착하기 요청
+=== 포착하기 요청
+
+==== 발생 가능 서비스 예외 코드
+"P400", "존재하지 않는 게시글입니다"
+
+"P410", "이미 포착된 게시글입니다"
+
+
+==== 요청
 HTTP Example
 
 include::{snippets}/post/{postId}/likes/post/http-request.adoc[]
@@ -26,9 +32,15 @@ Response Parameters
 
 include::{snippets}/post/{postId}/likes/post/response-fields.adoc[]
 
-==== 포착 취소하기 요청
+=== 포착 취소하기 요청
+
+==== 발생 가능 서비스 예외 코드
+"P400", "존재하지 않는 게시글입니다"
+"P411", "포착 하지 않은 게시글입니다"
+
 HTTP Example
 
+==== 요청
 include::{snippets}/post/{postId}/likes/delete/http-request.adoc[]
 
 Path Parameters

@@ -3,6 +3,14 @@
 === 로그인
 OAuth 2.0을 활용한 로그인 (및 회원가입) 을 진행한다.
 
+==== 발생 가능 서비스 예외 코드
+"P204", "올바르지 않은 apple identifyToken입니다"
+
+"P205", "지원하지 않는 provider입니다"
+
+"P300", "존재하지 않는 유저입니다"
+
+
 ==== 요청
 HTTP Example
 
@@ -25,3 +33,4 @@ include::{snippets}/user/login/http-response.adoc[]
 Response Parameters
 
 include::{snippets}/user/login/response-fields.adoc[]
+
