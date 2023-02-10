@@ -2,7 +2,9 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.RefreshToken;
 import com.nexters.phochak.dto.TokenDto;
+import com.nexters.phochak.dto.request.ReissueAccessTokenRequestDto;
 import com.nexters.phochak.dto.response.LoginResponseDto;
+import com.nexters.phochak.dto.response.ReissueAccessTokenResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.RefreshTokenRepository;
@@ -71,6 +73,16 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                     .getBody();
 
         return Long.valueOf((String) claims.get("userId"));
+    }
+
+    @Override
+    public ReissueAccessTokenResponseDto reissueAccessToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
+        Long userId = validateToken(reissueAccessTokenRequestDto.getRefreshToken());
+        TokenDto accessToken = generateToken(userId, accessTokenExpireLength);
+        return ReissueAccessTokenResponseDto.builder()
+                .accessToken(createTokenStringForResponse(accessToken))
+                .expiresIn(accessToken.getExpiresIn())
+                .build();
     }
 
     @Override

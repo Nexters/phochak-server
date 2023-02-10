@@ -1,11 +1,14 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.dto.request.ReissueAccessTokenRequestDto;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.request.LoginRequestDto;
 import com.nexters.phochak.dto.request.NicknameModifyRequestDto;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.LoginResponseDto;
+import com.nexters.phochak.dto.request.LoginRequestDto;
+import com.nexters.phochak.dto.response.ReissueAccessTokenResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.dto.response.UserInfoResponseDto;
 import com.nexters.phochak.exception.PhochakException;
@@ -17,6 +20,9 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestHeader;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -37,6 +43,11 @@ public class UserController {
     public CommonResponse<LoginResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
         Long loginUserId = userService.login(provider, requestDto.getToken());
         return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
+    }
+
+    @PostMapping("reissue-token")
+    public CommonResponse<ReissueAccessTokenResponseDto> login(@RequestBody ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
+        return new CommonResponse<>(jwtTokenService.reissueAccessToken(reissueAccessTokenRequestDto));
     }
 
     // test(web oauth) 용 api, provider를 kakao_test 로 명시

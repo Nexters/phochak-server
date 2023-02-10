@@ -1,7 +1,9 @@
 package com.nexters.phochak.service;
 
 import com.nexters.phochak.dto.TokenDto;
+import com.nexters.phochak.dto.request.ReissueAccessTokenRequestDto;
 import com.nexters.phochak.dto.response.LoginResponseDto;
+import com.nexters.phochak.dto.response.ReissueAccessTokenResponseDto;
 
 public interface JwtTokenService {
     /**
@@ -24,4 +26,6 @@ public interface JwtTokenService {
      * @return
      */
     TokenDto generateAccessToken(Long userId);
+
+    ReissueAccessTokenResponseDto reissueAccessToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto);
 }
