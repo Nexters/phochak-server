@@ -24,7 +24,7 @@ public class MediaFileLocalRepository implements MediaFileRepository {
         try {
             shorts.transferTo(filePath);
         } catch(IllegalStateException e) {
-            throw new PhochakException(ResCode.INVALID_VIDEO_FORMAT, "올바르지 않은 파일");
+            throw new PhochakException(ResCode.INVALID_VIDEO_FORMAT);
         } catch(IOException e) {
             throw new PhochakException(ResCode.INTERNAL_SERVER_ERROR, "영상 파일 처리 실패");
         }
