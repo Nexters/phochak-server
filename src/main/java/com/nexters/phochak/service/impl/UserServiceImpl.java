@@ -2,6 +2,7 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.OAuthUserInformation;
+import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.UserRepository;
@@ -43,6 +44,11 @@ public class UserServiceImpl implements UserService {
         if (!userRepository.existsById(userId)) {
             throw new PhochakException(ResCode.NOT_FOUND_USER);
         }
+    }
+
+    @Override
+    public UserCheckResponseDto checkNicknameIsDuplicated(String nickname) {
+        return UserCheckResponseDto.of(userRepository.existsByNickname(nickname));
     }
 
     private User getOrCreateUser(OAuthUserInformation userInformation) {

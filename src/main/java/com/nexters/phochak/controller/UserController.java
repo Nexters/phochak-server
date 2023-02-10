@@ -3,6 +3,7 @@ package com.nexters.phochak.controller;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.request.LoginRequestDto;
+import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
 import lombok.RequiredArgsConstructor;
@@ -34,5 +35,10 @@ public class UserController {
     public CommonResponse<LoginResponseDto> login(@PathVariable String provider, @RequestParam String code) {
         Long loginUserId = userService.login(provider, code);
         return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
+    }
+
+    @GetMapping("check/nickname")
+    public CommonResponse<UserCheckResponseDto> checkNicknameIsDuplicated(@RequestParam String nickname) {
+        return new CommonResponse<>(userService.checkNicknameIsDuplicated(nickname));
     }
 }

@@ -13,7 +13,7 @@ endif::[]
 
 include::rescode.adoc[]
 
-include::login.adoc[]
+include::user.adoc[]
 
 include::post.adoc[]
 
