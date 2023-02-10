@@ -1,5 +1,6 @@
 package com.nexters.phochak.client.impl;
 
+import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
@@ -39,7 +40,7 @@ public class NCPStorageClient implements StorageBucketClient {
         long expTimeMillis = expiration.getTime();
         expTimeMillis += 1000 * 60 * 30; // 30분
         expiration.setTime(expTimeMillis);
-        return s3Client.generatePresignedUrl(bucketName, objectName, expiration);
+        return s3Client.generatePresignedUrl(bucketName, objectName, expiration, HttpMethod.PUT);
     }
 
     @Override
