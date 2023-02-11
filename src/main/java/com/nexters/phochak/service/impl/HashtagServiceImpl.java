@@ -21,7 +21,7 @@ public class HashtagServiceImpl implements HashtagService {
 
     @Override
     public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, Post post) {
-        if(stringHashtagList.size() == 0) {
+        if(stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
         validateHashtag(stringHashtagList);
@@ -37,7 +37,7 @@ public class HashtagServiceImpl implements HashtagService {
     private void validateHashtag(List<String> stringHashtagList) {
         for(String tag : stringHashtagList) {
             if(tag.contains(" ")) {
-                throw new PhochakException(ResCode.SPACE_IN_HASHTAG, "해시태그에 공백이 존재합니다.");
+                throw new PhochakException(ResCode.INVALID_INPUT, "해시태그에는 공백이 들어갈 수 없습니다.");
             }
         }
     }
