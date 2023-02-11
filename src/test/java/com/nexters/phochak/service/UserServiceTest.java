@@ -3,6 +3,7 @@ package com.nexters.phochak.service;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.KakaoUserInformation;
 import com.nexters.phochak.dto.TokenDto;
+import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.UserRepository;
@@ -21,6 +22,7 @@ import java.util.Map;
 import java.util.Optional;
 
 import static com.nexters.phochak.dto.KakaoUserInformation.KakaoOAuthProperties;
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
@@ -112,6 +114,34 @@ class UserServiceTest {
         assertThatThrownBy(() -> userService.validateUser(1L))
                 .isInstanceOf(PhochakException.class)
                 .hasMessage(ResCode.NOT_FOUND_USER.getMessage());
+    }
+
+    @Test
+    @DisplayName("닉네임 중복 체크 시 중복된 닉네임이 존재하면 true를 반환한다")
+    void checkNickname_duplicated() {
+        // given
+        String nickname = "nickname";
+        given(userRepository.existsByNickname(nickname)).willReturn(true);
+
+        // when
+        UserCheckResponseDto response = userService.checkNicknameIsDuplicated(nickname);
+
+        // then
+        assertThat(response.getIsDuplicated()).isTrue();
+    }
+
+    @Test
+    @DisplayName("닉네임 변경 시 중복된 닉네임이 존재하면 예외가 발생한다")
+    void modifyNickname_duplicated() {
+        // given
+        String nickname = "nickname";
+        given(userRepository.existsByNickname(nickname)).willReturn(true);
+        given(userRepository.findById(any())).willReturn(Optional.of(user));
+
+        // when & then
+        assertThatThrownBy(() -> userService.modifyNickname(nickname))
+                .isInstanceOf(PhochakException.class)
+                .hasMessage(ResCode.DUPLICATED_NICKNAME.getMessage());
     }
 
     static class MockUser extends User {
