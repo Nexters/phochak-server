@@ -55,3 +55,48 @@ include::{snippets}/user/check/nickname/http-response.adoc[]
 Response Parameters
 
 include::{snippets}/user/check/nickname/response-fields.adoc[]
+
+=== 닉네임 변경
+원하는 닉네임으로 닉네임을 변경한다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/user/modify/nickname/http-request.adoc[]
+
+Request Parameters
+
+include::{snippets}/user/modify/nickname/request-fields.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/user/modify/nickname/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/user/modify/nickname/response-fields.adoc[]
+
+**닉네임 변경 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|성공
+|닉네임 변경 성공
+
+|P200
+|형식오류
+|파라미터 형식 오류
+
+|P206
+|파라미터 누락
+|필수 파라미터 누락
+
+|P301
+|닉네임 중복 발생
+|저장하려는 시점에 닉네임 중복 발생, 수정하여 재시도 필요

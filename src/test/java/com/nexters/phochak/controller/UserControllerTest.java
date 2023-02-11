@@ -1,5 +1,6 @@
 package com.nexters.phochak.controller;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
@@ -12,12 +13,17 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
@@ -25,6 +31,7 @@ import static org.springframework.restdocs.operation.preprocess.Preprocessors.pr
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.requestFields;
 import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
@@ -38,6 +45,7 @@ class UserControllerTest extends RestDocs {
     UserService userService;
     @Mock
     JwtTokenService jwtTokenService;
+
     @InjectMocks
     UserController userController;
     MockMvc mockMvc;
@@ -106,7 +114,7 @@ class UserControllerTest extends RestDocs {
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("nickname").description("(필수) 중복확인하고자 하는 닉네임")
+                                parameterWithName("nickname").description("(필수) 중복확인하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
@@ -116,4 +124,33 @@ class UserControllerTest extends RestDocs {
                 ));
     }
 
+    @Test
+    @DisplayName("유저 API - 닉네임 변경하기")
+    void modifyNickname() throws Exception {
+        ObjectMapper objectMapper = new ObjectMapper();
+        String nickname = "변경 닉네임";
+        Map<String, Object> body = new HashMap<>();
+        body.put("nickname", nickname);
+
+        doNothing().when(userService).modifyNickname(any());
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .put("/v1/user/modify/nickname")
+                                .content(objectMapper.writeValueAsString(body))
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("user/modify/nickname",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("nickname").description("(필수) 변경하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+                        )
+                ));
+    }
 }
