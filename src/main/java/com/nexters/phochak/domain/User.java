@@ -51,4 +51,8 @@ public class User extends BaseTime {
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
     }
+
+    public void modifyNickname(String nickname) {
+        this.nickname = nickname;
+    }
 }
