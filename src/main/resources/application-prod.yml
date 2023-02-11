@@ -9,7 +9,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: create # 일단 테스트용으로 create 사용, 이후 ddl 만들면 validate 로 수정 필요
+      ddl-auto: validate # TODO: ddl 작성
 
 kakao:
   redirect_uri: http://${server_public_address}/v1/user/login/kakao
