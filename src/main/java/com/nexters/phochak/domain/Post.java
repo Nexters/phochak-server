@@ -35,7 +35,7 @@ public class Post extends BaseTime {
     @JoinColumn(name="USER_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private User user;
 
-    @OneToOne(fetch = FetchType.LAZY)
+    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name="SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shorts shorts;
 
@@ -50,7 +50,7 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<Likes> likes;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     private List<Hashtag> hashtags;
 
     public Post() {
