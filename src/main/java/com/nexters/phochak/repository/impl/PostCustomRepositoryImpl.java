@@ -55,7 +55,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private BooleanExpression filterByCursor(PostSortOption postSortOption, CustomCursor cursor) {
         String cursorString = cursor.createCursorString();
         if (postSortOption == PostSortOption.LATEST) {
-            return post.id.lt(Long.valueOf(cursorString.substring(CRITERIA_PADDING)));
+            return post.id.lt(cursor.getLastId());
         } else if (postSortOption == PostSortOption.VIEW) {
             return StringExpressions.lpad(post.view.stringValue(), CRITERIA_PADDING, ZERO)
                     .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
