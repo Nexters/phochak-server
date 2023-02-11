@@ -19,7 +19,7 @@ import javax.validation.constraints.Size;
 @Entity
 @Table(name = "`USER`")
 public class User extends BaseTime {
-    public static final int NICKNAME_MAX_SIZE = 10;
+    private static final int NICKNAME_MAX_SIZE = 10;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -54,5 +54,9 @@ public class User extends BaseTime {
 
     public void modifyNickname(String nickname) {
         this.nickname = nickname;
+    }
+
+    public static int getNicknameMaxSize() {
+        return NICKNAME_MAX_SIZE;
     }
 }

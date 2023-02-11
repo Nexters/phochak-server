@@ -101,6 +101,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private static String generateUUID() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, User.NICKNAME_MAX_SIZE - NICKNAME_PREFIX.length());
+        return UUID.randomUUID().toString().replace("-", "").substring(0, User.getNicknameMaxSize() - NICKNAME_PREFIX.length());
     }
 }
