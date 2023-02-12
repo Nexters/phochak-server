@@ -1,6 +1,6 @@
 package com.nexters.phochak.exception;
 
-import com.nexters.phochak.dto.response.ExceptionResponseDto;
+import com.nexters.phochak.dto.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -19,43 +19,33 @@ import java.util.List;
 public class CustomExceptionHandler {
 
     @ExceptionHandler(PhochakException.class)
-    protected ResponseEntity<ExceptionResponseDto> handlePhochakCustomException(PhochakException e, HttpServletRequest request) {
+    protected CommonResponse<Void> handlePhochakCustomException(PhochakException e, HttpServletRequest request) {
         log.warn("[PhochakException 발생] request url: {}", request.getRequestURI(), e);
-        return ResponseEntity.ok().body(ExceptionResponseDto.builder()
-                .resCode(e.getResCode())
-                .customResMessage(e.getCustomResMessage())
-                .build());
+        return new CommonResponse<>(e.getResCode().getCode(), e.getCustomResMessage());
     }
 
     @ExceptionHandler(Exception.class)
-    protected ResponseEntity<ExceptionResponseDto> handleInternalErrorException(Exception e, HttpServletRequest request) {
+    protected ResponseEntity<CommonResponse<Void>> handleInternalErrorException(Exception e, HttpServletRequest request) {
         log.error("[Internal Error Message] request url: {}", request.getRequestURI(), e);
-        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(ExceptionResponseDto.builder()
-                .resCode(ResCode.INTERNAL_SERVER_ERROR)
-                .build());
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new CommonResponse<>(ResCode.INTERNAL_SERVER_ERROR));
     }
 
     @ExceptionHandler(BindException.class)
-    protected ResponseEntity<ExceptionResponseDto> handleBindException(BindException e, HttpServletRequest request) {
+    protected CommonResponse<Void> handleBindException(BindException e, HttpServletRequest request) {
         log.warn("[BindException 발생] request url: {}", request.getRequestURI(), e);
         List<ObjectError> allErrors = e.getBindingResult().getAllErrors();
 
         StringBuilder stringBuilder = getResponseStringBuilder(allErrors);
 
-        return ResponseEntity.ok(ExceptionResponseDto.builder()
-                .resCode(ResCode.INVALID_INPUT)
-                .customResMessage(stringBuilder.toString())
-                .build());
+        return new CommonResponse<>(ResCode.INVALID_INPUT.getCode(), stringBuilder.toString());
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    protected ResponseEntity<ExceptionResponseDto> pathParamException(MissingServletRequestParameterException e, HttpServletRequest request) {
+    protected CommonResponse<Void> pathParamException(MissingServletRequestParameterException e, HttpServletRequest request) {
         log.warn("[MissingServletRequestParameterException 발생] request url: {}", request.getRequestURI(), e);
 
-        return ResponseEntity.ok(ExceptionResponseDto.builder()
-                .resCode(ResCode.INVALID_INPUT)
-                .customResMessage("check this param: " + e.getParameterName())
-                .build());
+        return new CommonResponse<>(ResCode.INVALID_INPUT.getCode(), "check this param: " + e.getParameterName());
     }
 
     private static StringBuilder getResponseStringBuilder(Iterable<ObjectError> allErrors) {
