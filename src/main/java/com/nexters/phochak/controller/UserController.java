@@ -1,11 +1,13 @@
 package com.nexters.phochak.controller;
 
+import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.request.LoginRequestDto;
 import com.nexters.phochak.dto.request.NicknameModifyRequestDto;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
+import com.nexters.phochak.dto.response.UserInfoResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.service.JwtTokenService;
@@ -59,5 +61,12 @@ public class UserController {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
         return new CommonResponse<>();
+    }
+
+    @Auth
+    @GetMapping
+    public CommonResponse<UserInfoResponseDto> getInfo() {
+        Long userId = UserContext.CONTEXT.get();
+        return new CommonResponse<>(userService.getInfo(userId));
     }
 }
