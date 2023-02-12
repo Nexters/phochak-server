@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
+import com.nexters.phochak.dto.response.UserInfoResponseDto;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,9 +23,13 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
@@ -137,6 +142,7 @@ class UserControllerTest extends RestDocs {
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .put("/v1/user/nickname")
+                                .header(AUTHORIZATION_HEADER, "access token")
                                 .content(objectMapper.writeValueAsString(body))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -146,10 +152,47 @@ class UserControllerTest extends RestDocs {
                         requestFields(
                                 fieldWithPath("nickname").description("(필수) 변경하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
                         ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("유저 API - 유저 정보 조회하기")
+    void getInfo() throws Exception {
+        UserInfoResponseDto response = UserInfoResponseDto.builder()
+                .id(1L)
+                .nickname("nickname")
+                .profileImgUrl("profile image url")
+                .build();
+
+        given(userService.getInfo(any())).willReturn(response);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user")
+                                .header(AUTHORIZATION_HEADER, "access token"))
+                .andExpect(status().isOk())
+                .andDo(document("user",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크")
                         )
                 ));
     }

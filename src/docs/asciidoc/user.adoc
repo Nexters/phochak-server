@@ -34,6 +34,48 @@ Response Parameters
 
 include::{snippets}/user/login/response-fields.adoc[]
 
+=== 회원정보 가져오기
+현재 로그인된 유저의 정보를 가져온다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/user/http-request.adoc[]
+
+Request Headers
+
+include::{snippets}/user/request-headers.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/user/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/user/response-fields.adoc[]
+
+**회원정보 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|조회 성공
+
+|P201
+|토큰을 찾을 수 없습니다(로그인 되지 않은 사용자입니다)
+|로그인 되지 않았거나 토큰 누락
+
+|P300
+|존재하지 않는 유저입니다
+|존재하지 않는 유저를 조회
+|===
+
 === 닉네임 중복체크
 변경하려는 닉네임의 중복 여부를 체크한다.
 
@@ -63,6 +105,10 @@ include::{snippets}/user/check/nickname/response-fields.adoc[]
 HTTP Example
 
 include::{snippets}/user/modify/nickname/http-request.adoc[]
+
+Request Headers
+
+include::{snippets}/user/request-headers.adoc[]
 
 Request Parameters
 
@@ -100,3 +146,4 @@ include::{snippets}/user/modify/nickname/response-fields.adoc[]
 |P301
 |닉네임이 중복되었습니다
 |저장하려는 시점에 닉네임 중복 발생, 수정하여 재시도 필요
+|===
