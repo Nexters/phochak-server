@@ -1,5 +1,7 @@
 package com.nexters.phochak.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,10 +23,12 @@ public class Shorts {
     @Column(name="SHORTS_ID")
     private Long id;
 
+    @JsonProperty("state")
     @Enumerated(EnumType.STRING)
     @Column(nullable = false, unique = false)
     private ShortsStateEnum shortsStateEnum;
 
+    @JsonIgnore
     @Column(nullable = false, unique = true)
     private String uploadKey;
 
