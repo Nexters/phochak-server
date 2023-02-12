@@ -37,7 +37,7 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     private static void validateHashtag(List<String> stringHashtagList) {
-        Pattern pattern = Pattern.compile("[a-zA-Z0-9 ㄱ-ㅎㅏ-ㅣ가-힣_]\\S{1,20}$");
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣_]{1,20}$");
         for(String tag : stringHashtagList) {
             if(!pattern.matcher(tag).matches()) {
                 throw new PhochakException(ResCode.INVALID_INPUT, "해시태그 형식이 올바르지 않습니다.");
