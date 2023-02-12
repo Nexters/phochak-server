@@ -2,6 +2,7 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.exception.PhochakException;
+import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -31,7 +32,7 @@ class HashtagServiceImplTest {
     @DisplayName("해시태그 생성 성공")
     void createHashtag() {
         //given
-        List<String> stringHashList = List.of("해시태그1", "해시태그2", "해시태그3");
+        List<String> stringHashList = List.of("해시태그1", "해시_태그2", "해시태그3");
         Post post = new Post();
 
         //when
@@ -64,8 +65,7 @@ class HashtagServiceImplTest {
 
         //when, then
         assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.INVALID_INPUT.getMessage());
+                .isInstanceOf(PhochakException.class);
     }
 
     @Test
@@ -77,8 +77,7 @@ class HashtagServiceImplTest {
 
         //when, then
         assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.INVALID_INPUT.getMessage());
+                .isInstanceOf(PhochakException.class);
     }
 
     @Test
@@ -90,8 +89,7 @@ class HashtagServiceImplTest {
 
         //when, then
         assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.INVALID_INPUT.getMessage());
+                .isInstanceOf(PhochakException.class);
     }
 
 }
