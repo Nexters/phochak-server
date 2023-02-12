@@ -9,19 +9,19 @@ public enum ResCode {
     INTERNAL_SERVER_ERROR("P100", "서버 에러 발생"),
 
     //P2xx: 인증 예외
-    INVALID_INPUT("P200", "요청 값이 올바르지 않습니다"),
+    INVALID_INPUT("P200", "요청 값의 형식이 올바르지 않습니다"),
     TOKEN_NOT_FOUND("P201", "토큰을 찾을 수 없습니다(로그인 되지 않은 사용자입니다)"),
     INVALID_TOKEN("P202", "올바르지 않은 토큰입니다"),
     EXPIRED_TOKEN("P203", "만료된 토큰입니다"),
     INVALID_APPLE_TOKEN("P204", "올바르지 않은 apple identifyToken입니다"),
     NOT_SUPPORTED_PROVIDER("P205", "지원하지 않는 provider입니다"),
-
+    NOT_FOUND_REQUIRED_FIELD("P206", "요청 필수 값이 존재하지 않습니다"),
     //P3xx: 유저 예외
     NOT_FOUND_USER("P300", "존재하지 않는 유저입니다"),
+    DUPLICATED_NICKNAME("P301", "닉네임이 중복되었습니다"),
 
     //P4xx: 게시글 예외
     NOT_FOUND_POST("P400", "존재하지 않는 게시글입니다"),
-    SPACE_IN_HASHTAG("P401", "해시태그에는 공백이 들어갈 수 없습니다."),
     ALREADY_PHOCHAKED("P410", "이미 포착된 게시글입니다"),
     NOT_PHOCHAKED("P411", "포착 하지 않은 게시글입니다"),
     NOT_FOUND_SORT_VALUE("P412", "최신순이 아닌 경우 정렬기준의 값은 필수입니다"),

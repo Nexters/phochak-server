@@ -114,7 +114,7 @@ include::{snippets}/post/upload-key/GET/response-fields.adoc[]
 포스트 업로드 기능을 제공한다
 
 ==== 발생 가능 서비스 예외 코드
-"P401", "해시태그에는 공백이 들어갈 수 없습니다."
+"P200", "해시태그에는 공백이 들어갈 수 없습니다."
 
 ==== 요청
 HTTP Example

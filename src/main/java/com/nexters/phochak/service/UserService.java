@@ -24,4 +24,6 @@ public interface UserService {
      * @return
      */
     UserCheckResponseDto checkNicknameIsDuplicated(String nickname);
+
+    void modifyNickname(String nickname);
 }

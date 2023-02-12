@@ -2,8 +2,7 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
-import com.nexters.phochak.repository.*;
+import com.nexters.phochak.repository.HashtagRepository;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -12,12 +11,13 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class HashtagServiceImplTest {
@@ -65,7 +65,7 @@ class HashtagServiceImplTest {
         //when, then
         assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
                 .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.SPACE_IN_HASHTAG.getMessage());
+                .hasMessage("해시태그에는 공백이 들어갈 수 없습니다.");
     }
 
 }

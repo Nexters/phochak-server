@@ -4,6 +4,7 @@ import com.nexters.phochak.dto.response.CommonResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.BindException;
 import org.springframework.validation.FieldError;
 import org.springframework.validation.ObjectError;
@@ -46,6 +47,13 @@ public class CustomExceptionHandler {
         log.warn("[MissingServletRequestParameterException 발생] request url: {}", request.getRequestURI(), e);
 
         return new CommonResponse<>(ResCode.INVALID_INPUT.getCode(), "check this param: " + e.getParameterName());
+    }
+
+    @ExceptionHandler(HttpMessageNotReadableException.class)
+    protected CommonResponse<Void> handleRequestBodyException(HttpMessageNotReadableException e, HttpServletRequest request) {
+        log.warn("[HttpMessageNotReadableException 발생] request url: {}", request.getRequestURI(), e);
+
+        return new CommonResponse<>(ResCode.NOT_FOUND_REQUIRED_FIELD.getCode(), "request body에 필요한 값이 존재하지 않습니다");
     }
 
     private static StringBuilder getResponseStringBuilder(Iterable<ObjectError> allErrors) {

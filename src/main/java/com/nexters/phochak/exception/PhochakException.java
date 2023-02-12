@@ -10,15 +10,14 @@ import lombok.Getter;
 public class PhochakException extends RuntimeException {
 
     private final ResCode resCode;
-    private String customResMessage;
+    private final String customResMessage;
 
     public PhochakException(ResCode resCode) {
-        super(resCode.getMessage());
-        this.resCode = resCode;
+        this(resCode, resCode.getMessage());
     }
 
     public PhochakException(ResCode resCode, String customResMessage) {
-        super(resCode.getMessage());
+        super(customResMessage);
         this.resCode = resCode;
         this.customResMessage = customResMessage;
     }

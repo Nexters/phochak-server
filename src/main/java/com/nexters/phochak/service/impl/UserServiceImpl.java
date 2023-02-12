@@ -1,5 +1,6 @@
 package com.nexters.phochak.service.impl;
 
+import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.OAuthUserInformation;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
@@ -48,7 +49,26 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public UserCheckResponseDto checkNicknameIsDuplicated(String nickname) {
-        return UserCheckResponseDto.of(userRepository.existsByNickname(nickname));
+        return UserCheckResponseDto.of(isDuplicatedNickname(nickname));
+    }
+
+
+    @Override
+    public void modifyNickname(String nickname) {
+        Long userId = UserContext.CONTEXT.get();
+
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+
+        if (isDuplicatedNickname(nickname)) {
+            throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
+        }
+
+        user.modifyNickname(nickname);
+    }
+
+    private boolean isDuplicatedNickname(String nickname) {
+        return userRepository.existsByNickname(nickname);
     }
 
     private User getOrCreateUser(OAuthUserInformation userInformation) {
@@ -81,6 +101,6 @@ public class UserServiceImpl implements UserService {
     }
 
     private static String generateUUID() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, User.NICKNAME_MAX_SIZE - NICKNAME_PREFIX.length());
+        return UUID.randomUUID().toString().replace("-", "").substring(0, User.getNicknameMaxSize() - NICKNAME_PREFIX.length());
     }
 }
