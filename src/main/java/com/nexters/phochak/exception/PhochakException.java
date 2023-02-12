@@ -1,9 +1,12 @@
 package com.nexters.phochak.exception;
 
+import lombok.Getter;
+
 /**
  * 서비스 최상위 Exception.
  * 해당 클래스 상속 후 에러 코드 및 메시지 정의
  */
+@Getter
 public class PhochakException extends RuntimeException {
 
     private final ResCode resCode;
@@ -19,13 +22,4 @@ public class PhochakException extends RuntimeException {
         this.resCode = resCode;
         this.customResMessage = customResMessage;
     }
-
-    public ResCode getResCode() {
-        return resCode;
-    }
-
-    public String getCustomResMessage() {
-        return customResMessage;
-    }
-
 }
