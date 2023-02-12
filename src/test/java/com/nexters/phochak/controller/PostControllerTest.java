@@ -115,7 +115,7 @@ class PostControllerTest extends RestDocs {
                                 .get("/v1/post/list")
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .header(AUTHORIZATION_HEADER, "testToken"))
+                                .header(AUTHORIZATION_HEADER, "access token"))
                 .andExpect(status().isOk())
                 .andDo(document("post/list/initial",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
@@ -183,7 +183,7 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .header(AUTHORIZATION_HEADER, "testToken")
+                                .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
                 .andDo(document("post/list/after",
@@ -254,7 +254,7 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .header(AUTHORIZATION_HEADER, "testToken")
+                                .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
                 .andDo(document("post/list/last",

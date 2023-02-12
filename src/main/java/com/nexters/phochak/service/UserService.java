@@ -1,6 +1,7 @@
 package com.nexters.phochak.service;
 
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
+import com.nexters.phochak.dto.response.UserInfoResponseDto;
 
 public interface UserService {
 
@@ -25,5 +26,16 @@ public interface UserService {
      */
     UserCheckResponseDto checkNicknameIsDuplicated(String nickname);
 
+    /**
+     * 원하는 닉네임으로 닉네임을 변경한다.
+     * @param nickname
+     */
     void modifyNickname(String nickname);
+
+    /**
+     * 해당 유저의 정보를 조회한다.
+     * @param userId
+     * @return
+     */
+    UserInfoResponseDto getInfo(Long userId);
 }

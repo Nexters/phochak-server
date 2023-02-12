@@ -4,6 +4,7 @@ import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.OAuthUserInformation;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
+import com.nexters.phochak.dto.response.UserInfoResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.UserRepository;
@@ -65,6 +66,13 @@ public class UserServiceImpl implements UserService {
         }
 
         user.modifyNickname(nickname);
+    }
+
+    @Override
+    public UserInfoResponseDto getInfo(Long userId) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        return UserInfoResponseDto.of(user);
     }
 
     private boolean isDuplicatedNickname(String nickname) {
