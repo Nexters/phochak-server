@@ -44,13 +44,13 @@ public class UserController {
         return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
     }
 
-    @GetMapping("check/nickname")
+    @GetMapping("/check/nickname")
     public CommonResponse<UserCheckResponseDto> checkNicknameIsDuplicated(@RequestParam String nickname) {
         return new CommonResponse<>(userService.checkNicknameIsDuplicated(nickname));
     }
 
     @Auth
-    @PutMapping("modify/nickname")
+    @PutMapping("nickname")
     public CommonResponse<Void> modifyNickname(@RequestBody @Valid NicknameModifyRequestDto request) {
         try {
             userService.modifyNickname(request.getNickname());

@@ -136,7 +136,7 @@ class UserControllerTest extends RestDocs {
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
-                                .put("/v1/user/modify/nickname")
+                                .put("/v1/user/nickname")
                                 .content(objectMapper.writeValueAsString(body))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
