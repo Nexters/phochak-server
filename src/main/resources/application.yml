@@ -25,6 +25,9 @@ kakao:
 logging:
   level:
     com.nexters.phochak: debug
+  slack:
+    webhook-uri: "http://localhost:8080/log-callback"
+  config: classpath:logback-spring.xml
 
 security:
   jwt:

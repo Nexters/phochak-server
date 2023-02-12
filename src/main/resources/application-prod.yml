@@ -11,6 +11,11 @@ spring:
     hibernate:
       ddl-auto: validate # TODO: ddl 작성
 
+logging:
+  slack:
+    webhook-uri: ${slack_webhook_uri}
+  config: classpath:logback-spring.xml
+
 kakao:
   redirect_uri: http://${server_public_address}/v1/user/login/kakao
   client_id: ${kakao_client_id}
