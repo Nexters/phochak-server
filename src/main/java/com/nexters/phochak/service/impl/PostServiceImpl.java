@@ -57,6 +57,7 @@ public class PostServiceImpl implements PostService {
         shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
     }
 
+    @Override
     @Transactional
     public void delete(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
