@@ -11,6 +11,8 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 @Service
@@ -34,10 +36,11 @@ public class HashtagServiceImpl implements HashtagService {
         return hashtagRepository.saveAll(hashtagList);
     }
 
-    private void validateHashtag(List<String> stringHashtagList) {
+    private static void validateHashtag(List<String> stringHashtagList) {
+        Pattern pattern = Pattern.compile("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣_]{1,20}$");
         for(String tag : stringHashtagList) {
-            if(tag.contains(" ")) {
-                throw new PhochakException(ResCode.INVALID_INPUT, "해시태그에는 공백이 들어갈 수 없습니다.");
+            if(!pattern.matcher(tag).matches()) {
+                throw new PhochakException(ResCode.INVALID_INPUT, "해시태그 형식이 올바르지 않습니다.");
             }
         }
     }
