@@ -56,7 +56,7 @@ class HashtagServiceImplTest {
     }
 
     @Test
-    @DisplayName("해시태그에 공백이 있으면 SPACE_IN_HASHTAG 예외가 발생한다")
+    @DisplayName("해시태그에 공백이 있으면 INVALID_INPUT 예외가 발생한다")
     void createHashtagWithSpace_invalidInput() {
         //given
         List<String> stringHashList = List.of("해시태 그1", " 해시태그2", "해시태그 3");
@@ -65,7 +65,33 @@ class HashtagServiceImplTest {
         //when, then
         assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
                 .isInstanceOf(PhochakException.class)
-                .hasMessage("해시태그에는 공백이 들어갈 수 없습니다.");
+                .hasMessage(ResCode.INVALID_INPUT.getMessage());
+    }
+
+    @Test
+    @DisplayName("해시태그가 20자가 넘으면 SPACE_IN_HASHTAG 예외가 발생한다")
+    void createHashtagWithOverThen20Char_invalidInput() {
+        //given
+        List<String> stringHashList = List.of("123456789012345678901");
+        Post post = new Post();
+
+        //when, then
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
+                .isInstanceOf(PhochakException.class)
+                .hasMessage(ResCode.INVALID_INPUT.getMessage());
+    }
+
+    @Test
+    @DisplayName("해시태그 특수문자 _ 외에는 SPACE_IN_HASHTAG 예외가 발생한다")
+    void createHashtagWithExclamationMark_invalidInput() {
+        //given
+        List<String> stringHashList = List.of("tet@test");
+        Post post = new Post();
+
+        //when, then
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
+                .isInstanceOf(PhochakException.class)
+                .hasMessage(ResCode.INVALID_INPUT.getMessage());
     }
 
 }
