@@ -14,25 +14,27 @@ spring:
       enabled: true
       path: /h2-console
 
-app:
-  resource:
-    support:
-      shorts: mp4, mov, avi, wmv
-    local:
-      dummy: app-resource/test/dummy/
-      shorts: app-resource/test/shorts/
-
 ncp:
   s3:
     end-point: test
     region-name: test
-    bucket-name: test
+    original-bucket-name: test
+    encoded-bucket-name: test
     access-key: test
     secret-key: test
+
   shorts:
+    file-location-prefix:
+      head: test
+      tail: test
     streaming-url-prefix:
-      head: https://avvyxbbcswfn15804294.cdn.ntruss.com/hls/DtbTiSqB73qTBrez5H4IJg__/shorts/
-      tail: _encoded.mp4/index.m3u8
+      head: test
+      tail: test
+
+  thumbnail:
+    file-location-prefix:
+      head: test
+      tail: test
     thumbnail-url-prefix:
-      head: https://kr.object.ncloudstorage.com/phochak-shorts/thumbnail/shorts/
-      tail: _01.jpg
+      head: test
+      tail: test
