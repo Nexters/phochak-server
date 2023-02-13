@@ -25,7 +25,6 @@ import java.util.List;
 
 @ToString
 @Getter
-@Setter
 @Entity
 public class Post extends BaseTime {
     @Id
