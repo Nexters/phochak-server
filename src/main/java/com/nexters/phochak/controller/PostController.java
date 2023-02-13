@@ -6,6 +6,7 @@ import com.nexters.phochak.dto.EncodingCallbackRequestDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
+import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
@@ -56,8 +57,8 @@ public class PostController {
 
     @Auth
     @GetMapping("/list")
-    public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor) {
-        List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor);
+    public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor, @Valid PostFilter filter) {
+        List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor, filter);
         if (nextCursorPage.size() < customCursor.getPageSize()) {
             return new CommonPageResponse<>(nextCursorPage, true);
         }
