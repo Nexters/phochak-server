@@ -57,7 +57,7 @@ public class PostController {
 
     @Auth
     @GetMapping("/list")
-    public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor, @Valid PostFilter filter) {
+    public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor, PostFilter filter) {
         List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor, filter);
         if (nextCursorPage.size() < customCursor.getPageSize()) {
             return new CommonPageResponse<>(nextCursorPage, true);
