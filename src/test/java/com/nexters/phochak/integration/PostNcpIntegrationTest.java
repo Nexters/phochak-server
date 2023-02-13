@@ -1,19 +1,27 @@
 package com.nexters.phochak.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.client.impl.NCPStorageClient;
 import com.nexters.phochak.controller.PostController;
 import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.domain.Post;
+import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.exception.CustomExceptionHandler;
+import com.nexters.phochak.repository.PostRepository;
+import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import com.nexters.phochak.specification.OAuthProviderEnum;
+import com.nexters.phochak.specification.PostCategoryEnum;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -21,6 +29,8 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -29,17 +39,15 @@ import java.util.Map;
 import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.exception.ResCode.INVALID_INPUT;
 import static com.nexters.phochak.exception.ResCode.OK;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.operation.preprocess.Preprocessors.prettyPrint;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
-import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
-import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
+import static org.springframework.restdocs.request.RequestDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -54,9 +62,15 @@ public class PostNcpIntegrationTest extends RestDocs {
     @Autowired JwtTokenServiceImpl jwtTokenService;
     @Autowired
     PostController postController;
+    @Autowired EntityManager em;
     @Autowired ObjectMapper objectMapper;
     MockMvc mockMvc;
     static String testToken;
+    @Autowired
+    private PostRepository postRepository;
+    @Autowired
+    private ShortsRepository shortsRepository;
+    @MockBean NCPStorageClient ncpStorageClient;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -77,6 +91,8 @@ public class PostNcpIntegrationTest extends RestDocs {
     @Test
     @DisplayName("upload key 생성 성공")
     void uploadKey_success() throws Exception {
+        //given
+        given(ncpStorageClient.generatePresignedUrl(any())).willReturn(new URL("http://test.com"));
 
         // when, then
         mockMvc.perform(get("/v1/post/upload-key")
@@ -137,6 +153,55 @@ public class PostNcpIntegrationTest extends RestDocs {
                         fieldWithPath("data").type(JsonFieldType.NULL).description("null")
                 )
         ));
+    }
+
+    @Test
+    @DisplayName("게시글 삭제 성공")
+    void deletePost_success() throws Exception {
+        //given
+        User user = userRepository.findByNickname("nickname").get();
+
+        Shorts shorts = Shorts.builder()
+                .thumbnailUrl("test")
+                .shortsUrl("test")
+                .uploadKey("test")
+                .build();
+        shortsRepository.save(shorts);
+
+        Post post = Post.builder()
+                        .shorts(shorts)
+                        .postCategory(PostCategoryEnum.TOUR)
+                        .user(user)
+                        .build();
+        postRepository.save(post);
+        Long postId = post.getId();
+
+        em.flush();
+        em.clear();
+
+        // when, then
+        mockMvc.perform(delete("/v1/post/{postId}", postId)
+                        .header(AUTHORIZATION_HEADER, testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("post/DELETE",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("postId").description("(필수) 삭제할 포스트의 id")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                        )
+                ));
+        Assertions.assertThat(postRepository.count()).isZero();
+        Assertions.assertThat(shortsRepository.count()).isZero();
     }
 
     @Test

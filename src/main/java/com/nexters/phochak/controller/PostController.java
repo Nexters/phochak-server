@@ -69,7 +69,7 @@ public class PostController {
 
     @Auth
     @DeleteMapping("/{postId}")
-    public CommonResponse<Void> createPost(@PathVariable Long postId) {
+    public CommonResponse<Void> deletePost(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         postService.delete(userId, postId);
         return new CommonResponse<>();
