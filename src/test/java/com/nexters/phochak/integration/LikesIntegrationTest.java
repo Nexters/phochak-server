@@ -10,7 +10,7 @@ import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
-import com.nexters.phochak.repository.PhochakRepository;
+import com.nexters.phochak.repository.LikesRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
@@ -64,7 +64,7 @@ class LikesIntegrationTest extends RestDocs {
     @Autowired
     private PostRepository postRepository;
     @Autowired
-    private PhochakRepository phochakRepository;
+    private LikesRepository likesRepository;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -144,7 +144,7 @@ class LikesIntegrationTest extends RestDocs {
                         .user(user)
                         .post(post)
                         .build();
-        phochakRepository.save(likes);
+        likesRepository.save(likes);
 
         //when, then
         mockMvc.perform(delete("/v1/post/{postId}/likes", post.getId()).header(AUTHORIZATION_HEADER, testToken))

@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface PhochakRepository extends JpaRepository<Likes, Long> {
+public interface LikesRepository extends JpaRepository<Likes, Long> {
     boolean existsByUserAndPost(User user, Post post);
 
     Optional<Likes> findByUserAndPost(User user, Post post);

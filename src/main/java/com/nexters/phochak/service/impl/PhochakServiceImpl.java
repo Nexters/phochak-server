@@ -5,7 +5,7 @@ import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
-import com.nexters.phochak.repository.PhochakRepository;
+import com.nexters.phochak.repository.LikesRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.PhochakService;
@@ -17,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @RequiredArgsConstructor
 public class PhochakServiceImpl implements PhochakService {
 
-    private final PhochakRepository phochakRepository;
+    private final LikesRepository likesRepository;
     private final PostRepository postRepository;
     private final UserRepository userRepository;
 
@@ -26,7 +26,7 @@ public class PhochakServiceImpl implements PhochakService {
     public void addPhochak(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if(phochakRepository.existsByUserAndPost(user, post)) {
+        if(likesRepository.existsByUserAndPost(user, post)) {
             throw new PhochakException(ResCode.ALREADY_PHOCHAKED);
         }
 
@@ -34,7 +34,7 @@ public class PhochakServiceImpl implements PhochakService {
                 .user(user)
                 .post(post)
                 .build();
-        phochakRepository.save(likes);
+        likesRepository.save(likes);
     }
 
     @Override
@@ -43,10 +43,10 @@ public class PhochakServiceImpl implements PhochakService {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
 
-        Likes likes = phochakRepository.findByUserAndPost(user, post)
+        Likes likes = likesRepository.findByUserAndPost(user, post)
                 .orElseThrow(() -> new PhochakException(ResCode.NOT_PHOCHAKED));
 
-        phochakRepository.delete(likes);
+        likesRepository.delete(likes);
     }
 
 }
