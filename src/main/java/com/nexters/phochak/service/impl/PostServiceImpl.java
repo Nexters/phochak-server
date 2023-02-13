@@ -1,9 +1,12 @@
 package com.nexters.phochak.service.impl;
 
+import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
+import com.nexters.phochak.dto.PostFetchCommand;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
+import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.repository.PostRepository;
@@ -54,8 +57,12 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor) {
-        return postRepository.findNextPageByCursor(customCursor);
+    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, PostFilter filter) {
+        final Long userId = UserContext.CONTEXT.get();
+
+        PostFetchCommand command = PostFetchCommand.of(customCursor, filter, userId);
+
+        return postRepository.findNextPageByCursor(command);
     }
     
     private String generateObjectUploadKey() {
