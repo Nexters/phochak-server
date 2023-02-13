@@ -3,9 +3,6 @@ package com.nexters.phochak.service.impl;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.dto.EncodingCallbackRequestDto;
-import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
-import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.ShortsStateEnum;
@@ -21,14 +18,13 @@ import java.util.Optional;
 public class NCPShortsService implements ShortsService {
 
     private final ShortsRepository shortsRepository;
-    private final PostRepository postRepository;
     @Value("${ncp.shorts.streaming-url-prefix.head}")
     private String STREAMING_PREFIX_HEAD;
     @Value("${ncp.shorts.streaming-url-prefix.tail}")
     private String STREAMING_PREFIX_TAIL;
-    @Value("${ncp.shorts.thumbnail-url-prefix.head}")
+    @Value("${ncp.thumbnail.thumbnail-url-prefix.head}")
     private String THUMBNAIL_PREFIX_HEAD;
-    @Value("${ncp.shorts.thumbnail-url-prefix.tail}")
+    @Value("${ncp.thumbnail.thumbnail-url-prefix.tail}")
     private String THUMBNAIL_PREFIX_TAIL;
 
     @Override
@@ -91,6 +87,5 @@ public class NCPShortsService implements ShortsService {
     private String generateShortsFileName(String uploadKey) {
         return STREAMING_PREFIX_HEAD + uploadKey + STREAMING_PREFIX_TAIL;
     }
-
 
 }

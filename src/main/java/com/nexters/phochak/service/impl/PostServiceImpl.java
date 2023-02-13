@@ -65,7 +65,9 @@ public class PostServiceImpl implements PostService {
         if(!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
+        String objectKey = post.getShorts().getUploadKey();
         postRepository.delete(post);
+        storageBucketClient.removeShortsObject(objectKey);
     }
 
     @Override
