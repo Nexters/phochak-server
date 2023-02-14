@@ -39,7 +39,7 @@ public class UserController {
 
     @PostMapping("reissue-token")
     public CommonResponse<JwtResponseDto> login(@RequestBody ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
-        return new CommonResponse<>(jwtTokenService.reissueAccessToken(reissueAccessTokenRequestDto));
+        return new CommonResponse<>(jwtTokenService.reissueToken(reissueAccessTokenRequestDto));
     }
 
     // test(web oauth) 용 api, provider를 kakao_test 로 명시

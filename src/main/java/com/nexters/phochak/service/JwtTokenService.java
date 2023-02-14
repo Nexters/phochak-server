@@ -21,11 +21,17 @@ public interface JwtTokenService {
     Long validateJwt(String token);
 
     /**
-     * Access Token 하나를 발급한다.
+     * JWT 형태의 Token을 생성한다.
      * @param userId
+     * @param expireLength
      * @return
      */
-    TokenDto generateAccessToken(Long userId);
+    TokenDto generateToken(Long userId, Long expireLength);
 
-    JwtResponseDto reissueAccessToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto);
+    /**
+     * AT, RT 를 재발급한다.
+     * @param reissueAccessTokenRequestDto
+     * @return
+     */
+    JwtResponseDto reissueToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto);
 }

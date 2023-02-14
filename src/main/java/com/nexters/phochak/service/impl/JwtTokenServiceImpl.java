@@ -87,7 +87,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public JwtResponseDto reissueAccessToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
+    public JwtResponseDto reissueToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
         //AT, RT 파싱
         String currentAccessToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getAccessToken());
         String currentRefreshToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getRefreshToken());
@@ -116,11 +116,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public TokenDto generateAccessToken(Long userId) {
-        return generateToken(userId, accessTokenExpireLength);
-    }
-
-    private TokenDto generateToken(Long userId, Long expireLength) {
+    public TokenDto generateToken(Long userId, Long expireLength) {
         // header 설정
         Map<String, Object> headers = new HashMap<>();
         headers.put("typ", "JWT");
