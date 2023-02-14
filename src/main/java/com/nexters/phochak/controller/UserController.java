@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @PostMapping("reissue-token")
-    public CommonResponse<ReissueAccessTokenResponseDto> login(@RequestBody ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
+    public CommonResponse<JwtResponseDto> login(@RequestBody ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
         return new CommonResponse<>(jwtTokenService.reissueAccessToken(reissueAccessTokenRequestDto));
     }
 
