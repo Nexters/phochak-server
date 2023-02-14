@@ -66,7 +66,7 @@ class AuthAspectTest {
     void validateAccessToken_ExpiredToken() {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateToken("Valid Token")).willThrow(ExpiredJwtException.class);
+        given(jwtTokenService.validateJwt("Valid Token")).willThrow(ExpiredJwtException.class);
 
         // when & then
         Assertions.assertThatThrownBy(() -> aspect.validateAccessToken(joinPoint))
@@ -79,7 +79,7 @@ class AuthAspectTest {
     void validateAccessToken_TokenException() {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateToken("Valid Token")).willThrow(JwtException.class);
+        given(jwtTokenService.validateJwt("Valid Token")).willThrow(JwtException.class);
 
         // when & then
         Assertions.assertThatThrownBy(() -> aspect.validateAccessToken(joinPoint))
@@ -92,7 +92,7 @@ class AuthAspectTest {
     void validateAccessToken_NotFoundUser() {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateToken("Valid Token")).willReturn(1L);
+        given(jwtTokenService.validateJwt("Valid Token")).willReturn(1L);
         willThrow(new PhochakException(ResCode.NOT_FOUND_USER)).given(userService).validateUser(1L);
 
         // when & then
@@ -106,7 +106,7 @@ class AuthAspectTest {
     void validateAccessToken_success() throws Throwable {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateToken("Valid Token")).willReturn(1L);
+        given(jwtTokenService.validateJwt("Valid Token")).willReturn(1L);
         willDoNothing().given(userService).validateUser(1L);
 
         // when
