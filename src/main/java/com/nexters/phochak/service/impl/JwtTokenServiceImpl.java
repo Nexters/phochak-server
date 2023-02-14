@@ -82,13 +82,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         }
     }
 
-    public Boolean isAccessTokenExpired(String accessToken) {
-        return JWT.decode(accessToken).getExpiresAt().before(new Date());
-    }
-
     @Override
     public JwtResponseDto reissueToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
-        //AT, RT 파싱
         String currentAccessToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getAccessToken());
         String currentRefreshToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getRefreshToken());
 
@@ -96,22 +91,20 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         Long userId = validateJwt(currentRefreshToken);
 
         //해당 요청 들어오면 RT 항상 만료 시킴
-        //redis에서 RT과 매칭되는 AT 있는지 확인
-        boolean isTokenMatched = refreshTokenRepository.findAccessToken(currentRefreshToken).equals(currentAccessToken);
-        refreshTokenRepository.expire(currentRefreshToken);
+        //redis에서 RT과 매칭되는 AT 있는지 확인 (삭제 후 return 결과로 판단)
+        boolean isTokenMatched = refreshTokenRepository.expire(currentRefreshToken);
 
         if(!isTokenMatched) {
             log.error("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
 
-        //AT 아직 유효기간 남음 -> RT 탈취로 판단하고 만료시킴
+        //AT 아직 유효기간 남음 -> RT 탈취로 판단하고 강제 만료
         if(isAccessTokenExpired(currentAccessToken)) {
             log.error("JwtTokenServiceImpl|Request reissue when AT was not expired: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
 
-        //발급
         return issueToken(userId);
     }
 
@@ -139,6 +132,10 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .compact();
 
         return new TokenDto(jwt, String.valueOf(expireLength));
+    }
+
+    private Boolean isAccessTokenExpired(String accessToken) {
+        return JWT.decode(accessToken).getExpiresAt().before(new Date());
     }
 
     public static String parseOnlyTokenFromRequest(String token) {
