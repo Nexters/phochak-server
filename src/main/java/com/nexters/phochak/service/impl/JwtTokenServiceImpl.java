@@ -1,6 +1,6 @@
 package com.nexters.phochak.service.impl;
 
-import com.nexters.phochak.domain.RefreshToken;
+import com.auth0.jwt.JWT;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.dto.request.ReissueAccessTokenRequestDto;
 import com.nexters.phochak.dto.response.JwtResponseDto;
@@ -10,7 +10,6 @@ import com.nexters.phochak.repository.RefreshTokenRepository;
 import com.nexters.phochak.service.JwtTokenService;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtParser;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
@@ -48,18 +47,14 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public JwtResponseDto createLoginResponse(Long userId) {
+    public JwtResponseDto issueToken(Long userId) {
         if (Objects.isNull(userId)) {
             throw new PhochakException(ResCode.NOT_FOUND_USER);
         }
         TokenDto accessToken = generateToken(userId, accessTokenExpireLength);
         TokenDto refreshToken = generateToken(userId, refreshTokenExpireLength);
 
-        // 해당 유저 id 앞으로 refresh token 저장
-        refreshTokenRepository.save(RefreshToken.builder()
-                .userId(userId)
-                .refreshTokenString(refreshToken.getTokenString())
-                .build());
+        refreshTokenRepository.saveWithAccessToken(refreshToken.getTokenString(), accessToken.getTokenString());
 
         return JwtResponseDto.builder()
                 .accessToken(createTokenStringForResponse(accessToken))
@@ -70,48 +65,54 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public Long validateToken(String token) {
-        Claims claims = Jwts.parserBuilder()
+    public Long validateJwt(String token) {
+        try {
+            Claims claims = Jwts.parserBuilder()
                     .setSigningKey(secretKey.getBytes())
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
-        return Long.valueOf((String) claims.get("userId"));
+            return Long.valueOf((String) claims.get("userId"));
+        } catch (ExpiredJwtException e) {
+            log.info("JwtTokenServiceImpl|Token expired: {}", token, e);
+            throw new PhochakException(ResCode.EXPIRED_TOKEN);
+        } catch (Exception e) {
+            log.error("JwtTokenServiceImpl|Token Exception: {}", token, e);
+            throw new PhochakException(ResCode.INVALID_TOKEN);
+        }
+    }
+
+    public Boolean isAccessTokenExpired(String accessToken) {
+        return JWT.decode(accessToken).getExpiresAt().before(new Date());
     }
 
     @Override
     public JwtResponseDto reissueAccessToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
-        //엑세스토큰 파싱
-        String currentAccessToken = reissueAccessTokenRequestDto.getParsedAccessToken();
-        String currentRefreshToken = reissueAccessTokenRequestDto.getParsedRefreshToken();
+        //AT, RT 파싱
+        String currentAccessToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getAccessToken());
+        String currentRefreshToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getRefreshToken());
 
-        //access token 검증 -> 아직 유효기간 괜찮음 -> refresh 탈취로 판단 -> 만료시킴
-        try {
-            validateToken(currentRefreshToken);
-        } catch (ExpiredJwtException e) {
-            // 정상
-        } catch (Exception e) {
-            log.error("AuthAspect|Token Exception: {}", currentAccessToken, e);
+        //RT 검증
+        Long userId = validateJwt(currentRefreshToken);
+
+        //해당 요청 들어오면 RT 항상 만료 시킴
+        //redis에서 RT과 매칭되는 AT 있는지 확인
+        boolean isTokenMatched = refreshTokenRepository.findAccessToken(currentRefreshToken).equals(currentAccessToken);
+        refreshTokenRepository.expire(currentRefreshToken);
+
+        if(!isTokenMatched) {
+            log.error("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
 
-        //리프레시토큰 검증
-        Long userId = validateToken(currentRefreshToken);
-
-        //redis DB에서 accesstoken 꺼내서 대조
+        //AT 아직 유효기간 남음 -> RT 탈취로 판단하고 만료시킴
+        if(isAccessTokenExpired(currentAccessToken)) {
+            log.error("JwtTokenServiceImpl|Request reissue when AT was not expired: RT({})", currentRefreshToken);
+            throw new PhochakException(ResCode.INVALID_TOKEN);
+        }
 
         //발급
-        TokenDto refreshToken = new TokenDto(currentRefreshToken, String.valueOf(refreshTokenExpireLength));
-        TokenDto accessToken = generateToken(userId, accessTokenExpireLength);
-
-        //Redis에 저장
-
-        return JwtResponseDto.builder()
-                .accessToken(createTokenStringForResponse(accessToken))
-                .expiresIn(accessToken.getExpiresIn())
-                .refreshToken(createTokenStringForResponse(refreshToken))
-                .refreshTokenExpiresIn(refreshToken.getExpiresIn())
-                .build();
+        return issueToken(userId);
     }
 
     @Override
@@ -144,14 +145,15 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         return new TokenDto(jwt, String.valueOf(expireLength));
     }
 
-    private static String parseToken(String accessToken) { //중복. 일단 보류.
-        if (!accessToken.startsWith(TOKEN_TYPE + " ")) {
+    public static String parseOnlyTokenFromRequest(String token) {
+        if (!token.startsWith(TOKEN_TYPE + " ")) {
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
-        return accessToken.substring(TOKEN_TYPE.length()).trim();
+        return token.substring(TOKEN_TYPE.length()).trim();
     }
 
     private static String createTokenStringForResponse(TokenDto accessToken) {
         return TokenDto.TOKEN_TYPE + " " + accessToken.getTokenString();
     }
+
 }

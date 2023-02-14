@@ -5,7 +5,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
-import io.jsonwebtoken.ExpiredJwtException;
+import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.aspectj.lang.ProceedingJoinPoint;
@@ -37,18 +37,8 @@ public class AuthAspect {
             throw new PhochakException(ResCode.TOKEN_NOT_FOUND);
         }
 
-        accessToken = parseToken(accessToken);
-
-        Long userId;
-        try {
-            userId = jwtTokenService.validateToken(accessToken);
-        } catch (ExpiredJwtException e) {
-            log.info("AuthAspect|Token expired: {}", accessToken, e);
-            throw new PhochakException(ResCode.EXPIRED_TOKEN);
-        } catch (Exception e) {
-            log.error("AuthAspect|Token Exception: {}", accessToken, e);
-            throw new PhochakException(ResCode.INVALID_TOKEN);
-        }
+        accessToken = JwtTokenServiceImpl.parseOnlyTokenFromRequest(accessToken);
+        Long userId = jwtTokenService.validateJwt(accessToken);
 
         // 유저 검증 후 Thread Local 변수에 할당
         try {

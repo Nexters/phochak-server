@@ -74,7 +74,7 @@ class UserControllerTest extends RestDocs {
                 .refreshTokenExpiresIn("refresh token lifetime(ms)")
                 .build();
 
-        when(jwtTokenService.createLoginResponse(any())).thenReturn(response);
+        when(jwtTokenService.issueToken(any())).thenReturn(response);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders

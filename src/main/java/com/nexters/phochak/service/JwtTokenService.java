@@ -10,7 +10,7 @@ public interface JwtTokenService {
      * @param userId
      * @return
      */
-    JwtResponseDto createLoginResponse(Long userId);
+    JwtResponseDto issueToken(Long userId);
 
     /**
      * 특정 token의 유효성을 검증한다.
@@ -18,7 +18,7 @@ public interface JwtTokenService {
      * @param token
      * @return
      */
-    Long validateToken(String token);
+    Long validateJwt(String token);
 
     /**
      * Access Token 하나를 발급한다.

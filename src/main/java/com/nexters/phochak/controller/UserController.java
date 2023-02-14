@@ -34,7 +34,7 @@ public class UserController {
     @GetMapping("login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
         Long loginUserId = userService.login(provider, requestDto.getToken());
-        return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
+        return new CommonResponse<>(jwtTokenService.issueToken( loginUserId));
     }
 
     @PostMapping("reissue-token")
@@ -46,7 +46,7 @@ public class UserController {
     @GetMapping("test/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @RequestParam String code) {
         Long loginUserId = userService.login(provider, code);
-        return new CommonResponse<>(jwtTokenService.createLoginResponse(loginUserId));
+        return new CommonResponse<>(jwtTokenService.issueToken(loginUserId));
     }
 
     @GetMapping("/check/nickname")
