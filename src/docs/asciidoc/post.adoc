@@ -78,7 +78,30 @@ include::{snippets}/post/list/last/http-response.adoc[]
 
 Response Parameters
 
-include::{snippets}/post/list/after/response-fields.adoc[]
+include::{snippets}/post/list/last/response-fields.adoc[]
+
+==== 내가 업로드한 게시글 목록
+HTTP Example
+
+include::{snippets}/post/list/uploaded/http-request.adoc[]
+
+Request Parameters
+
+include::{snippets}/post/list/uploaded/request-parameters.adoc[]
+
+Request Headers
+
+include::{snippets}/post/list/uploaded/request-headers.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/list/uploaded/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/list/uploaded/response-fields.adoc[]
 
 === Presigned URL 발급
 S3 버킷에 미디어를 업로드 하기 위해, Presigned URL, upload key를 발급한다.

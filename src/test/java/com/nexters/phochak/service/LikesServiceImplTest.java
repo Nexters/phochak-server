@@ -4,7 +4,7 @@ import com.nexters.phochak.domain.Likes;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.repository.PhochakRepository;
+import com.nexters.phochak.repository.LikesRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.PhochakServiceImpl;
@@ -17,11 +17,13 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
 class LikesServiceImplTest {
@@ -30,7 +32,8 @@ class LikesServiceImplTest {
 
     @Mock UserRepository userRepository;
     @Mock PostRepository postRepository;
-    @Mock PhochakRepository phochakRepository;
+    @Mock
+    LikesRepository likesRepository;
 
     @Test
     @DisplayName("포착하기 성공")
@@ -41,13 +44,13 @@ class LikesServiceImplTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.existsByUserAndPost(user, post)).willReturn(false);
+        given(likesRepository.existsByUserAndPost(user, post)).willReturn(false);
 
         //then
         phochakService.addPhochak(0L, 0L);
 
         //then
-        verify(phochakRepository, times(1)).save(any());
+        verify(likesRepository, times(1)).save(any());
     }
 
     @Test
@@ -59,13 +62,11 @@ class LikesServiceImplTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.existsByUserAndPost(user, post)).willReturn(true);
+        given(likesRepository.existsByUserAndPost(user, post)).willReturn(true);
 
         //when, then
-        assertThrows(PhochakException.class, () -> {
-            phochakService.addPhochak(0L, 0L);
-        });
-        verify(phochakRepository, never()).save(any());
+        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> phochakService.addPhochak(0L, 0L));
+        verify(likesRepository, never()).save(any());
     }
 
     @Test
@@ -78,13 +79,13 @@ class LikesServiceImplTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.findByUserAndPost(user, post)).willReturn(Optional.of(likes));
+        given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.of(likes));
 
         //then
         phochakService.cancelPhochak(0L, 0L);
 
         //then
-        verify(phochakRepository, times(1)).delete(any());
+        verify(likesRepository, times(1)).delete(any());
     }
 
     @Test
@@ -96,12 +97,10 @@ class LikesServiceImplTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(phochakRepository.findByUserAndPost(user, post)).willReturn(Optional.empty());
+        given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.empty());
 
         //when, then
-        assertThrows(PhochakException.class, () -> {
-            phochakService.cancelPhochak(0L, 0L);
-        });
-        verify(phochakRepository, never()).delete(any());
+        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> phochakService.cancelPhochak(0L, 0L));
+        verify(likesRepository, never()).delete(any());
     }
 }

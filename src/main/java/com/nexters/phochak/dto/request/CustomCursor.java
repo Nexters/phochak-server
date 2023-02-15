@@ -13,12 +13,7 @@ import java.util.Objects;
 @ToString
 @Getter
 public class CustomCursor {
-    private static final int INITIAL_REQUEST_NUMBER = -1;
     private static final int DEFAULT_PAGE_SIZE = 5;
-    private static final String INTEGER_STRING_FORMATTER = "%010d";
-    private static final String LONG_STRING_FORMATTER = "%019d";
-    private static final int CURSOR_SIZE = 16;
-    private static final String MAX_DIGIT = "9";
 
     private Long lastId;
     private Integer pageSize;
@@ -45,13 +40,5 @@ public class CustomCursor {
                 throw new PhochakException(ResCode.NOT_FOUND_SORT_VALUE);
             }
         }
-    }
-
-    public String createCursorString() {
-        if (Objects.isNull(sortValue)) {
-            return null;
-        }
-
-        return String.format(INTEGER_STRING_FORMATTER, sortValue) + String.format(LONG_STRING_FORMATTER, lastId);
     }
 }
