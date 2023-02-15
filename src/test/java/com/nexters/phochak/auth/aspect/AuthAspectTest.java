@@ -66,7 +66,7 @@ class AuthAspectTest {
     void validateAccessToken_ExpiredToken() {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateJwt("Valid Token")).willThrow(ExpiredJwtException.class);
+        given(jwtTokenService.validateJwt("Valid Token")).willThrow(new PhochakException(ResCode.EXPIRED_TOKEN));
 
         // when & then
         Assertions.assertThatThrownBy(() -> aspect.validateAccessToken(joinPoint))
@@ -79,7 +79,7 @@ class AuthAspectTest {
     void validateAccessToken_TokenException() {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateJwt("Valid Token")).willThrow(JwtException.class);
+        given(jwtTokenService.validateJwt("Valid Token")).willThrow(new PhochakException(ResCode.INVALID_TOKEN));
 
         // when & then
         Assertions.assertThatThrownBy(() -> aspect.validateAccessToken(joinPoint))
