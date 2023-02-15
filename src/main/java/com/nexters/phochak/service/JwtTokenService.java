@@ -1,7 +1,7 @@
 package com.nexters.phochak.service;
 
 import com.nexters.phochak.dto.TokenDto;
-import com.nexters.phochak.dto.request.ReissueAccessTokenRequestDto;
+import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
 import com.nexters.phochak.dto.response.JwtResponseDto;
 
 public interface JwtTokenService {
@@ -30,8 +30,8 @@ public interface JwtTokenService {
 
     /**
      * AT, RT 를 재발급한다.
-     * @param reissueAccessTokenRequestDto
+     * @param reissueTokenRequestDto
      * @return
      */
-    JwtResponseDto reissueToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto);
+    JwtResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto);
 }

@@ -2,7 +2,7 @@ package com.nexters.phochak.service.impl;
 
 import com.auth0.jwt.JWT;
 import com.nexters.phochak.dto.TokenDto;
-import com.nexters.phochak.dto.request.ReissueAccessTokenRequestDto;
+import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
 import com.nexters.phochak.dto.response.JwtResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
@@ -83,9 +83,9 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public JwtResponseDto reissueToken(ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
-        String currentAccessToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getAccessToken());
-        String currentRefreshToken = parseOnlyTokenFromRequest(reissueAccessTokenRequestDto.getRefreshToken());
+    public JwtResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto) {
+        String currentAccessToken = parseOnlyTokenFromRequest(reissueTokenRequestDto.getAccessToken());
+        String currentRefreshToken = parseOnlyTokenFromRequest(reissueTokenRequestDto.getRefreshToken());
 
         //RT 검증
         Long userId = validateJwt(currentRefreshToken);

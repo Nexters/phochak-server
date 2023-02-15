@@ -5,6 +5,7 @@ import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.request.LoginRequestDto;
 import com.nexters.phochak.dto.request.NicknameModifyRequestDto;
+import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.JwtResponseDto;
 import com.nexters.phochak.dto.request.LoginRequestDto;
@@ -31,22 +32,22 @@ public class UserController {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
 
-    @GetMapping("login/{provider}")
+    @GetMapping("/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
         Long loginUserId = userService.login(provider, requestDto.getToken());
         return new CommonResponse<>(jwtTokenService.issueToken( loginUserId));
     }
 
-    @PostMapping("reissue-token")
-    public CommonResponse<JwtResponseDto> login(@RequestBody ReissueAccessTokenRequestDto reissueAccessTokenRequestDto) {
-        return new CommonResponse<>(jwtTokenService.reissueToken(reissueAccessTokenRequestDto));
-    }
-
     // test(web oauth) 용 api, provider를 kakao_test 로 명시
-    @GetMapping("test/login/{provider}")
+    @GetMapping("/test/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @RequestParam String code) {
         Long loginUserId = userService.login(provider, code);
         return new CommonResponse<>(jwtTokenService.issueToken(loginUserId));
+    }
+
+    @PostMapping("/reissue-token")
+    public CommonResponse<JwtResponseDto> reissue(@RequestBody ReissueTokenRequestDto reissueTokenRequestDto) {
+        return new CommonResponse<>(jwtTokenService.reissueToken(reissueTokenRequestDto));
     }
 
     @GetMapping("/check/nickname")

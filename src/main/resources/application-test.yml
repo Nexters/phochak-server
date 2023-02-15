@@ -15,4 +15,4 @@ spring:
       path: /h2-console
   redis:
     host: localhost
-    port: 6379
+    port: 6378
