@@ -4,11 +4,13 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.client.impl.NCPStorageClient;
 import com.nexters.phochak.controller.PostController;
 import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.exception.CustomExceptionHandler;
+import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
@@ -71,6 +73,8 @@ public class PostNcpIntegrationTest extends RestDocs {
     @Autowired
     private ShortsRepository shortsRepository;
     @MockBean NCPStorageClient ncpStorageClient;
+    @Autowired
+    private HashtagRepository hashtagRepository;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -175,6 +179,9 @@ public class PostNcpIntegrationTest extends RestDocs {
                         .build();
         postRepository.save(post);
         Long postId = post.getId();
+
+        List<Hashtag> hashtags = List.of(new Hashtag(post, "hashtag1"), new Hashtag(post, "hashtag2"), new Hashtag(post, "hashtag3"));
+        hashtagRepository.saveAll(hashtags);
 
         em.flush();
         em.clear();

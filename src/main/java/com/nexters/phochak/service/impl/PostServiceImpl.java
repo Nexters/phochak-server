@@ -61,7 +61,7 @@ public class PostServiceImpl implements PostService {
     @Transactional
     public void delete(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
         if(!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }

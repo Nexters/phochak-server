@@ -62,7 +62,7 @@ class PostServiceImplTest {
                         .user(owner)
                         .build();
         given(userRepository.getReferenceById(any())).willReturn(user);
-        given(postRepository.findById(any())).willReturn(Optional.of(post));
+        given(postRepository.findPostFetchJoin(any())).willReturn(Optional.of(post));
 
         //when, then
         assertThatThrownBy(() -> postService.delete(0L, 0L))
