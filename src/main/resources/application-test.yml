@@ -13,28 +13,3 @@ spring:
     console:
       enabled: true
       path: /h2-console
-
-ncp:
-  s3:
-    end-point: test
-    region-name: test
-    original-bucket-name: test
-    encoded-bucket-name: test
-    access-key: test
-    secret-key: test
-
-  shorts:
-    file-location-prefix:
-      head: test
-      tail: test
-    streaming-url-prefix:
-      head: test
-      tail: test
-
-  thumbnail:
-    file-location-prefix:
-      head: test
-      tail: test
-    thumbnail-url-prefix:
-      head: test
-      tail: test
