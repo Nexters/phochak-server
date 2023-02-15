@@ -100,7 +100,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         }
 
         //AT 아직 유효기간 남음 -> RT 탈취로 판단하고 강제 만료
-        if(isAccessTokenExpired(currentAccessToken)) {
+        if(!isAccessTokenExpired(currentAccessToken)) {
             log.error("JwtTokenServiceImpl|Request reissue when AT was not expired: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
