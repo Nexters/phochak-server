@@ -1,10 +1,12 @@
 package com.nexters.phochak.dto.request;
 
-import lombok.Builder;
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class ReissueTokenRequestDto {
     private String accessToken;
     private String refreshToken;
