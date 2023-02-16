@@ -12,6 +12,7 @@ spring:
   redis:
     host: ${redis_url}
     port: ${redis_port}
+    password: ${redis_password}
 
 logging:
   slack:
