@@ -50,7 +50,7 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<Likes> likes;
 
-    @OneToMany(mappedBy = "post", orphanRemoval = true)
+    @OneToMany(mappedBy = "post")
     private List<Hashtag> hashtags;
 
     public Post() {

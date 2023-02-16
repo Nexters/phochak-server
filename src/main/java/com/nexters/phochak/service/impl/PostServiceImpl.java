@@ -11,6 +11,7 @@ import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.repository.UserRepository;
@@ -33,6 +34,7 @@ public class PostServiceImpl implements PostService {
     private final HashtagService hashtagService;
     private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
+    private final HashtagRepository hashtagRepository;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
@@ -66,6 +68,7 @@ public class PostServiceImpl implements PostService {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
         String objectKey = post.getShorts().getUploadKey();
+        hashtagRepository.deleteAllByPostId(post.getId());
         postRepository.delete(post);
         storageBucketClient.removeShortsObject(objectKey);
     }
