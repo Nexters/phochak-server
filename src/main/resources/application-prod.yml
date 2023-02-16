@@ -9,6 +9,7 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
+      ddl-auto: validate
   redis:
     host: ${redis_url}
     port: ${redis_port}
