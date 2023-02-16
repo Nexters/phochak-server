@@ -4,8 +4,6 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import com.nexters.phochak.service.impl.UserServiceImpl;
-import io.jsonwebtoken.ExpiredJwtException;
-import io.jsonwebtoken.JwtException;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.DisplayName;
