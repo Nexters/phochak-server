@@ -92,9 +92,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
         //해당 요청 들어오면 RT 항상 만료 시킴
         //redis에서 RT과 매칭되는 AT 있는지 확인 (삭제 후 return 결과로 판단)
-        boolean isTokenMatched = refreshTokenRepository.expire(currentRefreshToken);
+        String accessToken = refreshTokenRepository.findAccessToken(currentRefreshToken);
+        refreshTokenRepository.expire(currentRefreshToken);
+        System.out.println("accessToken = " + accessToken);
+        System.out.println("currentAccessToken = " + currentAccessToken);
 
-        if(!isTokenMatched) {
+        if(!currentAccessToken.equals(accessToken)) {
             log.error("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
