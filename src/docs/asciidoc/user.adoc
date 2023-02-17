@@ -94,7 +94,7 @@ include::{snippets}/user/reissue-token/response-fields.adoc[]
 
 |P202
 |올바르지 않은 토큰입니다
-|디코딩실패 / 토큰만료 / 탈취감지
+|디코딩실패 / Refresh 토큰만료 / 탈취감지
 
 |===
 
