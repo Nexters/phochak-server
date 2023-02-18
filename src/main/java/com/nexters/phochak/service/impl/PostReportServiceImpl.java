@@ -41,6 +41,7 @@ public class PostReportServiceImpl implements PostReportService {
                 .reason(postReportRequestDto.getReason())
                 .build();
         reportPostRepository.save(reportPost);
+
         String message = createPostReportMessage(user, post, postReportRequestDto.getReason());
         SlackMessageFormDto test = SlackMessageFormDto.builder()
                 .username(slackReportBotNickname)
@@ -52,8 +53,9 @@ public class PostReportServiceImpl implements PostReportService {
     private String createPostReportMessage(User user, Post post, String reason) {
         Long reportCount = reportPostRepository.countByPost(post);
         return "게시글 신고가 접수되었습니다."
-                + "\n신고자: " + user.getNickname()
                 + "\n포스트 id: " + post.getId()
-                + "\n누적 신고: " + reportCount;
+                + "\n누적 신고: " + reportCount
+                + "\n신고자: " + user.getNickname()
+                + "\n신고 사유: " + reason;
     }
 }
