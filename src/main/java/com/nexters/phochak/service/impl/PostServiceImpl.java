@@ -2,14 +2,11 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.Post;
-import com.nexters.phochak.domain.ReportPost;
-import com.nexters.phochak.domain.ReportPostRepository;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.PostFetchCommand;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
-import com.nexters.phochak.dto.request.PostReportRequestDto;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.exception.PhochakException;
@@ -38,7 +35,6 @@ public class PostServiceImpl implements PostService {
     private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
     private final HashtagRepository hashtagRepository;
-    private final ReportPostRepository reportPostRepository;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
@@ -75,18 +71,6 @@ public class PostServiceImpl implements PostService {
         hashtagRepository.deleteAllByPostId(post.getId());
         postRepository.delete(post);
         storageBucketClient.removeShortsObject(objectKey);
-    }
-
-    @Override
-    public void report(Long userId, Long postId, PostReportRequestDto postReportRequestDto) {
-        User user = userRepository.getReferenceById(userId);
-        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        ReportPost reportPost = ReportPost.builder()
-                .reporter(user)
-                .post(post)
-                .reason(postReportRequestDto.getReason())
-                .build();
-        reportPostRepository.save(reportPost);
     }
 
     @Override
