@@ -20,4 +20,7 @@ public interface PostService {
      * @return
      */
     List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, PostFilter filter);
+
+    void delete(Long userId, Long postId);
+
 }

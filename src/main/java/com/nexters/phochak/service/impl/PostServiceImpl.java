@@ -9,6 +9,9 @@ import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
+import com.nexters.phochak.exception.PhochakException;
+import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.repository.UserRepository;
@@ -31,6 +34,7 @@ public class PostServiceImpl implements PostService {
     private final HashtagService hashtagService;
     private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
+    private final HashtagRepository hashtagRepository;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
@@ -53,6 +57,20 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
         hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), post);
         shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
+    }
+
+    @Override
+    @Transactional
+    public void delete(Long userId, Long postId) {
+        User user = userRepository.getReferenceById(userId);
+        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        if(!post.getUser().equals(user)) {
+            throw new PhochakException(ResCode.NOT_POST_OWNER);
+        }
+        String objectKey = post.getShorts().getUploadKey();
+        hashtagRepository.deleteAllByPostId(post.getId());
+        postRepository.delete(post);
+        storageBucketClient.removeShortsObject(objectKey);
     }
 
     @Override

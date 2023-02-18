@@ -36,7 +36,6 @@ public class PostLocalStorageIntegrationTest {
     @Autowired UserRepository userRepository;
     @Autowired JwtTokenServiceImpl jwtTokenService;
     @Autowired MockMvc mockMvc;
-    @Value("${app.resource.local.shorts}") String shortsPath;
 
     static String testToken;
 

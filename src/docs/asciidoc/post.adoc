@@ -180,3 +180,53 @@ include::{snippets}/post/POST/response-fields.adoc[]
 |요청 필수 값이 존재하지 않습니다
 |필수 파라미터 누락
 |===
+
+=== 포스트 삭제
+포스트 삭제 기능을 제공한다
+
+==== 요청
+HTTP Example
+
+include::{snippets}/post/DELETE/http-request.adoc[]
+
+Request Header
+
+include::{snippets}/post/DELETE/request-headers.adoc[]
+
+Path Parameters
+
+include::{snippets}/post/DELETE/path-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/DELETE/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/DELETE/response-fields.adoc[]
+
+**포스트 삭제 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|포스트 작성 성공
+
+|P200
+|요청 값의 형식이 올바르지 않습니다
+|파라미터 형식 오류
+
+|P400
+|존재하지 않는 게시글입니다
+|postId의 게시글이 존재하지 않을때 발생
+
+|P430
+|해당 게시글의 소유자가 아닙니다
+|해당 게시글이 나의 소유가 아닐때 발생
+|===
