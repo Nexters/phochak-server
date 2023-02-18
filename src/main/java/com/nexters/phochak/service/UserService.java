@@ -37,5 +37,5 @@ public interface UserService {
      * @param userId
      * @return
      */
-    UserInfoResponseDto getInfo(Long userId);
+    UserInfoResponseDto getInfo(Long pageOwnerId, Long userId);
 }

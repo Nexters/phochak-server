@@ -165,19 +165,20 @@ class UserControllerTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("유저 API - 유저 정보 조회하기")
-    void getInfo() throws Exception {
+    @DisplayName("유저 API - 다른 유저 페이지 정보 조회하기")
+    void getInfoOtherUserPage() throws Exception {
         UserInfoResponseDto response = UserInfoResponseDto.builder()
+                .isMyPage(false)
                 .id(1L)
                 .nickname("nickname")
                 .profileImgUrl("profile image url")
                 .build();
 
-        given(userService.getInfo(any())).willReturn(response);
+        given(userService.getInfo(any(),any())).willReturn(response);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
-                                .get("/v1/user")
+                                .get("/v1/user/{userId}", 10)
                                 .header(AUTHORIZATION_HEADER, "access token"))
                 .andExpect(status().isOk())
                 .andDo(document("user",
@@ -187,9 +188,48 @@ class UserControllerTest extends RestDocs {
                                 headerWithName(AUTHORIZATION_HEADER)
                                         .description("(필수) JWT Access Token")
                         ),
+                        pathParameters(
+                                parameterWithName("userId").description("(선택) 조회하려는 유저의 id. 만약 본인의 유저 페이지를 조회 한다면 빈 값 사용")
+                        ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("유저 API - 본인 유저 페이지 정보 조회하기")
+    void getInfoMyPage() throws Exception {
+        UserInfoResponseDto response = UserInfoResponseDto.builder()
+                .isMyPage(true)
+                .id(1L)
+                .nickname("nickname")
+                .profileImgUrl("profile image url")
+                .build();
+
+        given(userService.getInfo(any(),any())).willReturn(response);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/")
+                                .header(AUTHORIZATION_HEADER, "access token"))
+                .andExpect(status().isOk())
+                .andDo(document("user/me",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인"),
                                 fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
                                 fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
                                 fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크")

@@ -69,10 +69,14 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserInfoResponseDto getInfo(Long userId) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
-        return UserInfoResponseDto.of(user);
+    public UserInfoResponseDto getInfo(Long pageOwnerId, Long userId) {
+        User pageOwner;
+        if (pageOwnerId == null) {
+            pageOwner = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        } else {
+            pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        }
+        return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId));
     }
 
     private boolean isDuplicatedNickname(String nickname) {

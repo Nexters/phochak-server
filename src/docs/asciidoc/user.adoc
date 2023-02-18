@@ -34,13 +34,21 @@ Response Parameters
 
 include::{snippets}/user/login/response-fields.adoc[]
 
-=== 회원정보 가져오기
+=== 유저페이지 유저 정보 조회
 현재 로그인된 유저의 정보를 가져온다.
 
 ==== 요청
 HTTP Example
 
+다른 유저의 유저페이지 조회 예시
 include::{snippets}/user/http-request.adoc[]
+
+본인 유저페이지 조회 예시
+include::{snippets}/user/me/http-request.adoc[]
+
+Path Parameters
+
+include::{snippets}/user/path-parameters.adoc[]
 
 Request Headers
 
