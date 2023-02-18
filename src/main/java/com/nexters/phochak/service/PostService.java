@@ -4,6 +4,7 @@ import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
+import com.nexters.phochak.dto.request.PostReportRequestDto;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 
 import java.util.List;
@@ -23,4 +24,5 @@ public interface PostService {
 
     void delete(Long userId, Long postId);
 
+    void report(Long userId, Long postId, PostReportRequestDto postReportRequestDto);
 }
