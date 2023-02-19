@@ -279,3 +279,4 @@ include::{snippets}/post/report/response-fields.adoc[]
 |P400
 |존재하지 않는 게시글입니다
 |postId의 게시글이 존재하지 않을때 발생
+|===

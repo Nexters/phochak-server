@@ -349,6 +349,9 @@ public class PostNcpIntegrationTest extends RestDocs {
                                 headerWithName(AUTHORIZATION_HEADER)
                                         .description("JWT Access Token")
                         ),
+                        requestFields(
+                                fieldWithPath("reason").type(JsonFieldType.STRING).description("신고 사유")
+                        ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
