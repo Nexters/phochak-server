@@ -1,6 +1,7 @@
 package com.nexters.phochak.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.client.SlackPostReportFeignClient;
 import com.nexters.phochak.client.impl.NCPStorageClient;
 import com.nexters.phochak.controller.PostController;
 import com.nexters.phochak.docs.RestDocs;
@@ -19,7 +20,6 @@ import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import com.nexters.phochak.specification.PostCategoryEnum;
-import org.apache.http.entity.ContentType;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -76,6 +76,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     @Autowired
     private ShortsRepository shortsRepository;
     @MockBean NCPStorageClient ncpStorageClient;
+    @MockBean SlackPostReportFeignClient slackPostReportFeignClient;
     @Autowired
     private HashtagRepository hashtagRepository;
     @Autowired
