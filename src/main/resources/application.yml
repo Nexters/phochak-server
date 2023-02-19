@@ -60,3 +60,9 @@ ncp:
     thumbnail-url-prefix:
       head: test
       tail: test
+
+feign-client:
+  slack:
+    report:
+      bot-nickname: test
+      web-hook-uri: test

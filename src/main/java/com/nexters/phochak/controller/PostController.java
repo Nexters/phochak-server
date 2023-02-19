@@ -7,9 +7,11 @@ import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostFilter;
+import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
+import com.nexters.phochak.service.ReportPostService;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.ShortsService;
 import lombok.RequiredArgsConstructor;
@@ -34,6 +36,7 @@ public class PostController {
 
     private final ShortsService shortsService;
     private final PostService postService;
+    private final ReportPostService reportPostService;
 
     @Auth
     @GetMapping("/upload-key")
@@ -72,6 +75,14 @@ public class PostController {
     public CommonResponse<Void> deletePost(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         postService.delete(userId, postId);
+        return new CommonResponse<>();
+    }
+
+    @Auth
+    @PostMapping("/{postId}/report")
+    public CommonResponse<Void> reportPost(@PathVariable Long postId, @RequestBody ReportPostRequestDto reportPostRequestDto) {
+        Long userId = UserContext.getContext();
+        reportPostService.notifyReport(userId, postId, reportPostRequestDto);
         return new CommonResponse<>();
     }
 }

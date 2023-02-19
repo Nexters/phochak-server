@@ -1,17 +1,20 @@
 package com.nexters.phochak.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.client.SlackPostReportFeignClient;
 import com.nexters.phochak.client.impl.NCPStorageClient;
 import com.nexters.phochak.controller.PostController;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
+import com.nexters.phochak.domain.ReportPost;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.exception.CustomExceptionHandler;
 import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
+import com.nexters.phochak.repository.ReportPostRepository;
 import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.impl.JwtTokenServiceImpl;
@@ -73,8 +76,11 @@ public class PostNcpIntegrationTest extends RestDocs {
     @Autowired
     private ShortsRepository shortsRepository;
     @MockBean NCPStorageClient ncpStorageClient;
+    @MockBean SlackPostReportFeignClient slackPostReportFeignClient;
     @Autowired
     private HashtagRepository hashtagRepository;
+    @Autowired
+    private ReportPostRepository reportPostRepository;
 
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
@@ -93,7 +99,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("upload key 생성 성공")
+    @DisplayName("포스트 API - upload key 생성 성공")
     void uploadKey_success() throws Exception {
         //given
         given(ncpStorageClient.generatePresignedUrl(any())).willReturn(new URL("http://test.com"));
@@ -124,7 +130,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("게시글 생성 성공")
+    @DisplayName("포스트 API - 게시글 생성 성공")
     void createPost_success() throws Exception {
         //given
         Map<String, Object> body = new HashMap<>();
@@ -160,7 +166,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("게시글 삭제 성공")
+    @DisplayName("포스트 API - 게시글 삭제 성공")
     void deletePost_success() throws Exception {
         //given
         User user = userRepository.findByNickname("nickname").get();
@@ -212,7 +218,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("게시글 작성 필수 파라미터가 없는 경우 INVALID_INPUT 예외가 발생한다")
+    @DisplayName("포스트 API - 게시글 작성 필수 파라미터가 없는 경우 INVALID_INPUT 예외가 발생한다")
     void createPostValidateEssentialParameter_InvalidInput() throws Exception {
         //given
         Map<String, Object> body = new HashMap<>();
@@ -256,7 +262,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("존재하지 않는 카테고리 입력 시에 INVALID_INPUT 예외가 발생한다")
+    @DisplayName("포스트 API - 존재하지 않는 카테고리 입력 시에 INVALID_INPUT 예외가 발생한다")
     void createPostValidateCategory_InvalidInput() throws Exception {
         //given
         Map<String, Object> body = new HashMap<>();
@@ -274,7 +280,7 @@ public class PostNcpIntegrationTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("해시태그의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
+    @DisplayName("포스트 API - 해시태그의 개수가 30개가 넘으면, INVALID_INPUT 예외가 발생한다")
     void HashtagOver30_InvalidInput() throws Exception {
         //given
         List<String> hashtagList = new ArrayList<>();
@@ -294,5 +300,63 @@ public class PostNcpIntegrationTest extends RestDocs {
                         .header(AUTHORIZATION_HEADER, testToken)
                 ).andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(INVALID_INPUT.getCode()));
+    }
+
+    @Test
+    @DisplayName("포스트 API - 게시글 신고하기 성공")
+    void reportPost() throws Exception {
+        User user = userRepository.findByNickname("nickname").get();
+
+        Shorts shorts = Shorts.builder()
+                .thumbnailUrl("test")
+                .shortsUrl("test")
+                .uploadKey("test")
+                .build();
+        shortsRepository.save(shorts);
+
+        Post post = Post.builder()
+                .shorts(shorts)
+                .postCategory(PostCategoryEnum.TOUR)
+                .user(user)
+                .build();
+        postRepository.save(post);
+        Long postId = post.getId();
+
+        ReportPost reportPost = ReportPost.builder()
+                .reporter(user)
+                .post(post)
+                .reason("dummy")
+                .build();
+        reportPostRepository.save(reportPost);
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("reason", "신고샤유");
+
+        // when, then
+        mockMvc.perform(post("/v1/post/{postId}/report", postId)
+                        .content(objectMapper.writeValueAsString(body))
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .header(AUTHORIZATION_HEADER, testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("post/report",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("postId").description("(필수) 신고할 포스트의 id")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("JWT Access Token")
+                        ),
+                        requestFields(
+                                fieldWithPath("reason").type(JsonFieldType.STRING).description("신고 사유")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                        )
+                ));
     }
 }
