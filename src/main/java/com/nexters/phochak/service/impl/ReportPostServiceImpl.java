@@ -3,10 +3,10 @@ package com.nexters.phochak.service.impl;
 import com.nexters.phochak.client.SlackPostReportFeignClient;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.ReportPost;
+import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.repository.ReportPostRepository;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.SlackMessageFormDto;
-import com.nexters.phochak.dto.request.PostReportRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
@@ -28,21 +28,21 @@ public class ReportPostServiceImpl implements ReportPostService {
     private final SlackPostReportFeignClient slackPostReportFeignClient;
 
     @Value("${feign-client.slack.report.bot-nickname}")
-    private final String slackReportBotNickname;
+    private String slackReportBotNickname;
 
     @Override
     @Transactional
-    public void notifyReport(Long userId, Long postId, PostReportRequestDto postReportRequestDto) {
+    public void notifyReport(Long userId, Long postId, ReportPostRequestDto reportPostRequestDto) {
         User user = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
         ReportPost reportPost = ReportPost.builder()
                 .reporter(user)
                 .post(post)
-                .reason(postReportRequestDto.getReason())
+                .reason(reportPostRequestDto.getReason())
                 .build();
         reportPostRepository.save(reportPost);
 
-        String message = generateReportMessage(user, post, postReportRequestDto.getReason());
+        String message = generateReportMessage(user, post, reportPostRequestDto.getReason());
         SlackMessageFormDto test = SlackMessageFormDto.builder()
                 .username(slackReportBotNickname)
                 .text(message)
@@ -52,7 +52,7 @@ public class ReportPostServiceImpl implements ReportPostService {
 
     private String generateReportMessage(User user, Post post, String reason) {
         Long reportCount = reportPostRepository.countByPost(post);
-        return "게시글 신고가 접수되었습니다."
+        return "\uD83D\uDC6E\u200D 게시글 신고가 접수되었습니다 \uD83D\uDC6E\u200D"
                 + "\n포스트 id: " + post.getId()
                 + "\n누적 신고: " + reportCount
                 + "\n신고자: " + user.getNickname()
