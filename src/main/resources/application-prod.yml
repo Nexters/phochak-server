@@ -58,5 +58,5 @@ ncp:
 feign-client:
   slack:
     report:
-      bot-nickname: ${report-slack-bot-nickname}
+      bot-nickname: ${report_slack_bot_nickname}
       web-hook-uri: ${report_slack_webhook_uri}
