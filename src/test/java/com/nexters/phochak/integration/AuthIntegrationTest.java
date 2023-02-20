@@ -5,6 +5,7 @@ import com.nexters.phochak.controller.UserController;
 import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
+import com.nexters.phochak.dto.request.LogoutRequestDto;
 import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
 import com.nexters.phochak.exception.CustomExceptionHandler;
 import com.nexters.phochak.repository.RefreshTokenRepository;
@@ -25,6 +26,7 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.exception.ResCode.EXPIRED_TOKEN;
 import static com.nexters.phochak.exception.ResCode.INVALID_TOKEN;
 import static com.nexters.phochak.exception.ResCode.OK;
@@ -178,6 +180,37 @@ public class AuthIntegrationTest extends RestDocs {
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(INVALID_TOKEN.getCode()));
+    }
+
+    @Test
+    @DisplayName("로그아웃 API - 로그아웃 성공")
+    void logout_success() throws Exception {
+        //given
+        TokenDto currentAT1 = jwtTokenService.generateToken(globalUserId, 1000000000L);
+        TokenDto currentRT1 = jwtTokenService.generateToken(globalUserId, 9999999999L);
+
+        refreshTokenRepository.saveWithAccessToken(currentRT1.getTokenString(), currentAT1.getTokenString());
+
+        LogoutRequestDto body = new LogoutRequestDto(currentRT1.getTokenString());
+
+        //when, then
+        mockMvc.perform(post("/v1/user/logout")
+                        .header(AUTHORIZATION_HEADER, TokenDto.TOKEN_TYPE + " " + currentAT1.getTokenString())
+                        .content(objectMapper.writeValueAsString(body))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("user/logout",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestFields(
+                                fieldWithPath("refreshToken").description("(필수) 만료되지 않은 Refresh token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                        )));
     }
 
 }
