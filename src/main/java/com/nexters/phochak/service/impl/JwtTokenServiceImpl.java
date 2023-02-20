@@ -112,6 +112,14 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
+    public void logout(String refreshToken) {
+        Boolean isExpired = refreshTokenRepository.expire(refreshToken);
+        if (!isExpired) {
+            throw new PhochakException(ResCode.INVALID_TOKEN);
+        }
+    }
+
+    @Override
     public TokenDto generateToken(Long userId, Long expireLength) {
         // header 설정
         Map<String, Object> headers = new HashMap<>();

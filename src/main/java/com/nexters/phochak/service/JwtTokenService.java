@@ -34,4 +34,10 @@ public interface JwtTokenService {
      * @return
      */
     JwtResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto);
+
+    /**
+     * 로그아웃.
+     * @param refreshToken
+     */
+    void logout(String refreshToken);
 }
