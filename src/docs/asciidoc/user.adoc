@@ -101,7 +101,7 @@ include::{snippets}/user/reissue-token/response-fields.adoc[]
 === 로그아웃 요청
 로그아웃 기능을 제공한다.
 
-Access Token과 Refresh Token이 유효할 때 로그아웃이 가능합니다.
+Refresh Token이 유효할 때 로그아웃이 가능합니다.
 
 클라이언트에서도 가급적 토큰 값을 지우는 것을 권장드립니다.
 
