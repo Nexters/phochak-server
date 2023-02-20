@@ -98,7 +98,7 @@ include::{snippets}/user/reissue-token/response-fields.adoc[]
 
 |===
 
-+=== 로그아웃 요청
+=== 로그아웃 요청
 로그아웃 기능을 제공한다.
 
 Access Token과 Refresh Token이 유효할 때 로그아웃이 가능합니다.
@@ -124,7 +124,7 @@ Response Parameters
 
 include::{snippets}/user/logout/response-fields.adoc[]
 
-**토큰 재발급 요청 API 응답코드**
+**로그아웃 요청 API 응답코드**
 [cols="2,10,7"]
 |===
 |응답코드
@@ -133,7 +133,7 @@ include::{snippets}/user/logout/response-fields.adoc[]
 
 |P000
 |정상 처리
-|재발급 성공
+|로그아웃 성공
 
 |P200
 |요청 값의 형식이 올바르지 않습니다
@@ -145,7 +145,7 @@ include::{snippets}/user/logout/response-fields.adoc[]
 
 |P203
 |만료된 토큰입니다
-|엑세스 토큰 만료
+|Refresh 토큰 만료
 
 |===
 
