@@ -113,10 +113,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public void logout(String refreshToken) {
-        Boolean isExpired = refreshTokenRepository.expire(refreshToken);
-        if (!isExpired) {
-            throw new PhochakException(ResCode.INVALID_TOKEN);
-        }
+        validateJwt(refreshToken);
+        refreshTokenRepository.expire(refreshToken);
     }
 
     @Override
