@@ -2,9 +2,9 @@ package com.nexters.phochak.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.docs.RestDocs;
-import com.nexters.phochak.dto.response.LoginResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.dto.response.UserInfoResponseDto;
+import com.nexters.phochak.dto.response.JwtResponseDto;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -66,14 +66,14 @@ class UserControllerTest extends RestDocs {
         String provider = "kakao";
         String token = "testCode";
 
-        LoginResponseDto response = LoginResponseDto.builder()
+        JwtResponseDto response = JwtResponseDto.builder()
                 .accessToken("Bearer {jwt}")
                 .expiresIn("access token lifetime(ms)")
                 .refreshToken("Bearer {jwt}")
                 .refreshTokenExpiresIn("refresh token lifetime(ms)")
                 .build();
 
-        when(jwtTokenService.createLoginResponse(any())).thenReturn(response);
+        when(jwtTokenService.issueToken(any())).thenReturn(response);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders

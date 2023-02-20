@@ -1,7 +1,8 @@
 package com.nexters.phochak.service;
 
 import com.nexters.phochak.dto.TokenDto;
-import com.nexters.phochak.dto.response.LoginResponseDto;
+import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
+import com.nexters.phochak.dto.response.JwtResponseDto;
 
 public interface JwtTokenService {
     /**
@@ -9,19 +10,28 @@ public interface JwtTokenService {
      * @param userId
      * @return
      */
-    LoginResponseDto createLoginResponse(Long userId);
+    JwtResponseDto issueToken(Long userId);
 
     /**
      * 특정 token의 유효성을 검증한다.
+     *
      * @param token
      * @return
      */
-    Long validateToken(String token);
+    Long validateJwt(String token);
 
     /**
-     * Access Token 하나를 발급한다.
+     * JWT 형태의 Token을 생성한다.
      * @param userId
+     * @param expireLength
      * @return
      */
-    TokenDto generateAccessToken(Long userId);
+    TokenDto generateToken(Long userId, Long expireLength);
+
+    /**
+     * AT, RT 를 재발급한다.
+     * @param reissueTokenRequestDto
+     * @return
+     */
+    JwtResponseDto reissueToken(ReissueTokenRequestDto reissueTokenRequestDto);
 }

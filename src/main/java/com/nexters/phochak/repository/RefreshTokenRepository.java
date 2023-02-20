@@ -1,7 +1,10 @@
 package com.nexters.phochak.repository;
 
-import com.nexters.phochak.domain.RefreshToken;
-import org.springframework.data.jpa.repository.JpaRepository;
+public interface RefreshTokenRepository {
 
-public interface RefreshTokenRepository extends JpaRepository<RefreshToken, Long> {
+    void saveWithAccessToken(String refreshToken, String accessToken);
+
+    String findAccessToken(String refreshToken);
+
+    Boolean expire(String refreshToken);
 }

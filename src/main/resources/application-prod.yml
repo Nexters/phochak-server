@@ -9,7 +9,11 @@ spring:
   jpa:
     generate-ddl: true
     hibernate:
-      ddl-auto: validate # TODO: ddl 작성
+      ddl-auto: validate
+  redis:
+    host: ${redis_url}
+    port: ${redis_port}
+    password: ${redis_password}
 
 logging:
   slack:

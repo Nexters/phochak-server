@@ -94,7 +94,7 @@ public class PostNcpIntegrationTest extends RestDocs {
                 .profileImgUrl(null)
                 .build();
         userRepository.save(user);
-        TokenDto tokenDto = jwtTokenService.generateAccessToken(user.getId());
+        TokenDto tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
         testToken = TokenDto.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
