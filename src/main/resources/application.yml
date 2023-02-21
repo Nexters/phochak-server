@@ -16,6 +16,7 @@ spring:
   redis:
     host: localhost
     port: 6379
+    password: qpdjrmflftm
 # 카카오 OAUTH 관련 설정
 # TODO: 배포 환경별로 분리 필요, 운영에서는 secret key 적용하고 별도로 관리 필요 (애플 로그인이 어떻게 돼있는지 모름)
 kakao:
