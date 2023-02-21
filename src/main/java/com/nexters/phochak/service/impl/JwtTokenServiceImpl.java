@@ -112,6 +112,12 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
+    public void logout(String refreshToken) {
+        validateJwt(refreshToken);
+        refreshTokenRepository.expire(refreshToken);
+    }
+
+    @Override
     public TokenDto generateToken(Long userId, Long expireLength) {
         // header 설정
         Map<String, Object> headers = new HashMap<>();

@@ -3,6 +3,7 @@ package com.nexters.phochak.controller;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
 import com.nexters.phochak.dto.request.LoginRequestDto;
+import com.nexters.phochak.dto.request.LogoutRequestDto;
 import com.nexters.phochak.dto.request.NicknameModifyRequestDto;
 import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
 import com.nexters.phochak.dto.response.CommonResponse;
@@ -51,6 +52,13 @@ public class UserController {
     @PostMapping("/reissue-token")
     public CommonResponse<JwtResponseDto> reissue(@RequestBody ReissueTokenRequestDto reissueTokenRequestDto) {
         return new CommonResponse<>(jwtTokenService.reissueToken(reissueTokenRequestDto));
+    }
+
+    @Auth
+    @PostMapping("/logout")
+    public CommonResponse<Void> logout(@RequestBody LogoutRequestDto logoutRequestDto) {
+        jwtTokenService.logout(logoutRequestDto.getRefreshToken());
+        return new CommonResponse<>();
     }
 
     @GetMapping("/check/nickname")
