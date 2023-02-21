@@ -20,13 +20,15 @@ public class EmbeddedRedisConfig {
 
     @Value("${spring.redis.port}")
     private int redisPort;
+    @Value("${spring.redis.password}")
+    private String redisPassword;
 
     private RedisServer redisServer;
 
     @PostConstruct
     public void redisServer() throws IOException {
         int port = isRedisRunning()? findAvailablePort() : redisPort;
-        redisServer = new RedisServer(port);
+        redisServer = RedisServer.builder().port(port).setting("requirepass " + redisPassword).build();
         redisServer.start();
     }
 
