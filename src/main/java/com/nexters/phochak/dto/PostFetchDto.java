@@ -60,14 +60,14 @@ public class PostFetchDto {
     @Getter
     public static class PostShortsInformation {
         private Long id;
-        private ShortsStateEnum shortsStateEnum;
+        private ShortsStateEnum state;
         private String shortsUrl;
         private String thumbnailUrl;
 
         @QueryProjection
-        public PostShortsInformation(Long id, ShortsStateEnum shortsStateEnum, String shortsUrl, String thumbnailUrl) {
+        public PostShortsInformation(Long id, ShortsStateEnum state, String shortsUrl, String thumbnailUrl) {
             this.id = id;
-            this.shortsStateEnum = shortsStateEnum;
+            this.state = state;
             this.shortsUrl = shortsUrl;
             this.thumbnailUrl = thumbnailUrl;
         }
