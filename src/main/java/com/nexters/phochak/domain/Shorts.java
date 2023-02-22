@@ -1,6 +1,5 @@
 package com.nexters.phochak.domain;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.Builder;
@@ -28,7 +27,6 @@ public class Shorts {
     @Column(nullable = false, unique = false)
     private ShortsStateEnum shortsStateEnum;
 
-    @JsonIgnore
     @Column(nullable = false, unique = true)
     private String uploadKey;
 
