@@ -35,7 +35,11 @@ public class PostFetchCommand {
     }
 
     public boolean hasUploadedFilter() {
-        return filter.isUploadedFilter();
+        return Objects.equals(filter, PostFilter.UPLOADED);
+    }
+
+    public boolean hasLikedFilter() {
+        return Objects.equals(filter, PostFilter.LIKED);
     }
 
     public String createCursorString() {

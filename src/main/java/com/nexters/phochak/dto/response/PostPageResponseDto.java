@@ -1,55 +1,43 @@
 package com.nexters.phochak.dto.response;
 
-import com.nexters.phochak.domain.Hashtag;
-import com.nexters.phochak.domain.Post;
-import com.nexters.phochak.domain.Shorts;
-import com.nexters.phochak.domain.User;
+import com.nexters.phochak.dto.HashtagFetchDto;
+import com.nexters.phochak.dto.LikesFetchDto;
+import com.nexters.phochak.dto.PostFetchDto;
 import com.nexters.phochak.specification.PostCategoryEnum;
-import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
+import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Objects;
 
-@Getter
 @Builder
-@AllArgsConstructor(access = AccessLevel.PRIVATE)
+@AllArgsConstructor
+@NoArgsConstructor
+@Getter
 public class PostPageResponseDto {
     private long id;
-    private User user;
-    private Shorts shorts;
+    private PostFetchDto.PostUserInformation user;
+    private PostFetchDto.PostShortsInformation shorts;
     private List<String> hashtags;
     private long view;
     private PostCategoryEnum category;
-    private long like;
+    private int like;
     private Boolean isLiked;
 
-    public static PostPageResponseDto from(Post post, Long userId) {
+    public static PostPageResponseDto of(
+            PostFetchDto postFetchDto, HashtagFetchDto hashtagFetchDto, LikesFetchDto likesFetchDto) {
         return PostPageResponseDto.builder()
-                .id(post.getId())
-                .user(post.getUser())
-                .shorts(post.getShorts())
-                .hashtags(post.getHashtags().stream().map(Hashtag::getTag).collect(Collectors.toList()))
-                .view(post.getView())
-                .category(post.getPostCategory())
-                .like(post.getLikes().size())
-                .isLiked(post.getLikes().stream().anyMatch(likes -> likes.hasLikesByUser(userId)))
+                .id(postFetchDto.getId())
+                .user(postFetchDto.getUser())
+                .shorts(postFetchDto.getShorts())
+                .hashtags(Objects.isNull(hashtagFetchDto) ? Collections.emptyList() : hashtagFetchDto.getHashtags())
+                .view(postFetchDto.getView())
+                .category(postFetchDto.getCategory())
+                .like(postFetchDto.getLike())
+                .isLiked(Objects.isNull(likesFetchDto) ? false : likesFetchDto.isLiked())
                 .build();
-    }
-
-    @Getter
-    private static class HashTagsDto {
-        private final List<String> tags;
-
-        private HashTagsDto(List<String> tags) {
-            this.tags = tags;
-        }
-
-        public static HashTagsDto from(List<Hashtag> hashtags) {
-            List<String> tags = hashtags.stream().map(Hashtag::getTag).collect(Collectors.toList());
-            return new HashTagsDto(tags);
-        }
     }
 }
