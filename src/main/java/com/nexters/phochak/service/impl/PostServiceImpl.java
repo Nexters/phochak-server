@@ -83,12 +83,13 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void viewPost(Long postId) {
+    public int updateView(Long postId) {
         int countOfUpdatedRow = postRepository.updateView(postId);
 
         if (countOfUpdatedRow < 1) {
             throw new PhochakException(ResCode.NOT_FOUND_POST);
         }
+        return countOfUpdatedRow;
     }
 
     private String generateObjectUploadKey() {

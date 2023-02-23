@@ -1,9 +1,9 @@
 package com.nexters.phochak.service;
 
+import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
-import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
@@ -16,7 +16,6 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Optional;
@@ -24,7 +23,6 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyLong;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
@@ -69,5 +67,4 @@ class PostServiceImplTest {
                 .isInstanceOf(PhochakException.class)
                 .hasMessage(ResCode.NOT_POST_OWNER.getMessage());
     }
-
 }

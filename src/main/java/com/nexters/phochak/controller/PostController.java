@@ -88,8 +88,8 @@ public class PostController {
 
     @Auth
     @PostMapping("/{postId}/view")
-    public CommonResponse<Void> viewPost(@PathVariable Long postId) {
-        postService.viewPost(postId);
+    public CommonResponse<Void> updateView(@PathVariable Long postId) {
+        postService.updateView(postId);
         return new CommonResponse<>();
     }
 }
