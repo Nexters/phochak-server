@@ -11,6 +11,7 @@ import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.List;
@@ -47,6 +48,13 @@ public class CustomExceptionHandler {
         log.warn("[MissingServletRequestParameterException 발생] request url: {}", request.getRequestURI(), e);
 
         return new CommonResponse<>(ResCode.INVALID_INPUT.getCode(), "check this param: " + e.getParameterName());
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    protected CommonResponse<Void> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException e, HttpServletRequest request) {
+        log.warn("[MethodArgumentTypeMismatchException 발생] request url: {}", request.getRequestURI(), e);
+
+        return new CommonResponse<>(ResCode.INVALID_INPUT);
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
