@@ -41,13 +41,13 @@ public class PostController {
     @Auth
     @GetMapping("/upload-key")
     public CommonResponse<PostUploadKeyResponseDto> generateUploadKey(
-            @RequestParam(name="file-extension") String fileExtension) {
+            @RequestParam(name = "file-extension") String fileExtension) {
         return new CommonResponse<>(postService.generateUploadKey(fileExtension));
     }
 
     @PostMapping("/encoding-callback")
     public void encodingCallback(@RequestBody EncodingCallbackRequestDto encodingCallbackRequestDto) {
-        if(encodingCallbackRequestDto.getStatus().equals("COMPLETE")) {
+        if (encodingCallbackRequestDto.getStatus().equals("COMPLETE")) {
             shortsService.connectPost(encodingCallbackRequestDto);
         }
     }
@@ -83,6 +83,13 @@ public class PostController {
     public CommonResponse<Void> reportPost(@PathVariable Long postId, @RequestBody ReportPostRequestDto reportPostRequestDto) {
         Long userId = UserContext.getContext();
         reportPostService.notifyReport(userId, postId, reportPostRequestDto);
+        return new CommonResponse<>();
+    }
+
+    @Auth
+    @PostMapping("/{postId}/view")
+    public CommonResponse<Void> viewPost(@PathVariable Long postId) {
+        postService.viewPost(postId);
         return new CommonResponse<>();
     }
 }

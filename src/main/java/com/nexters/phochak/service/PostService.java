@@ -23,4 +23,9 @@ public interface PostService {
 
     void delete(Long userId, Long postId);
 
+    /**
+     * 특정 게시글의 조회수를 올린다.
+     * @param postId
+     */
+    void viewPost(Long postId);
 }
