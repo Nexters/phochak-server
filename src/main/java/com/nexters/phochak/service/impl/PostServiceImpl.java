@@ -26,6 +26,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.UUID;
 import java.util.List;
 
+@Transactional
 @Service
 @RequiredArgsConstructor
 public class PostServiceImpl implements PostService {
@@ -47,24 +48,22 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    @Transactional
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = userRepository.getReferenceById(userId);
         Post post = Post.builder()
-                        .user(user)
-                        .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
-                        .build();
+                .user(user)
+                .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
+                .build();
         postRepository.save(post);
         hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), post);
         shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
     }
 
     @Override
-    @Transactional
     public void delete(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if(!post.getUser().equals(user)) {
+        if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
         String objectKey = post.getShorts().getUploadKey();
@@ -82,7 +81,17 @@ public class PostServiceImpl implements PostService {
 
         return postRepository.findNextPageByCursor(command);
     }
-    
+
+    @Override
+    public int updateView(Long postId) {
+        int countOfUpdatedRow = postRepository.updateView(postId);
+
+        if (countOfUpdatedRow < 1) {
+            throw new PhochakException(ResCode.NOT_FOUND_POST);
+        }
+        return countOfUpdatedRow;
+    }
+
     private String generateObjectUploadKey() {
         return UUID.randomUUID().toString();
     }

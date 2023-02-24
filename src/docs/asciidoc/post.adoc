@@ -261,7 +261,7 @@ Response Parameters
 
 include::{snippets}/post/report/response-fields.adoc[]
 
-**포스트 삭제 API 응답코드**
+**포스트 신고 API 응답코드**
 [cols="2,10,7"]
 |===
 |응답코드
@@ -271,6 +271,52 @@ include::{snippets}/post/report/response-fields.adoc[]
 |P000
 |정상 처리
 |포스트 작성 성공
+
+|P200
+|요청 값의 형식이 올바르지 않습니다
+|파라미터 형식 오류
+
+|P400
+|존재하지 않는 게시글입니다
+|postId의 게시글이 존재하지 않을때 발생
+|===
+
+=== 포스트 조회수 반영
+포스트 조회 시 조회수를 반영하기 위해 요청을 보낸다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/post/view/http-request.adoc[]
+
+Request Header
+
+include::{snippets}/post/view/request-headers.adoc[]
+
+Path Parameters
+
+include::{snippets}/post/view/path-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/view/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/view/response-fields.adoc[]
+
+**포스트 조회수 반영 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|포스트 조회수 반영 성공
 
 |P200
 |요청 값의 형식이 올바르지 않습니다
