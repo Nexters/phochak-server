@@ -6,7 +6,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-public interface HashtagRepository extends JpaRepository<Hashtag, Long> {
+public interface HashtagRepository extends JpaRepository<Hashtag, Long>, HashtagCustomRepository {
 
     @Query("delete from Hashtag h where h.post.id = :postId")
     @Modifying

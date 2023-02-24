@@ -1,9 +1,11 @@
 package com.nexters.phochak.repository.impl;
 
-import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.QPost;
 import com.nexters.phochak.dto.PostFetchCommand;
-import com.nexters.phochak.dto.response.PostPageResponseDto;
+import com.nexters.phochak.dto.PostFetchDto;
+import com.nexters.phochak.dto.QPostFetchDto;
+import com.nexters.phochak.dto.QPostFetchDto_PostShortsInformation;
+import com.nexters.phochak.dto.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostCustomRepository;
@@ -18,8 +20,10 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
-import java.util.Objects;
+import java.util.Map;
 import java.util.stream.Collectors;
+
+import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -30,36 +34,36 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private static final QPost post = QPost.post;
 
     private final JPAQueryFactory queryFactory;
-    private BooleanExpression filter;
 
     @Override
-    public List<PostPageResponseDto> findNextPageByCursor(PostFetchCommand command) {
-        List<Post> result = queryFactory.selectFrom(post)
-                .join(post.user).fetchJoin()
-                .join(post.shorts).fetchJoin()
-                .leftJoin(post.likes).fetchJoin()
-                .leftJoin(post.hashtags)
+    public List<PostFetchDto> findNextPageByCursor(PostFetchCommand command) {
+        Map<Long, PostFetchDto> resultMap = queryFactory.from(post)
+                .join(post.user)
+                .join(post.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
-                .where(getFilterExpression(command)) // 내가 업로드하거나 좋아요한 게시글
+                .where(getFilterExpression(command)) // 내가 업로드한 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
-                .fetch();
+                .transform(groupBy(post.id)
+                        .as(new QPostFetchDto(post.id,
+                                new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
+                                new QPostFetchDto_PostShortsInformation(post.shorts.id, post.shorts.shortsStateEnum, post.shorts.shortsUrl, post.shorts.thumbnailUrl),
+                                post.view,
+                                post.postCategory,
+                                post.likes.size()
+                        )));
 
-        return result.stream()
-                .map(p -> PostPageResponseDto.from(p, command.getUserId()))
+        return resultMap.keySet().stream()
+                .map(resultMap::get)
                 .collect(Collectors.toList());
     }
 
-    private static BooleanExpression getFilterExpression(PostFetchCommand command) {
-        if (Objects.isNull(command.getFilter())) {
-            return null;
-        }
 
+    private static BooleanExpression getFilterExpression(PostFetchCommand command) {
         if (command.hasUploadedFilter()) {
             return post.user.id.eq(command.getUserId());
         }
-        // TODO: 내가 좋아요한 게시글
         return null;
     }
 

@@ -1,8 +1,17 @@
+//querydsl 추가
+buildscript {
+	ext {
+		queryDslVersion = "5.0.0"
+	}
+}
+
 plugins {
 	id 'java'
 	id 'org.springframework.boot' version '2.7.7'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
+	//querydsl 추가
+	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 }
 
 group = 'com.nexters'
@@ -79,7 +88,8 @@ dependencies {
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.29'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation 'com.querydsl:querydsl-jpa'
+	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
 	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.238')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
 	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
@@ -89,7 +99,6 @@ dependencies {
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	runtimeOnly 'com.mysql:mysql-connector-j'
 	annotationProcessor 'org.projectlombok:lombok'
-	annotationProcessor "com.querydsl:querydsl-apt:${dependencyManagement.importedProperties['querydsl.version']}:jpa"
 	// java.lang.NoClassDefFoundError(javax.annotation.Entity) 발생 대응
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
 	// java.lang.NoClassDefFoundError(javax.annotation.Generated) 발생 대응
@@ -102,4 +111,24 @@ dependencies {
 
 tasks.named('test') {
 	useJUnitPlatform()
+}
+
+//querydsl 추가
+def querydslDir = "$buildDir/generated/querydsl"
+
+querydsl {
+	jpa = true
+	querydslSourcesDir = querydslDir
+}
+sourceSets {
+	main.java.srcDir querydslDir
+}
+compileQuerydsl {
+	options.annotationProcessorPath = configurations.querydsl
+}
+configurations {
+	compileOnly {
+		extendsFrom annotationProcessor
+	}
+	querydsl.extendsFrom compileClasspath
 }

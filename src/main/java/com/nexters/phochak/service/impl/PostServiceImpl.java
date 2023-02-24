@@ -1,9 +1,14 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.auth.UserContext;
+import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.User;
+import com.nexters.phochak.dto.HashtagFetchDto;
+import com.nexters.phochak.dto.LikesFetchDto;
 import com.nexters.phochak.dto.PostFetchCommand;
+import com.nexters.phochak.dto.PostFetchDto;
+import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
@@ -13,9 +18,9 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
-import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.HashtagService;
+import com.nexters.phochak.service.LikesService;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.PostCategoryEnum;
@@ -23,8 +28,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
 import java.util.List;
+import java.util.Map;
+import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Transactional
 @Service
@@ -35,6 +42,7 @@ public class PostServiceImpl implements PostService {
     private final HashtagService hashtagService;
     private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
+    private final LikesService likesService;
     private final HashtagRepository hashtagRepository;
 
     @Override
@@ -79,7 +87,28 @@ public class PostServiceImpl implements PostService {
 
         PostFetchCommand command = PostFetchCommand.of(customCursor, filter, userId);
 
-        return postRepository.findNextPageByCursor(command);
+        return createPostPageResponseDto(command);
+    }
+
+    private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
+        if (!command.hasLikedFilter()) {
+            return getNextCursorPageWithoutLikedFilter(command.getUserId(), postRepository.findNextPageByCursor(command));
+        }
+        return getNextCursorPageWithoutLikedFilter(command.getUserId(), likesService.findLikedPosts(command));
+    }
+
+    private List<PostPageResponseDto> getNextCursorPageWithoutLikedFilter(Long userId, List<PostFetchDto> postFetchDtos) {
+        return createPostPageResponseDto(userId, postFetchDtos);
+    }
+
+    private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
+        List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).collect(Collectors.toList());
+        Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagService.findHashtagsOfPosts(postIds);
+        Map<Long, LikesFetchDto> likesFetchDtos = likesService.checkIsLikedPost(postIds, userId);
+
+        return postFetchDtos.stream()
+                .map(p -> PostPageResponseDto.of(p, hashtagFetchDtos.get(p.getId()), likesFetchDtos.get(p.getId())))
+                .collect(Collectors.toList());
     }
 
     @Override
@@ -91,6 +120,7 @@ public class PostServiceImpl implements PostService {
         }
         return countOfUpdatedRow;
     }
+
 
     private String generateObjectUploadKey() {
         return UUID.randomUUID().toString();

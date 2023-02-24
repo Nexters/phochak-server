@@ -2,6 +2,7 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
+import com.nexters.phochak.dto.HashtagFetchDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
@@ -11,7 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Collections;
 import java.util.List;
-import java.util.regex.Matcher;
+import java.util.Map;
 import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
@@ -34,6 +35,11 @@ public class HashtagServiceImpl implements HashtagService {
                         .build()
         ).collect(Collectors.toList());
         return hashtagRepository.saveAll(hashtagList);
+    }
+
+    @Override
+    public Map<Long, HashtagFetchDto> findHashtagsOfPosts(List<Long> postIds) {
+        return hashtagRepository.findHashTagsOfPost(postIds);
     }
 
     private static void validateHashtag(List<String> stringHashtagList) {
