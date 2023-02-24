@@ -150,7 +150,7 @@ class UserControllerTest extends RestDocs {
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestFields(
-                                fieldWithPath("nickname").description("(필수) 변경하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
+                                fieldWithPath("nickname").description("(필수) 변경하고자 하는 닉네임")
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
