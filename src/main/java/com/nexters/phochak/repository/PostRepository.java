@@ -25,7 +25,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRep
     @Query("DELETE from Post p WHERE p.user = :user")
     void deleteAllByUser(@Param("user") User user);
 
-    @Modifying
     @Query("select p from Post p left join fetch p.shorts where p.user = :user")
     List<Post> findAllPostByUserFetchJoin(@Param("user") User user);
 }
