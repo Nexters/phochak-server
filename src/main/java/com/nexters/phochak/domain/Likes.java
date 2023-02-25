@@ -19,7 +19,7 @@ import java.util.Objects;
 
 @Getter
 @Entity
-@Table(indexes = @Index(name="idx02_unique_likes", columnList = "user, post", unique = true))
+@Table(indexes = @Index(name="idx02_unique_likes", columnList = "USER_ID, POST_ID", unique = true))
 public class Likes extends BaseTime {
 
     @Id
