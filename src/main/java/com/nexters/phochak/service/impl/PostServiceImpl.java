@@ -13,7 +13,6 @@ import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
-import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
@@ -92,9 +91,9 @@ public class PostServiceImpl implements PostService {
 
     private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
         if (!command.hasLikedFilter()) {
-            return getNextCursorPageWithoutLikedFilter(command.getUserId(), postRepository.findNextPageByCursor(command));
+            return getNextCursorPageWithoutLikedFilter(command.getUserId(), postRepository.findNextPageByCommmand(command));
         }
-        return getNextCursorPageWithoutLikedFilter(command.getUserId(), likesService.findLikedPosts(command));
+        return getNextCursorPageWithoutLikedFilter(command.getUserId(), likesService.findLikedPostsByCommand(command));
     }
 
     private List<PostPageResponseDto> getNextCursorPageWithoutLikedFilter(Long userId, List<PostFetchDto> postFetchDtos) {

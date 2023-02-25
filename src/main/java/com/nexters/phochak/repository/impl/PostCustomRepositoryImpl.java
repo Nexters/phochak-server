@@ -46,8 +46,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                                 new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(post.shorts.id, post.shorts.shortsStateEnum, post.shorts.shortsUrl, post.shorts.thumbnailUrl),
                                 post.view,
-                                post.postCategory,
-                                post.likes.size()
+                                post.postCategory
                         )));
 
         return resultMap.keySet().stream()

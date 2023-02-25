@@ -22,7 +22,7 @@ public class LikeServiceImpl implements LikesService {
     }
 
     @Override
-    public List<PostFetchDto> findLikedPosts(PostFetchCommand command) {
+    public List<PostFetchDto> findLikedPostsByCommand(PostFetchCommand command) {
         return likesRepository.findLikedPosts(command);
     }
 }
