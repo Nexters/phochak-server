@@ -293,7 +293,7 @@ public class AuthIntegrationTest extends RestDocs {
         em.flush();
         em.clear();
 
-        Assertions.assertThat(userRepository.findById(globalUserId).get().getNickname()).isEqualTo("탈퇴한유저");
+        Assertions.assertThat(userRepository.findById(globalUserId).get().getNickname()).isNull();
         Assertions.assertThat(postRepository.count()).isZero();
         Assertions.assertThat(shortsRepository.count()).isZero();
         Assertions.assertThat(hashtagRepository.count()).isZero();

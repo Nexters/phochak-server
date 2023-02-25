@@ -28,11 +28,11 @@ public class User extends BaseTime {
     @Enumerated(EnumType.STRING)
     private OAuthProviderEnum provider;
 
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String providerId;
 
     @Size(min = 1, max = NICKNAME_MAX_SIZE)
-    @Column(nullable = false, unique = true)
+    @Column(nullable = true, unique = true)
     private String nickname;
 
     private String profileImgUrl;
@@ -54,9 +54,9 @@ public class User extends BaseTime {
     }
 
     public void withdrawInformation() {
-        this.nickname = "탈퇴한유저";
-        this.provider = OAuthProviderEnum.WITHDRAW;
-        this.providerId = "탈퇴한유저";
+        this.nickname = null;
+        this.providerId = null;
+        this.provider = null;
         this.profileImgUrl = null;
     }
 }
