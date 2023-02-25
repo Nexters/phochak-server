@@ -23,8 +23,17 @@
         </filter>
     </appender>
 
+    <appender name="file" class="ch.qos.logback.core.FileAppender">
+        <file>~/logs/myapp.log</file>
+        <append>true</append>
+        <encoder>
+            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+        </encoder>
+    </appender>
+
     <root level="INFO">
         <appender-ref ref="Console" />
         <appender-ref ref="ASYNC_SLACK"/>
+        <appender-ref ref="file"/>
     </root>
 </configuration>
