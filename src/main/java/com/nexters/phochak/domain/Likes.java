@@ -11,12 +11,15 @@ import javax.persistence.ForeignKey;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.Table;
 import java.util.Objects;
 
 @Getter
 @Entity
+@Table(indexes = @Index(name="idx02_unique_likes", columnList = "user, post", unique = true))
 public class Likes extends BaseTime {
 
     @Id
