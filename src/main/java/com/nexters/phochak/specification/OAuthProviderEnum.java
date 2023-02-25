@@ -9,7 +9,7 @@ public enum OAuthProviderEnum {
     /**
      * 지원하는 OAuth Provider 목록
      */
-    APPLE("apple"), KAKAO("kakao"), NAVER("naver"), KAKAO_TEST("kakao_test");
+    APPLE("apple"), KAKAO("kakao"), NAVER("naver"), KAKAO_TEST("kakao_test"), WITHDRAW("withdraw");
 
     private final String code;
 

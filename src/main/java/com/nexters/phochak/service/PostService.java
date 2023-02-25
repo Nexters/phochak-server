@@ -1,5 +1,6 @@
 package com.nexters.phochak.service;
 
+import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
@@ -28,4 +29,6 @@ public interface PostService {
      * @param postId
      */
     int updateView(Long postId);
+
+    void deleteAllPostByUser(User user);
 }

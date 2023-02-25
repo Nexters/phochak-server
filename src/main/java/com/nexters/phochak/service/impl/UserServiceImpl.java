@@ -85,7 +85,7 @@ public class UserServiceImpl implements UserService {
     public void withdraw(Long userId) {
         User user = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         user.withdrawInformation();
-//        postService.deleteAllPostByUser(user);
+        postService.deleteAllPostByUser(user);
     }
 
     private boolean isDuplicatedNickname(String nickname) {

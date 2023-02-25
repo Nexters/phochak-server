@@ -13,11 +13,11 @@ import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
-import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
+import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.HashtagService;
 import com.nexters.phochak.service.LikesService;
@@ -44,6 +44,7 @@ public class PostServiceImpl implements PostService {
     private final ShortsService shortsService;
     private final LikesService likesService;
     private final HashtagRepository hashtagRepository;
+    private final ShortsRepository shortsRepository;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
@@ -77,7 +78,7 @@ public class PostServiceImpl implements PostService {
         String objectKey = post.getShorts().getUploadKey();
         hashtagRepository.deleteAllByPostId(post.getId());
         postRepository.delete(post);
-        storageBucketClient.removeShortsObject(objectKey);
+        storageBucketClient.removeShortsObject(List.of(objectKey));
     }
 
     @Override
@@ -119,6 +120,16 @@ public class PostServiceImpl implements PostService {
             throw new PhochakException(ResCode.NOT_FOUND_POST);
         }
         return countOfUpdatedRow;
+    }
+
+    @Override
+    public void deleteAllPostByUser(User user) {
+        //포스트 엔티티 조회
+        List<Post> postList = postRepository.findAllPostByUserFetchJoin(user);
+        List<String> shortsKeyList = postList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
+        postRepository.deleteAllByUser(user);
+        shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
+        storageBucketClient.removeShortsObject(shortsKeyList);
     }
 
 

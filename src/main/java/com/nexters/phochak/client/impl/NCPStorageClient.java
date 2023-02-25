@@ -13,6 +13,7 @@ import org.springframework.stereotype.Repository;
 
 import java.net.URL;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -52,10 +53,12 @@ public class NCPStorageClient implements StorageBucketClient {
     }
 
     @Override
-    public void removeShortsObject(String objectKey) {
+    public void removeShortsObject(List<String> objectKeyList) {
         //TODO: 비동기 처리
-        s3Client.deleteObject(encodedBucketName, shortsLocationPrefixHead + objectKey + shortsLocationPrefixTail);
-        s3Client.deleteObject(encodedBucketName, thumbnailLocationPrefixHead + objectKey+ thumbnailLocationPrefixTail);
+        for (String key : objectKeyList) {
+            s3Client.deleteObject(encodedBucketName, shortsLocationPrefixHead + key + shortsLocationPrefixTail);
+            s3Client.deleteObject(encodedBucketName, thumbnailLocationPrefixHead + key+ thumbnailLocationPrefixTail);
+        }
     }
 
     @Override
