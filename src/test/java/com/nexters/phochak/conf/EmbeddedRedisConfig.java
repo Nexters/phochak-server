@@ -1,6 +1,6 @@
 package com.nexters.phochak.conf;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.nexters.phochak.config.property.RedisProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.util.StringUtils;
@@ -16,12 +16,14 @@ import java.io.InputStreamReader;
 @Configuration
 public class EmbeddedRedisConfig {
 
-    @Value("${spring.redis.port}")
     private int redisPort;
-    @Value("${spring.redis.password}")
     private String redisPassword;
-
     private RedisServer redisServer;
+
+    public EmbeddedRedisConfig(RedisProperties redisProperties) {
+        this.redisPort = redisProperties.getPort();
+        this.redisPassword = redisProperties.getPassword();
+    }
 
     @PostConstruct
     public void redisServer() throws IOException {
