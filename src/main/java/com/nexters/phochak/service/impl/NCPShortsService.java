@@ -24,7 +24,7 @@ public class NCPShortsService implements ShortsService {
     public void connectShorts(String uploadKey, Post post) {
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
-        if(optionalShorts.isPresent()) {
+        if (optionalShorts.isPresent()) {
             // case: 인코딩이 먼저 끝나있는 경우
             //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
@@ -35,10 +35,10 @@ public class NCPShortsService implements ShortsService {
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);
             Shorts shorts = Shorts.builder()
-                            .uploadKey(uploadKey)
-                            .shortsUrl(shortsFileName)
-                            .thumbnailUrl(thumbnailFileName)
-                            .build();
+                    .uploadKey(uploadKey)
+                    .shortsUrl(shortsFileName)
+                    .thumbnailUrl(thumbnailFileName)
+                    .build();
             shortsRepository.save(shorts);
             post.setShorts(shorts);
         }
@@ -51,7 +51,7 @@ public class NCPShortsService implements ShortsService {
 
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
-        if(optionalShorts.isPresent()) {
+        if (optionalShorts.isPresent()) {
             // case: 포스트 생성이 먼저된 경우 -> 상태 변경
             //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
@@ -70,7 +70,7 @@ public class NCPShortsService implements ShortsService {
     }
 
     private String getKeyFromFilePath(String filePath) {
-        return filePath.substring(filePath.lastIndexOf("/")+1, filePath.indexOf("_"));
+        return filePath.substring(filePath.lastIndexOf("/") + 1, filePath.indexOf("_"));
     }
 
     private String generateThumbnailsFileName(String uploadKey) {
