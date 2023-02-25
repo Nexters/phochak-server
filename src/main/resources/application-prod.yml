@@ -54,8 +54,7 @@ ncp:
     thumbnail-url-prefix-head: ${thumbnail_url_prefix_head}
     thumbnail-url-prefix-tail: ${thumbnail_url_prefix_tail}
 
-feign-client:
-  slack:
-    report:
-      bot-nickname: ${report_slack_bot_nickname}
-      web-hook-uri: ${report_slack_webhook_uri}
+slack:
+  report:
+    bot-nickname: ${report_slack_bot_nickname}
+    web-hook-uri: ${report_slack_webhook_uri}

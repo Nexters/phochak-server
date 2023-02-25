@@ -25,6 +25,8 @@ kakao:
   api_url:
     token: https://kauth.kakao.com/oauth/token
     information: https://kapi.kakao.com/v2/user/me
+apple:
+  auth-uri: https://appleid.apple.com/auth/keys
 
 logging:
   level:
@@ -60,8 +62,7 @@ ncp:
     thumbnail-url-prefix-head: test
     thumbnail-url-prefix-tail: test
 
-feign-client:
-  slack:
-    report:
-      bot-nickname: test
-      web-hook-uri: test
+slack:
+  report:
+    bot-nickname: test
+    web-hook-uri: test
