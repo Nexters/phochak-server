@@ -46,5 +46,6 @@
         <appender-ref ref="Console" />
         <appender-ref ref="ASYNC_SLACK"/>
         <appender-ref ref="file"/>
+        <appender-ref ref="ROLLING"/>
     </root>
 </configuration>
