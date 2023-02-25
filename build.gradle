@@ -40,13 +40,13 @@ test {
 }
 
 asciidoctor {
+	dependsOn test
+	configurations 'asciidoctorExtensions'
+	inputs.dir snippetsDir
 	sources {
 		include("**/index.adoc")
 	}
 	baseDirFollowsSourceDir() // 특정 .adoc에 다른 adoc 파일을 가져와서 사용하고 싶을 경우 설정
-	inputs.dir snippetsDir
-	dependsOn test
-	configurations 'asciidoctorExtensions'
 }
 
 asciidoctor.doFirst {
