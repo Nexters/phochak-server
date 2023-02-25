@@ -1,0 +1,33 @@
+name: CI
+
+on:
+  pull_request
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set application.yml for deploy
+        working-directory: ./be/src/main/resources
+
+      - name: Setup Java JDK
+        uses: actions/setup-java@v3.4.0
+        with:
+          distribution: 'adopt-hotspot'
+          java-version: '11'
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x gradlew
+
+      - name: Setup MySQL
+        uses: mirromutth/mysql-action@v1.1
+        with:
+          mysql database: phochak
+          mysql user: phochak
+          mysql root password: qpdjrmflftm
+
+      - name: Build with Gradle
+        run: ./gradlew build
