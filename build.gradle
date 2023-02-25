@@ -34,6 +34,9 @@ ext {
 	snippetsDir = file('build/generated-snippets')
 }
 
+// Run tests before building
+check.dependsOn test
+
 test {
 	outputs.dir snippetsDir
 	useJUnitPlatform()
@@ -106,7 +109,8 @@ dependencies {
 	testImplementation 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
 	testImplementation 'org.springframework.restdocs:spring-restdocs-mockmvc'
-	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	testImplementation 'org.springframework.restdocs:spring-restdocs-asciidoctor'
+	asciidoctorExtensions 'org.springframework.restdocs:spring-restdocs-mockmvc'
 }
 
 tasks.named('test') {
