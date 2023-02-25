@@ -23,14 +23,6 @@
         </filter>
     </appender>
 
-<!--    <appender name="file" class="ch.qos.logback.core.FileAppender">-->
-<!--        <file>logs/myapp.log</file>-->
-<!--        <append>true</append>-->
-<!--        <encoder>-->
-<!--            <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>-->
-<!--        </encoder>-->
-<!--    </appender>-->
-
     <appender name="ROLLING" class="ch.qos.logback.core.rolling.RollingFileAppender">
         <file>logs/myapp.log</file>
         <rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
@@ -45,7 +37,6 @@
     <root level="INFO">
         <appender-ref ref="Console" />
         <appender-ref ref="ASYNC_SLACK"/>
-<!--        <appender-ref ref="file"/>-->
         <appender-ref ref="ROLLING"/>
     </root>
 </configuration>
