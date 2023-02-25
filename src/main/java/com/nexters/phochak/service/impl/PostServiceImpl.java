@@ -126,12 +126,13 @@ public class PostServiceImpl implements PostService {
     public void deleteAllPostByUser(User user) {
         //포스트 엔티티 조회
         List<Post> postList = postRepository.findAllPostByUserFetchJoin(user);
+        List<Long> postIdList = postList.stream().map(Post::getId).collect(Collectors.toList());
         List<String> shortsKeyList = postList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
         postRepository.deleteAllByUser(user);
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
+        hashtagRepository.deleteAllByPostIdIn(postIdList);
         storageBucketClient.removeShortsObject(shortsKeyList);
     }
-
 
     private String generateObjectUploadKey() {
         return UUID.randomUUID().toString();
