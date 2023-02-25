@@ -18,3 +18,5 @@ include::user.adoc[]
 include::post.adoc[]
 
 include::likes.adoc[]
+
+created by link:https://github.com/seyoung755[@Seyeong Kim], link:https://github.com/JinuCheon[@JinuCheon]
