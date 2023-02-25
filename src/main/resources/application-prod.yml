@@ -44,20 +44,16 @@ ncp:
     secret-key: ${s3_secret_key}
 
   shorts:
-    file-location-prefix:
-      head: ${shorts_file_location_prefix_head}
-      tail: ${shorts_file_location_prefix_tail}
-    streaming-url-prefix:
-      head: ${streaming_url_prefix_head}
-      tail: ${streaming_url_prefix_tail}
+    file-location-prefix-head: ${shorts_file_location_prefix_head}
+    file-location-prefix-tail: ${shorts_file_location_prefix_tail}
+    streaming-url-prefix-head: ${streaming_url_prefix_head}
+    streaming-url-prefix-tail: ${streaming_url_prefix_tail}
 
   thumbnail:
-    file-location-prefix:
-      head: ${thumbnail_file_location_prefix_head}
-      tail: ${thumbnail_file_location_prefix_tail}
-    thumbnail-url-prefix:
-      head: ${thumbnail_url_prefix_head}
-      tail: ${thumbnail_url_prefix_tail}
+    file-location-prefix-head: ${thumbnail_file_location_prefix_head}
+    file-location-prefix-tail: ${thumbnail_file_location_prefix_tail}
+    thumbnail-url-prefix-head: ${thumbnail_url_prefix_head}
+    thumbnail-url-prefix-tail: ${thumbnail_url_prefix_tail}
 
 feign-client:
   slack:

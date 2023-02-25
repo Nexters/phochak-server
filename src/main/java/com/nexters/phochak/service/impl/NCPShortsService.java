@@ -1,5 +1,6 @@
 package com.nexters.phochak.service.impl;
 
+import com.nexters.phochak.config.property.NCPStorageProperties;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.dto.EncodingCallbackRequestDto;
@@ -7,7 +8,6 @@ import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,14 +18,7 @@ import java.util.Optional;
 public class NCPShortsService implements ShortsService {
 
     private final ShortsRepository shortsRepository;
-    @Value("${ncp.shorts.streaming-url-prefix.head}")
-    private String STREAMING_PREFIX_HEAD;
-    @Value("${ncp.shorts.streaming-url-prefix.tail}")
-    private String STREAMING_PREFIX_TAIL;
-    @Value("${ncp.thumbnail.thumbnail-url-prefix.head}")
-    private String THUMBNAIL_PREFIX_HEAD;
-    @Value("${ncp.thumbnail.thumbnail-url-prefix.tail}")
-    private String THUMBNAIL_PREFIX_TAIL;
+    private final NCPStorageProperties ncpStorageProperties;
 
     @Override
     public void connectShorts(String uploadKey, Post post) {
@@ -81,11 +74,11 @@ public class NCPShortsService implements ShortsService {
     }
 
     private String generateThumbnailsFileName(String uploadKey) {
-        return THUMBNAIL_PREFIX_HEAD + uploadKey + THUMBNAIL_PREFIX_TAIL;
+        return ncpStorageProperties.getThumbnail().getThumbnailUrlPrefixHead() + uploadKey + ncpStorageProperties.getThumbnail().getThumbnailUrlPrefixTail();
     }
 
     private String generateShortsFileName(String uploadKey) {
-        return STREAMING_PREFIX_HEAD + uploadKey + STREAMING_PREFIX_TAIL;
+        return ncpStorageProperties.getShorts().getStreamingUrlPrefixHead() + uploadKey + ncpStorageProperties.getShorts().getStreamingUrlPrefixTail();
     }
 
 }

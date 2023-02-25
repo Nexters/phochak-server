@@ -50,20 +50,16 @@ ncp:
     secret-key: test
 
   shorts:
-    file-location-prefix:
-      head: test
-      tail: test
-    streaming-url-prefix:
-      head: test
-      tail: test
+    file-location-prefix-head: test
+    file-location-prefix-tail: test
+    streaming-url-prefix-head: test
+    streaming-url-prefix-tail: test
 
   thumbnail:
-    file-location-prefix:
-      head: test
-      tail: test
-    thumbnail-url-prefix:
-      head: test
-      tail: test
+    file-location-prefix-head: test
+    file-location-prefix-tail: test
+    thumbnail-url-prefix-head: test
+    thumbnail-url-prefix-tail: test
 
 feign-client:
   slack:
