@@ -6,5 +6,5 @@ import com.nexters.phochak.dto.PostFetchDto;
 import java.util.List;
 
 public interface PostCustomRepository {
-    List<PostFetchDto> findNextPageByCursor(PostFetchCommand command);
+    List<PostFetchDto> findNextPageByCommmand(PostFetchCommand command);
 }

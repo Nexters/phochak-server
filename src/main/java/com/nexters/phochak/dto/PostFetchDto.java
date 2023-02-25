@@ -17,26 +17,14 @@ public class PostFetchDto {
     private PostShortsInformation shorts;
     private long view;
     private PostCategoryEnum category;
-    private int like;
 
     @QueryProjection
-    public PostFetchDto(long id, PostUserInformation user, PostShortsInformation shorts, long view, PostCategoryEnum category, int like) {
+    public PostFetchDto(long id, PostUserInformation user, PostShortsInformation shorts, long view, PostCategoryEnum category) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
         this.view = view;
         this.category = category;
-        this.like = like;
-    }
-
-    @QueryProjection
-    public PostFetchDto(long id, PostUserInformation user, PostShortsInformation shorts, long view, PostCategoryEnum category, long like) {
-        this.id = id;
-        this.user = user;
-        this.shorts = shorts;
-        this.view = view;
-        this.category = category;
-        this.like = (int) like;
     }
 
     @Builder

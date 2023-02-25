@@ -1,6 +1,5 @@
 package com.nexters.phochak.dto;
 
-import com.querydsl.core.annotations.QueryProjection;
 import lombok.Getter;
 import lombok.ToString;
 
@@ -8,10 +7,11 @@ import lombok.ToString;
 @Getter
 public class LikesFetchDto {
 
+    private int like;
     private boolean isLiked;
 
-    @QueryProjection
-    public LikesFetchDto(boolean isLiked) {
+    public LikesFetchDto(int like, boolean isLiked) {
+        this.like = like;
         this.isLiked = isLiked;
     }
 }

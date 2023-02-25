@@ -36,7 +36,7 @@ public class PostPageResponseDto {
                 .hashtags(Objects.isNull(hashtagFetchDto) ? Collections.emptyList() : hashtagFetchDto.getHashtags())
                 .view(postFetchDto.getView())
                 .category(postFetchDto.getCategory())
-                .like(postFetchDto.getLike())
+                .like(Objects.isNull(likesFetchDto) ? 0 : likesFetchDto.getLike())
                 .isLiked(Objects.isNull(likesFetchDto) ? false : likesFetchDto.isLiked())
                 .build();
     }

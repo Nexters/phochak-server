@@ -10,5 +10,5 @@ import java.util.Map;
 public interface LikesService {
     Map<Long, LikesFetchDto> checkIsLikedPost(List<Long> postIds, Long userId);
 
-    List<PostFetchDto> findLikedPosts(PostFetchCommand command);
+    List<PostFetchDto> findLikedPostsByCommand(PostFetchCommand command);
 }

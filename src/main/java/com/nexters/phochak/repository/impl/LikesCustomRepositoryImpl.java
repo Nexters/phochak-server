@@ -6,12 +6,11 @@ import com.nexters.phochak.domain.QShorts;
 import com.nexters.phochak.dto.LikesFetchDto;
 import com.nexters.phochak.dto.PostFetchCommand;
 import com.nexters.phochak.dto.PostFetchDto;
-import com.nexters.phochak.dto.QLikesFetchDto;
 import com.nexters.phochak.dto.QPostFetchDto;
 import com.nexters.phochak.dto.QPostFetchDto_PostShortsInformation;
 import com.nexters.phochak.dto.QPostFetchDto_PostUserInformation;
-import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.dto.QQuerydslFetchDto;
+import com.nexters.phochak.dto.QuerydslFetchDto;
 import com.nexters.phochak.repository.LikesCustomRepository;
 import com.nexters.phochak.specification.PostSortOption;
 import com.nexters.phochak.specification.ShortsStateEnum;
@@ -19,7 +18,6 @@ import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.StringExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -33,9 +31,6 @@ import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 public class LikesCustomRepositoryImpl implements LikesCustomRepository {
-    private static final int ID_PADDING = 19;
-    private static final int CRITERIA_PADDING = 10;
-    public static final char ZERO = '0';
     private static final QLikes likes = QLikes.likes;
     private static final QPost post = QPost.post;
     private static final QShorts shorts = QShorts.shorts;
@@ -46,20 +41,22 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
     public Map<Long, LikesFetchDto> checkIsLikedPost(List<Long> postIds, Long userId) {
         Map<Long, LikesFetchDto> result = new HashMap<>();
 
-        Map<Long, List<LikesFetchDto>> map = queryFactory.from(likes)
+        Map<Long, List<QuerydslFetchDto>> map = queryFactory.from(likes)
                 .join(likes.post)
                 .where(likes.post.id.in(postIds))
                 .transform(groupBy(likes.post.id)
-                        .as(list(new QLikesFetchDto(likes.user.id.eq(userId)))));
+                        .as(list(new QQuerydslFetchDto(likes.user.id.eq(userId)))));
 
         map.keySet().forEach(k -> {
-                            LikesFetchDto likesFetchDto = map.get(k).stream().parallel()
-                                    .filter(LikesFetchDto::isLiked)
-                                    .findAny()
-                                    .orElseGet(() -> new LikesFetchDto(false));
-                            result.put(k, likesFetchDto);
-                        }
-                );
+                    int size = map.get(k).size();
+                    boolean isLiked = false;
+                    for (int i = 0; i < size; i++) {
+                        if (map.get(k).get(i).isLiked()) {
+                            isLiked = true;
+                            break;
+                        }}
+                    result.put(k, new LikesFetchDto(size, isLiked));
+                });
 
         return result;
     }
@@ -83,7 +80,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                         new QPostFetchDto(post.id,
                                 new QPostFetchDto_PostUserInformation(likes.user.id, likes.user.nickname, likes.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
-                                likes.post.view, likes.post.postCategory, post.likes.size())
+                                likes.post.view, likes.post.postCategory)
                 ));
 
         return result.keySet().stream()
@@ -92,20 +89,15 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
     }
 
     private BooleanExpression filterByCursor(PostFetchCommand command) {
-        String cursorString = command.createCursorString();
+        BooleanExpression defaultFilter = likes.post.id.lt(command.getLastId());
         switch (command.getSortOption()) {
-            case LATEST:
-                return likes.post.id.lt(command.getLastId());
             case VIEW:
-                return StringExpressions.lpad(likes.post.view.stringValue(), CRITERIA_PADDING, ZERO)
-                        .concat(StringExpressions.lpad(likes.post.id.stringValue(), ID_PADDING, ZERO))
-                        .lt(cursorString);
+                return likes.post.view.loe(command.getSortValue()).and(defaultFilter);
             case LIKE:
-                return StringExpressions.lpad(likes.count().stringValue(), CRITERIA_PADDING, ZERO)
-                        .concat(StringExpressions.lpad(likes.post.id.stringValue(), ID_PADDING, ZERO))
-                        .lt(cursorString);
+                return likes.count().loe(command.getSortValue()).and(defaultFilter);
+            default:
+                return defaultFilter;
         }
-        throw new PhochakException(ResCode.NOT_SUPPORTED_SORT_OPTION);
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {

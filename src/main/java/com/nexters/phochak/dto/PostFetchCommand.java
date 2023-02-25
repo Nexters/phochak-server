@@ -13,9 +13,6 @@ import java.util.Objects;
 @RequiredArgsConstructor
 @Getter
 public class PostFetchCommand {
-    private static final String INTEGER_STRING_FORMATTER = "%010d";
-    private static final String LONG_STRING_FORMATTER = "%019d";
-
     private final long userId;
     private final Long lastId;
     private final Integer pageSize;
@@ -40,13 +37,5 @@ public class PostFetchCommand {
 
     public boolean hasLikedFilter() {
         return Objects.equals(filter, PostFilter.LIKED);
-    }
-
-    public String createCursorString() {
-        if (Objects.isNull(sortValue)) {
-            return null;
-        }
-
-        return String.format(INTEGER_STRING_FORMATTER, sortValue) + String.format(LONG_STRING_FORMATTER, lastId);
     }
 }

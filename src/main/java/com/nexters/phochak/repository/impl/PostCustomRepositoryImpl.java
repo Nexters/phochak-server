@@ -6,8 +6,6 @@ import com.nexters.phochak.dto.PostFetchDto;
 import com.nexters.phochak.dto.QPostFetchDto;
 import com.nexters.phochak.dto.QPostFetchDto_PostShortsInformation;
 import com.nexters.phochak.dto.QPostFetchDto_PostUserInformation;
-import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostCustomRepository;
 import com.nexters.phochak.specification.PostSortOption;
 import com.nexters.phochak.specification.ShortsStateEnum;
@@ -15,7 +13,6 @@ import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.StringExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -29,15 +26,12 @@ import static com.querydsl.core.group.GroupBy.groupBy;
 @Slf4j
 @RequiredArgsConstructor
 public class PostCustomRepositoryImpl implements PostCustomRepository {
-    private static final int ID_PADDING = 19;
-    private static final int CRITERIA_PADDING = 10;
-    public static final char ZERO = '0';
     private static final QPost post = QPost.post;
 
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<PostFetchDto> findNextPageByCursor(PostFetchCommand command) {
+    public List<PostFetchDto> findNextPageByCommmand(PostFetchCommand command) {
         Map<Long, PostFetchDto> resultMap = queryFactory.from(post)
                 .join(post.user)
                 .join(post.shorts)
@@ -52,8 +46,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                                 new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(post.shorts.id, post.shorts.shortsStateEnum, post.shorts.shortsUrl, post.shorts.thumbnailUrl),
                                 post.view,
-                                post.postCategory,
-                                post.likes.size()
+                                post.postCategory
                         )));
 
         return resultMap.keySet().stream()
@@ -70,20 +63,15 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     }
 
     private BooleanExpression filterByCursor(PostFetchCommand command) {
-        String cursorString = command.createCursorString();
+        BooleanExpression defaultFilter = post.id.lt(command.getLastId());
         switch (command.getSortOption()) {
-            case LATEST:
-                return post.id.lt(command.getLastId());
             case VIEW:
-                return StringExpressions.lpad(post.view.stringValue(), CRITERIA_PADDING, ZERO)
-                        .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
-                        .lt(cursorString);
+                return post.view.loe(command.getSortValue()).and(defaultFilter);
             case LIKE:
-                return StringExpressions.lpad(post.likes.size().stringValue(), CRITERIA_PADDING, ZERO)
-                        .concat(StringExpressions.lpad(post.id.stringValue(), ID_PADDING, ZERO))
-                        .lt(cursorString);
+                return post.likes.size().loe(command.getSortValue()).and(defaultFilter);
+            default:
+                return defaultFilter;
         }
-        throw new PhochakException(ResCode.NOT_SUPPORTED_SORT_OPTION);
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {
