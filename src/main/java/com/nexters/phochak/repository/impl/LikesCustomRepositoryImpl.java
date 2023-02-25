@@ -10,8 +10,6 @@ import com.nexters.phochak.dto.QLikesFetchDto;
 import com.nexters.phochak.dto.QPostFetchDto;
 import com.nexters.phochak.dto.QPostFetchDto_PostShortsInformation;
 import com.nexters.phochak.dto.QPostFetchDto_PostUserInformation;
-import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.LikesCustomRepository;
 import com.nexters.phochak.specification.PostSortOption;
 import com.nexters.phochak.specification.ShortsStateEnum;
@@ -19,7 +17,6 @@ import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
-import com.querydsl.core.types.dsl.StringExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -33,9 +30,6 @@ import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 public class LikesCustomRepositoryImpl implements LikesCustomRepository {
-    private static final int ID_PADDING = 19;
-    private static final int CRITERIA_PADDING = 10;
-    public static final char ZERO = '0';
     private static final QLikes likes = QLikes.likes;
     private static final QPost post = QPost.post;
     private static final QShorts shorts = QShorts.shorts;
@@ -92,20 +86,15 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
     }
 
     private BooleanExpression filterByCursor(PostFetchCommand command) {
-        String cursorString = command.createCursorString();
+        BooleanExpression defaultFilter = likes.post.id.lt(command.getLastId());
         switch (command.getSortOption()) {
-            case LATEST:
-                return likes.post.id.lt(command.getLastId());
             case VIEW:
-                return StringExpressions.lpad(likes.post.view.stringValue(), CRITERIA_PADDING, ZERO)
-                        .concat(StringExpressions.lpad(likes.post.id.stringValue(), ID_PADDING, ZERO))
-                        .lt(cursorString);
+                return likes.post.view.loe(command.getSortValue()).and(defaultFilter);
             case LIKE:
-                return StringExpressions.lpad(likes.count().stringValue(), CRITERIA_PADDING, ZERO)
-                        .concat(StringExpressions.lpad(likes.post.id.stringValue(), ID_PADDING, ZERO))
-                        .lt(cursorString);
+                return likes.count().loe(command.getSortValue()).and(defaultFilter);
+            default:
+                return defaultFilter;
         }
-        throw new PhochakException(ResCode.NOT_SUPPORTED_SORT_OPTION);
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {
