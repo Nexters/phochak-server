@@ -27,12 +27,11 @@ kakao:
     token: https://kauth.kakao.com/oauth/token
     information: https://kapi.kakao.com/v2/user/me
 
-security:
-  jwt:
-    token:
-      secret-key: ${oauth_secret_key}
-      access-token-expire-length: ${access_token_expire_length}
-      refresh-token-expire-length: ${refresh_token_expire_length}
+jwt:
+  token:
+    secret-key: ${oauth_secret_key}
+    access-token-expire-length: ${access_token_expire_length}
+    refresh-token-expire-length: ${refresh_token_expire_length}
 
 ncp:
   s3:
