@@ -1,6 +1,7 @@
 package com.nexters.phochak.service.impl;
 
 import com.auth0.jwt.JWT;
+import com.nexters.phochak.config.property.JwtProperties;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
 import com.nexters.phochak.dto.response.JwtResponseDto;
@@ -13,7 +14,6 @@ import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -37,13 +37,11 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     private final long refreshTokenExpireLength;
 
     public JwtTokenServiceImpl(RefreshTokenRepository refreshTokenRepository,
-                               @Value("${security.jwt.token.secret-key}") String secretKey,
-                               @Value("${security.jwt.token.access-token-expire-length}") long accessTokenExpireLength,
-                               @Value("${security.jwt.token.refresh-token-expire-length}") long refreshTokenExpireLength) {
+                               JwtProperties jwtProperties) {
         this.refreshTokenRepository = refreshTokenRepository;
-        this.secretKey = secretKey;
-        this.accessTokenExpireLength = accessTokenExpireLength;
-        this.refreshTokenExpireLength = refreshTokenExpireLength;
+        this.secretKey = jwtProperties.getSecretKey();
+        this.accessTokenExpireLength = jwtProperties.getAccessTokenExpireLength();
+        this.refreshTokenExpireLength = jwtProperties.getRefreshTokenExpireLength();
     }
 
     @Override
@@ -94,8 +92,6 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         //redis에서 RT과 매칭되는 AT 있는지 확인 (삭제 후 return 결과로 판단)
         String accessToken = refreshTokenRepository.findAccessToken(currentRefreshToken);
         refreshTokenRepository.expire(currentRefreshToken);
-        System.out.println("accessToken = " + accessToken);
-        System.out.println("currentAccessToken = " + currentAccessToken);
 
         if(!currentAccessToken.equals(accessToken)) {
             log.error("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
@@ -143,7 +139,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         return new TokenDto(jwt, String.valueOf(expireLength));
     }
 
-    private Boolean isAccessTokenExpired(String accessToken) {
+    private boolean isAccessTokenExpired(String accessToken) {
         return JWT.decode(accessToken).getExpiresAt().before(new Date());
     }
 

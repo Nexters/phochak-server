@@ -1,5 +1,6 @@
 package com.nexters.phochak.service;
 
+import com.nexters.phochak.config.property.NCPStorageProperties;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
@@ -8,6 +9,7 @@ import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.service.impl.NCPShortsService;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import com.nexters.phochak.specification.ShortsStateEnum;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -27,8 +29,21 @@ import static org.mockito.Mockito.verify;
 class NCPShortsServiceTest {
 
     @InjectMocks NCPShortsService ncpShortsService;
+    NCPShortsService mock;
 
-    @Mock ShortsRepository shortsRepository;
+    @Mock
+    ShortsRepository shortsRepository;
+    @Mock
+    NCPStorageProperties ncpStorageProperties;
+
+    @BeforeEach
+    void setUp() {
+        NCPStorageProperties.NCPS3Properties s3 = new NCPStorageProperties.NCPS3Properties("", "", "", "", "", "");
+        NCPStorageProperties.NCPShortsProperties shorts = new NCPStorageProperties.NCPShortsProperties("", "", "", "");
+        NCPStorageProperties.NCPThumbnailProperties thumbnail = new NCPStorageProperties.NCPThumbnailProperties("", "", "", "");
+        ncpStorageProperties = new NCPStorageProperties(s3, shorts, thumbnail);
+        mock = new NCPShortsService(shortsRepository, ncpStorageProperties);
+    }
 
     @Test
     @DisplayName("인코딩이 끝나있는 경우, 게시글을 shorts 객체와 연결한다")
@@ -65,7 +80,7 @@ class NCPShortsServiceTest {
         given(shortsRepository.findByUploadKey(uploadKey)).willReturn(Optional.empty());
 
         //when
-        ncpShortsService.connectShorts(uploadKey, post);
+        mock.connectShorts(uploadKey, post);
 
         //then
         verify(shortsRepository, times(1)).save(any());
@@ -102,7 +117,7 @@ class NCPShortsServiceTest {
         given(shortsRepository.findByUploadKey(any())).willReturn(Optional.empty());
 
         //when
-        ncpShortsService.connectPost(encodingCallbackRequestDto);
+        mock.connectPost(encodingCallbackRequestDto);
 
         //then
         verify(shortsRepository, times(1)).save(any());

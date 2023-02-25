@@ -1,6 +1,6 @@
 package com.nexters.phochak.config;
 
-import org.springframework.beans.factory.annotation.Value;
+import com.nexters.phochak.config.property.RedisProperties;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
@@ -14,12 +14,15 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    @Value("${spring.redis.host}")
     private String host;
-    @Value("${spring.redis.port}")
     private int port;
-    @Value("${spring.redis.password}")
     private String password;
+
+    public RedisConfig(RedisProperties redisProperties) {
+        this.host = redisProperties.getHost();
+        this.port = redisProperties.getPort();
+        this.password = redisProperties.getPassword();
+    }
 
     @Bean
     public RedisConnectionFactory redisConnectionFactory() {

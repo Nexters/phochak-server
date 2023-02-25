@@ -1,19 +1,19 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.client.SlackPostReportFeignClient;
+import com.nexters.phochak.config.property.SlackReportProperties;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.ReportPost;
-import com.nexters.phochak.dto.request.ReportPostRequestDto;
-import com.nexters.phochak.repository.ReportPostRepository;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.SlackMessageFormDto;
+import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
+import com.nexters.phochak.repository.ReportPostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.ReportPostService;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -25,9 +25,7 @@ public class ReportPostServiceImpl implements ReportPostService {
     private final PostRepository postRepository;
     private final ReportPostRepository reportPostRepository;
     private final SlackPostReportFeignClient slackPostReportFeignClient;
-
-    @Value("${feign-client.slack.report.bot-nickname}")
-    private String slackReportBotNickname;
+    private final SlackReportProperties slackReportProperties;
 
     @Override
     @Transactional
@@ -43,7 +41,7 @@ public class ReportPostServiceImpl implements ReportPostService {
 
         String message = generateReportMessage(user, post, reportPostRequestDto.getReason());
         SlackMessageFormDto test = SlackMessageFormDto.builder()
-                .username(slackReportBotNickname)
+                .username(slackReportProperties.getBotNickname())
                 .text(message)
                 .build();
         slackPostReportFeignClient.call(test);

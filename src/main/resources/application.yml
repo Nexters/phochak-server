@@ -25,6 +25,8 @@ kakao:
   api_url:
     token: https://kauth.kakao.com/oauth/token
     information: https://kapi.kakao.com/v2/user/me
+apple:
+  auth-uri: https://appleid.apple.com/auth/keys
 
 logging:
   level:
@@ -33,12 +35,11 @@ logging:
     webhook-uri: "http://localhost:8080/log-callback"
   config: classpath:logback-spring.xml
 
-security:
-  jwt:
-    token:
-      secret-key: 5da7665f9e4ee2fccdcdfb21073dca41d24fdb37830cdc47f487db830731248b1410fb0e75329db38be1d32445bdf6d305b5858e8aa5b0a549f877dc7ea83e55
-      access-token-expire-length: 86400000 # 1 day
-      refresh-token-expire-length: 604800000 # 1 week
+jwt:
+  token:
+    secret-key: 5da7665f9e4ee2fccdcdfb21073dca41d24fdb37830cdc47f487db830731248b1410fb0e75329db38be1d32445bdf6d305b5858e8aa5b0a549f877dc7ea83e55
+    access-token-expire-length: 86400000 # 1 day
+    refresh-token-expire-length: 604800000 # 1 week
 
 ncp:
   s3:
@@ -50,23 +51,18 @@ ncp:
     secret-key: test
 
   shorts:
-    file-location-prefix:
-      head: test
-      tail: test
-    streaming-url-prefix:
-      head: test
-      tail: test
+    file-location-prefix-head: test
+    file-location-prefix-tail: test
+    streaming-url-prefix-head: test
+    streaming-url-prefix-tail: test
 
   thumbnail:
-    file-location-prefix:
-      head: test
-      tail: test
-    thumbnail-url-prefix:
-      head: test
-      tail: test
+    file-location-prefix-head: test
+    file-location-prefix-tail: test
+    thumbnail-url-prefix-head: test
+    thumbnail-url-prefix-tail: test
 
-feign-client:
-  slack:
-    report:
-      bot-nickname: test
-      web-hook-uri: test
+slack:
+  report:
+    bot-nickname: test
+    web-hook-uri: test
