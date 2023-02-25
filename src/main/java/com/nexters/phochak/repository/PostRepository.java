@@ -27,5 +27,5 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRep
 
     @Modifying
     @Query("select p from Post p left join fetch p.shorts where p.user = :user")
-    List<Post> findAllPostByUserFetchJoin(User user);
+    List<Post> findAllPostByUserFetchJoin(@Param("user") User user);
 }
