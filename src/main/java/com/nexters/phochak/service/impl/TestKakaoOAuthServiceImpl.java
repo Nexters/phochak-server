@@ -2,12 +2,12 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.client.KakaoAccessTokenFeignClient;
 import com.nexters.phochak.client.KakaoInformationFeignClient;
+import com.nexters.phochak.config.property.KakaoLoginProperties;
 import com.nexters.phochak.dto.KakaoAccessTokenResponseDto;
 import com.nexters.phochak.dto.OAuthUserInformation;
 import com.nexters.phochak.service.OAuthService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
 @RequiredArgsConstructor
@@ -17,10 +17,7 @@ public class TestKakaoOAuthServiceImpl implements OAuthService {
     private static final String TOKEN_PREFIX = "Bearer ";
     private final KakaoAccessTokenFeignClient kakaoAccessTokenFeignClient;
     private final KakaoInformationFeignClient kakaoInformationFeignClient;
-    @Value("${kakao.client_id}")
-    private String clientId;
-    @Value("${kakao.redirect_uri}")
-    private String redirectUri;
+    private final KakaoLoginProperties kakaoLoginProperties;
 
     @Override
     public OAuthProviderEnum getOAuthProvider() {
@@ -32,8 +29,8 @@ public class TestKakaoOAuthServiceImpl implements OAuthService {
         KakaoAccessTokenResponseDto result = kakaoAccessTokenFeignClient.call(
                 "application/x-www-form-urlencoded",
                 "authorization_code",
-                clientId,
-                redirectUri,
+                kakaoLoginProperties.getClientId(),
+                kakaoLoginProperties.getRedirectUri(),
                 authorizationCode
         );
 
