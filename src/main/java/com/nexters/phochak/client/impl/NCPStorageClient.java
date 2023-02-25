@@ -70,8 +70,4 @@ public class NCPStorageClient implements StorageBucketClient {
         s3Client.deleteObjects(multiObjectDeleteRequest);
     }
 
-    @Override
-    public boolean doesExistOriginalObject(String objectName) {
-        return s3Client.doesObjectExist(originalBucketName, objectName);
-    }
 }

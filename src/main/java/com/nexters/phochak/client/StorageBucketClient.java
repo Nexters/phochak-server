@@ -7,6 +7,4 @@ public interface StorageBucketClient {
     URL generatePresignedUrl(String objectName);
 
     void removeShortsObject(List<String> objectKey);
-
-    boolean doesExistOriginalObject(String objectName);
 }
