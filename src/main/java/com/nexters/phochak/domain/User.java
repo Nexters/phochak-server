@@ -52,4 +52,11 @@ public class User extends BaseTime {
     public void modifyNickname(String nickname) {
         this.nickname = nickname;
     }
+
+    public void withdrawInformation() {
+        this.nickname = "탈퇴한유저";
+        this.provider = OAuthProviderEnum.WITHDRAW;
+        this.providerId = "탈퇴한유저";
+        this.profileImgUrl = null;
+    }
 }

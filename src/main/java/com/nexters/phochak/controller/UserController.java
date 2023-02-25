@@ -6,6 +6,7 @@ import com.nexters.phochak.dto.request.LoginRequestDto;
 import com.nexters.phochak.dto.request.LogoutRequestDto;
 import com.nexters.phochak.dto.request.NicknameModifyRequestDto;
 import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
+import com.nexters.phochak.dto.request.WithdrawRequestDto;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.JwtResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
@@ -83,5 +84,14 @@ public class UserController {
     public CommonResponse<UserInfoResponseDto> getInfo(@PathVariable(value = "userId", required = false) Long pageOwnerId) {
         Long userId = UserContext.CONTEXT.get();
         return new CommonResponse<>(userService.getInfo(pageOwnerId, userId));
+    }
+
+    @Auth
+    @PostMapping("/withdraw")
+    public CommonResponse<Void> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto) {
+        Long userId = UserContext.CONTEXT.get();
+        jwtTokenService.logout(withdrawRequestDto.getRefreshToken());
+        userService.withdraw(userId);
+        return new CommonResponse<>();
     }
 }
