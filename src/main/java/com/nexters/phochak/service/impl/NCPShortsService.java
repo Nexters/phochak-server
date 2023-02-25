@@ -26,7 +26,6 @@ public class NCPShortsService implements ShortsService {
 
         if (optionalShorts.isPresent()) {
             // case: 인코딩이 먼저 끝나있는 경우
-            //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
             shorts.updateShortsState(ShortsStateEnum.OK);
             post.setShorts(shorts);
@@ -53,7 +52,6 @@ public class NCPShortsService implements ShortsService {
 
         if (optionalShorts.isPresent()) {
             // case: 포스트 생성이 먼저된 경우 -> 상태 변경
-            //TODO: s3에 실제 파일이 존재하는지 더블 체크 + 수동 DB 롤백
             Shorts shorts = optionalShorts.get();
             shorts.updateShortsState(ShortsStateEnum.OK);
         } else {

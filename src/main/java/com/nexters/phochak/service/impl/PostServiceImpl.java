@@ -17,6 +17,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
 import com.nexters.phochak.repository.PostRepository;
+import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.HashtagService;
 import com.nexters.phochak.service.LikesService;
@@ -43,6 +44,7 @@ public class PostServiceImpl implements PostService {
     private final ShortsService shortsService;
     private final LikesService likesService;
     private final HashtagRepository hashtagRepository;
+    private final ShortsRepository shortsRepository;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
@@ -76,7 +78,7 @@ public class PostServiceImpl implements PostService {
         String objectKey = post.getShorts().getUploadKey();
         hashtagRepository.deleteAllByPostId(post.getId());
         postRepository.delete(post);
-        storageBucketClient.removeShortsObject(objectKey);
+        storageBucketClient.removeShortsObject(List.of(objectKey));
     }
 
     @Override
@@ -120,6 +122,16 @@ public class PostServiceImpl implements PostService {
         return countOfUpdatedRow;
     }
 
+    @Override
+    public void deleteAllPostByUser(User user) {
+        List<Post> postList = postRepository.findAllPostByUserFetchJoin(user);
+        List<Long> postIdList = postList.stream().map(Post::getId).collect(Collectors.toList());
+        List<String> shortsKeyList = postList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
+        postRepository.deleteAllByUser(user);
+        shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
+        hashtagRepository.deleteAllByPostIdIn(postIdList);
+        storageBucketClient.removeShortsObject(shortsKeyList);
+    }
 
     private String generateObjectUploadKey() {
         return UUID.randomUUID().toString();

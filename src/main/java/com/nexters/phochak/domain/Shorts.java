@@ -12,9 +12,12 @@ import javax.persistence.Enumerated;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.Index;
+import javax.persistence.Table;
 
 @Entity
 @Getter
+@Table(indexes = @Index(name = "idx_upload_key", columnList = "uploadKey"))
 public class Shorts {
 
     @Id

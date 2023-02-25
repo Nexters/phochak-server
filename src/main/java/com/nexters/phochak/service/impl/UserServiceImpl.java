@@ -9,6 +9,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.OAuthService;
+import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.UserService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.RequiredArgsConstructor;
@@ -28,6 +29,7 @@ public class UserServiceImpl implements UserService {
     private static final String NICKNAME_PREFIX = "여행자#";
     private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
     private final UserRepository userRepository;
+    private final PostService postService;
 
     @Override
     public Long login(String provider, String code) {
@@ -77,6 +79,13 @@ public class UserServiceImpl implements UserService {
             pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         }
         return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId));
+    }
+
+    @Override
+    public void withdraw(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        user.withdrawInformation();
+        postService.deleteAllPostByUser(user);
     }
 
     private boolean isDuplicatedNickname(String nickname) {

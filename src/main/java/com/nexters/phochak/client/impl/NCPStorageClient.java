@@ -6,13 +6,19 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
+import com.amazonaws.services.s3.model.DeleteObjectRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsRequest;
+import com.amazonaws.services.s3.model.DeleteObjectsResult;
+import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.config.property.NCPStorageProperties;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Repository;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Repository
 @Slf4j
@@ -52,14 +58,16 @@ public class NCPStorageClient implements StorageBucketClient {
     }
 
     @Override
-    public void removeShortsObject(String objectKey) {
-        //TODO: 비동기 처리
-        s3Client.deleteObject(encodedBucketName, shortsLocationPrefixHead + objectKey + shortsLocationPrefixTail);
-        s3Client.deleteObject(encodedBucketName, thumbnailLocationPrefixHead + objectKey+ thumbnailLocationPrefixTail);
+    public void removeShortsObject(List<String> objectKeyList) {
+        ArrayList<DeleteObjectsRequest.KeyVersion> keys = new ArrayList<>();
+        for (String objectKey : objectKeyList) {
+            keys.add(new DeleteObjectsRequest.KeyVersion(shortsLocationPrefixHead + objectKey + shortsLocationPrefixTail));
+            keys.add(new DeleteObjectsRequest.KeyVersion(thumbnailLocationPrefixHead + objectKey + thumbnailLocationPrefixTail));
+        }
+        DeleteObjectsRequest multiObjectDeleteRequest = new DeleteObjectsRequest(encodedBucketName)
+                .withKeys(keys)
+                .withQuiet(false);
+        s3Client.deleteObjects(multiObjectDeleteRequest);
     }
 
-    @Override
-    public boolean doesExistOriginalObject(String objectName) {
-        return s3Client.doesObjectExist(originalBucketName, objectName);
-    }
 }

@@ -1,17 +1,27 @@
 package com.nexters.phochak.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.client.impl.NCPStorageClient;
 import com.nexters.phochak.controller.UserController;
 import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.domain.Hashtag;
+import com.nexters.phochak.domain.Post;
+import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.TokenDto;
 import com.nexters.phochak.dto.request.LogoutRequestDto;
 import com.nexters.phochak.dto.request.ReissueTokenRequestDto;
+import com.nexters.phochak.dto.request.WithdrawRequestDto;
 import com.nexters.phochak.exception.CustomExceptionHandler;
+import com.nexters.phochak.repository.HashtagRepository;
+import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.RefreshTokenRepository;
+import com.nexters.phochak.repository.ShortsRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
+import com.nexters.phochak.specification.PostCategoryEnum;
+import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,6 +29,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDocs;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.payload.JsonFieldType;
@@ -26,10 +37,16 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.persistence.EntityManager;
+
+import java.util.List;
+
 import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.exception.ResCode.EXPIRED_TOKEN;
 import static com.nexters.phochak.exception.ResCode.INVALID_TOKEN;
 import static com.nexters.phochak.exception.ResCode.OK;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
@@ -51,9 +68,14 @@ public class AuthIntegrationTest extends RestDocs {
 
     @Autowired UserController userController;
     @Autowired UserRepository userRepository;
+    @Autowired PostRepository postRepository;
+    @Autowired ShortsRepository shortsRepository;
+    @Autowired HashtagRepository hashtagRepository;
     @Autowired JwtTokenService jwtTokenService;
     @Autowired ObjectMapper objectMapper;
+    @Autowired EntityManager em;
     @Autowired RefreshTokenRepository refreshTokenRepository;
+    @MockBean NCPStorageClient ncpStorageClient;
     MockMvc mockMvc;
     static Long globalUserId;
 
@@ -211,6 +233,70 @@ public class AuthIntegrationTest extends RestDocs {
                                 fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                                 fieldWithPath("data").type(JsonFieldType.NULL).description("null")
                         )));
+    }
+
+    @Test
+    @DisplayName("회원탈퇴 API - 회원탈퇴 성공")
+    void withdraw_success() throws Exception {
+        //given
+        TokenDto currentAT = jwtTokenService.generateToken(globalUserId, 1000000000L);
+        TokenDto currentRT = jwtTokenService.generateToken(globalUserId, 9999999999L);
+
+        User user = userRepository.findById(globalUserId).get();
+
+        for (int i=0; i < 10; i++) {
+            Shorts shorts = Shorts.builder()
+                    .thumbnailUrl("test" + i)
+                    .shortsUrl("test" + i)
+                    .uploadKey("test" + i)
+                    .build();
+            shortsRepository.save(shorts);
+
+            Post post = Post.builder()
+                    .shorts(shorts)
+                    .postCategory(PostCategoryEnum.TOUR)
+                    .user(user)
+                    .build();
+            postRepository.save(post);
+
+            List<Hashtag> hashtags = List.of(new Hashtag(post, "hashtag1"), new Hashtag(post, "hashtag2"), new Hashtag(post, "hashtag3"));
+            hashtagRepository.saveAll(hashtags);
+        }
+
+        refreshTokenRepository.saveWithAccessToken(currentRT.getTokenString(), currentAT.getTokenString());
+
+        WithdrawRequestDto body = new WithdrawRequestDto(currentRT.getTokenString());
+
+        //when, then
+        mockMvc.perform(post("/v1/user/withdraw")
+                        .header(AUTHORIZATION_HEADER, TokenDto.TOKEN_TYPE + " " + currentAT.getTokenString())
+                        .content(objectMapper.writeValueAsString(body))
+                        .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("user/withdraw",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("JWT Access Token")
+                        ),
+                        requestFields(
+                                fieldWithPath("refreshToken").description("(필수) 만료되지 않은 Refresh token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                        )));
+
+        em.flush();
+        em.clear();
+
+        Assertions.assertThat(userRepository.findById(globalUserId).get().getNickname()).isNull();
+        Assertions.assertThat(postRepository.count()).isZero();
+        Assertions.assertThat(shortsRepository.count()).isZero();
+        Assertions.assertThat(hashtagRepository.count()).isZero();
     }
 
 }

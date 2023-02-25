@@ -38,4 +38,6 @@ public interface UserService {
      * @return
      */
     UserInfoResponseDto getInfo(Long pageOwnerId, Long userId);
+
+    void withdraw(Long userId);
 }
