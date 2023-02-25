@@ -10,6 +10,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostCustomRepository;
 import com.nexters.phochak.specification.PostSortOption;
+import com.nexters.phochak.specification.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -42,6 +43,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .join(post.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(getFilterExpression(command)) // 내가 업로드한 게시글
+                .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
