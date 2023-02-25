@@ -14,6 +14,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.LikesCustomRepository;
 import com.nexters.phochak.specification.PostSortOption;
+import com.nexters.phochak.specification.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -73,6 +74,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .join(shorts).on(likes.post.shorts.eq(shorts))
                 .where(likes.user.id.eq(command.getUserId()))
                 .where(filterByCursor(command))
+                .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
