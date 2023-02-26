@@ -75,7 +75,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
             log.info("JwtTokenServiceImpl|Token expired: {}", token, e);
             throw new PhochakException(ResCode.EXPIRED_TOKEN);
         } catch (Exception e) {
-            log.error("JwtTokenServiceImpl|Token Exception: {}", token, e);
+            log.warn("JwtTokenServiceImpl|Token Exception: {}", token, e);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
     }
@@ -94,13 +94,13 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         refreshTokenRepository.expire(currentRefreshToken);
 
         if(!currentAccessToken.equals(accessToken)) {
-            log.error("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
+            log.warn("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
 
         //AT 아직 유효기간 남음 -> RT 탈취로 판단하고 강제 만료
         if(!isAccessTokenExpired(currentAccessToken)) {
-            log.error("JwtTokenServiceImpl|Request reissue when AT was not expired: RT({})", currentRefreshToken);
+            log.warn("JwtTokenServiceImpl|Request reissue when AT was not expired: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
 

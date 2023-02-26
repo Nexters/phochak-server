@@ -7,9 +7,12 @@ spring:
     username: ${datasource_username}
     password: ${datasource_password}
   jpa:
-    generate-ddl: true
     hibernate:
       ddl-auto: validate
+    properties:
+      hibernate:
+        show_sql: false
+        format_sql: false
   redis:
     host: ${redis_url}
     port: ${redis_port}
