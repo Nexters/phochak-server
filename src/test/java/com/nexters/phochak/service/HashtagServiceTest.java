@@ -1,9 +1,9 @@
-package com.nexters.phochak.service.impl;
+package com.nexters.phochak.service;
 
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.HashtagRepository;
+import com.nexters.phochak.service.impl.HashtagServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -21,7 +21,7 @@ import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class HashtagServiceImplTest {
+class HashtagServiceTest {
 
     @InjectMocks
     HashtagServiceImpl hashtagService;
