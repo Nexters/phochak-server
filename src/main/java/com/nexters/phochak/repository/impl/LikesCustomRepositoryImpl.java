@@ -66,12 +66,10 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
         Map<Long, PostFetchDto> result = queryFactory.select(likes, post)
                 .from(likes)
                 .join(post).on(likes.post.eq(post))
-                .join(likes.user)
-                .join(likes.post.shorts)
+                .join(likes.user).on(likes.user.id.eq(command.getUserId()))
                 .join(shorts).on(likes.post.shorts.eq(shorts))
-                .where(likes.user.id.eq(command.getUserId()))
                 .where(filterByCursor(command))
-                .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
+                .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
