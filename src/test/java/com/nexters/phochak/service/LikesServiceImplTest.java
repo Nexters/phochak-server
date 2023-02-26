@@ -7,7 +7,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.repository.LikesRepository;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
-import com.nexters.phochak.service.impl.PhochakServiceImpl;
+import com.nexters.phochak.service.impl.LikeServiceImpl;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -28,7 +28,8 @@ import static org.mockito.Mockito.verify;
 @ExtendWith(MockitoExtension.class)
 class LikesServiceImplTest {
 
-    @InjectMocks PhochakServiceImpl phochakService;
+    @InjectMocks
+    LikeServiceImpl likeService;
 
     @Mock UserRepository userRepository;
     @Mock PostRepository postRepository;
@@ -47,7 +48,7 @@ class LikesServiceImplTest {
         given(likesRepository.existsByUserAndPost(user, post)).willReturn(false);
 
         //then
-        phochakService.addPhochak(0L, 0L);
+        likeService.addPhochak(0L, 0L);
 
         //then
         verify(likesRepository, times(1)).save(any());
@@ -65,7 +66,7 @@ class LikesServiceImplTest {
         given(likesRepository.existsByUserAndPost(user, post)).willReturn(true);
 
         //when, then
-        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> phochakService.addPhochak(0L, 0L));
+        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> likeService.addPhochak(0L, 0L));
         verify(likesRepository, never()).save(any());
     }
 
@@ -82,7 +83,7 @@ class LikesServiceImplTest {
         given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.of(likes));
 
         //then
-        phochakService.cancelPhochak(0L, 0L);
+        likeService.cancelPhochak(0L, 0L);
 
         //then
         verify(likesRepository, times(1)).delete(any());
@@ -100,7 +101,7 @@ class LikesServiceImplTest {
         given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.empty());
 
         //when, then
-        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> phochakService.cancelPhochak(0L, 0L));
+        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> likeService.cancelPhochak(0L, 0L));
         verify(likesRepository, never()).delete(any());
     }
 }

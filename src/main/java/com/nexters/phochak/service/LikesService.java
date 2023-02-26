@@ -9,6 +9,7 @@ import java.util.Map;
 
 public interface LikesService {
     Map<Long, LikesFetchDto> checkIsLikedPost(List<Long> postIds, Long userId);
-
     List<PostFetchDto> findLikedPostsByCommand(PostFetchCommand command);
+    void addPhochak(Long userId, Long postId);
+    void cancelPhochak(Long userId, Long postId);
 }
