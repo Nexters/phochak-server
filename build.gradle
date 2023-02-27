@@ -52,6 +52,9 @@ jib {
 		// Set JVM options.
 		jvmFlags = ['-Dspring.profiles.active=prod', '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8']
 		// Expose different port.
+		dependencies {
+			include(['org.springframework.restdocs:spring-restdocs-mockmvc'])
+		}
 		ports = ['8080']
 	}
 }
