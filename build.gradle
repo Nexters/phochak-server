@@ -12,6 +12,7 @@ plugins {
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	//querydsl 추가
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+	id 'com.google.cloud.tools.jib' version '3.3.1'
 }
 
 group = 'com.nexters'
@@ -37,6 +38,22 @@ ext {
 test {
 	useJUnitPlatform()
 	outputs.dir snippetsDir
+}
+
+jib {
+	from {
+		image = "adoptopenjdk/openjdk11"
+	}
+	to {
+		image = "woojin8787/phochak-jib"
+		tags = ["latest"]
+	}
+	container {
+		// Set JVM options.
+		jvmFlags = ['-Dspring.profiles.active=prod', '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8']
+		// Expose different port.
+		ports = ['8080']
+	}
 }
 
 asciidoctor {
