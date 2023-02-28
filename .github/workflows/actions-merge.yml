@@ -3,8 +3,6 @@ name: CI/CD-workflow
 on:
   push:
     branches: ["develop"]
-  merge:
-    branches: ["develop"]
 
 jobs:
   build:
