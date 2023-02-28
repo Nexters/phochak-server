@@ -70,6 +70,8 @@ tasks.named('jib') {
 
 asciidoctor {
 	forkOptions {
+		// jvm 옵션. spring rest docs가 sun.nio.ch과 java.io 패키지를 사용하게 할 수 있게끔 설정
+		// HTTP 테스트 중에 요청과 응답을 캡쳐하는데, 운영체제와 네트워크 레이어의 io를 획득하기 위해 사용.
 		jvmArgs('--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED')
 		jvmArgs('--add-opens', 'java.base/java.io=ALL-UNNAMED')
 	}
