@@ -32,6 +32,7 @@ jobs:
         run: ./gradlew jib
 
   deploy:
+    need: build
     runs-on: ubuntu-latest
 
     steps:

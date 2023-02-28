@@ -30,7 +30,8 @@ jobs:
         run: ./gradlew jib
 
   deploy:
-    runs-on: ubuntu-latest
+    need: build
+    runs-on: ubuntu-latestb
 
     steps:
       - name: Deploy FastApi MainServer(master)
