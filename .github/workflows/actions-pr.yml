@@ -43,4 +43,5 @@ jobs:
           port: ${{ secrets.SERVER_PORT }}
           script: |
             docker stop phochak_server
+            docker rm phochak_server
             docker run --pull=always -d --name phochak_server -p 8080:8080 --network host --env-file /root/prod.env ${{ secrets.DOCKER_IMAGE }}
