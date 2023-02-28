@@ -56,7 +56,7 @@ jib {
 		extraDirectories {
 			paths {
 				path {
-					from = "${asciidoctor.outputDir}/html5"
+					from = "${asciidoctor.outputDir}"
 					into = "/app/resources/static/docs"
 				}
 			}
@@ -69,6 +69,10 @@ tasks.named('jib') {
 }
 
 asciidoctor {
+	forkOptions {
+		jvmArgs('--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED')
+		jvmArgs('--add-opens', 'java.base/java.io=ALL-UNNAMED')
+	}
 	dependsOn test
 	configurations 'asciidoctorExtensions'
 	inputs.dir snippetsDir
