@@ -42,5 +42,5 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           port: ${{ secrets.SERVER_PORT }}
           script: |
-            docker stop ${{ secrets.DOCKER_IMAGE }}
-            docker run --pull=always -d -p 8080:8080 —network host --env-file /root/prod.env ${{ secrets.DOCKER_IMAGE }}
+            docker stop phochak_server
+            docker run --pull=always -d --name phochak_server -p 8080:8080 --network host --env-file /root/prod.env ${{ secrets.DOCKER_IMAGE }}
