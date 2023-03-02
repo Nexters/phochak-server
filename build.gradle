@@ -12,6 +12,7 @@ plugins {
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
 	//querydsl 추가
 	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
+	id 'com.google.cloud.tools.jib' version '3.3.1'
 }
 
 group = 'com.nexters'
@@ -39,7 +40,41 @@ test {
 	outputs.dir snippetsDir
 }
 
+jib {
+	from {
+		image = "adoptopenjdk/openjdk11"
+	}
+	to {
+		image = "woojin8787/phochak-jib"
+		tags = ["latest"]
+	}
+	container {
+		// Set JVM options.
+		jvmFlags = ['-Dspring.profiles.active=prod', '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8']
+		// Expose different port.
+		ports = ['8080']
+		extraDirectories {
+			paths {
+				path {
+					from = "${asciidoctor.outputDir}"
+					into = "/app/resources/static/docs"
+				}
+			}
+		}
+	}
+}
+
+tasks.named('jib') {
+	dependsOn asciidoctor
+}
+
 asciidoctor {
+	forkOptions {
+		// jvm 옵션. spring rest docs가 sun.nio.ch과 java.io 패키지를 사용하게 할 수 있게끔 설정
+		// HTTP 테스트 중에 요청과 응답을 캡쳐하는데, 운영체제와 네트워크 레이어의 io를 획득하기 위해 사용.
+		jvmArgs('--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED')
+		jvmArgs('--add-opens', 'java.base/java.io=ALL-UNNAMED')
+	}
 	dependsOn test
 	configurations 'asciidoctorExtensions'
 	inputs.dir snippetsDir
