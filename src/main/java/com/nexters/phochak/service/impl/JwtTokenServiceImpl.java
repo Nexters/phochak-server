@@ -109,6 +109,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
 
     @Override
     public void logout(String refreshToken) {
+        refreshToken = parseOnlyTokenFromRequest(refreshToken);
         validateJwt(refreshToken);
         refreshTokenRepository.expire(refreshToken);
     }

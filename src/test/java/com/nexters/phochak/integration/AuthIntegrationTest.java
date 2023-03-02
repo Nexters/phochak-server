@@ -213,7 +213,7 @@ public class AuthIntegrationTest extends RestDocs {
 
         refreshTokenRepository.saveWithAccessToken(currentRT1.getTokenString(), currentAT1.getTokenString());
 
-        LogoutRequestDto body = new LogoutRequestDto(currentRT1.getTokenString());
+        LogoutRequestDto body = new LogoutRequestDto("Bearer " + currentRT1.getTokenString());
 
         //when, then
         mockMvc.perform(post("/v1/user/logout")
@@ -265,7 +265,7 @@ public class AuthIntegrationTest extends RestDocs {
 
         refreshTokenRepository.saveWithAccessToken(currentRT.getTokenString(), currentAT.getTokenString());
 
-        WithdrawRequestDto body = new WithdrawRequestDto(currentRT.getTokenString());
+        WithdrawRequestDto body = new WithdrawRequestDto("Bearer " + currentRT.getTokenString());
 
         //when, then
         mockMvc.perform(post("/v1/user/withdraw")
