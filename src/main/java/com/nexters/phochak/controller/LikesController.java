@@ -14,8 +14,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.ConstraintViolationException;
-
 @RestController
 @RequiredArgsConstructor
 @RequestMapping("v1/post/{postId}/likes")
@@ -29,7 +27,7 @@ public class LikesController {
         Long userId = UserContext.getContext();
         try {
             phochakService.addPhochak(userId, postId);
-        } catch (ConstraintViolationException | DataIntegrityViolationException e) {
+        } catch (DataIntegrityViolationException e) {
             throw new PhochakException(ResCode.ALREADY_PHOCHAKED);
         }
         return new CommonResponse<>();
