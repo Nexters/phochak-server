@@ -3,17 +3,17 @@ create table `user`
     user_id         bigint       not null auto_increment,
     created_at      datetime(6),
     updated_at      datetime(6),
-    nickname        varchar(10)  not null unique,
+    nickname        varchar(10)  unique,
     profile_img_url varchar(255),
     provider        varchar(255),
-    provider_id     varchar(255) not null unique,
+    provider_id     varchar(255) unique,
     primary key (user_id)
 ) engine=InnoDB
 
 create table hashtag
 (
     tag_id  bigint not null auto_increment,
-    tag     varchar(20),
+    tag     varchar(255),
     post_id bigint,
     primary key (tag_id)
 ) engine=InnoDB
