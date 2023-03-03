@@ -26,7 +26,7 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
 @ExtendWith(MockitoExtension.class)
-class PostServiceImplTest {
+class PostServiceTest {
 
     @InjectMocks PostServiceImpl postService;
 
