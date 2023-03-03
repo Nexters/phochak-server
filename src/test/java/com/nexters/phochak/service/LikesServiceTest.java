@@ -14,12 +14,15 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.springframework.dao.DataIntegrityViolationException;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThatExceptionOfType;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.ArgumentMatchers.refEq;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
@@ -42,10 +45,11 @@ class LikesServiceTest {
         //given
         User user = new User();
         Post post = new Post();
+        Likes likes = new Likes(user, post);
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(likesRepository.existsByUserAndPost(user, post)).willReturn(false);
+        given(likesRepository.save(refEq(likes))).willReturn(likes);
 
         //then
         likeService.addPhochak(0L, 0L);
@@ -63,11 +67,11 @@ class LikesServiceTest {
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(likesRepository.existsByUserAndPost(user, post)).willReturn(true);
+        given(likesRepository.save(refEq(new Likes(user, post)))).willThrow(DataIntegrityViolationException.class);
 
         //when, then
-        assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> likeService.addPhochak(0L, 0L));
-        verify(likesRepository, never()).save(any());
+        assertThatThrownBy(() -> likeService.addPhochak(0L, 0L))
+                .isInstanceOf(DataIntegrityViolationException.class);
     }
 
     @Test
@@ -79,7 +83,7 @@ class LikesServiceTest {
         Likes likes = new Likes();
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
-        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        given(postRepository.getReferenceById(anyLong())).willReturn(post);
         given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.of(likes));
 
         //then
@@ -97,7 +101,7 @@ class LikesServiceTest {
         Post post = new Post();
 
         given(userRepository.getReferenceById(anyLong())).willReturn(user);
-        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        given(postRepository.getReferenceById(anyLong())).willReturn(post);
         given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.empty());
 
         //when, then
