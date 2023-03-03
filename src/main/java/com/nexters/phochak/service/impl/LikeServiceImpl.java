@@ -31,9 +31,6 @@ public class LikeServiceImpl implements LikesService {
     public void addPhochak(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if(likesRepository.existsByUserAndPost(user, post)) {
-            throw new PhochakException(ResCode.ALREADY_PHOCHAKED);
-        }
 
         Likes likes = Likes.builder()
                 .user(user)
@@ -45,7 +42,7 @@ public class LikeServiceImpl implements LikesService {
     @Override
     public void cancelPhochak(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        Post post = postRepository.getReferenceById(postId);
 
         Likes likes = likesRepository.findByUserAndPost(user, post)
                 .orElseThrow(() -> new PhochakException(ResCode.NOT_PHOCHAKED));
