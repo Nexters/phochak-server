@@ -45,4 +45,5 @@ jobs:
             docker stop phochak_server
             docker rm phochak_server
             docker images | grep phochak-jib | sort -k2 | awk '{if(NR>1) print $3}' | xargs docker rmi --force
-            docker run --pull=always -d --name phochak_server -v /root/service/logs:/logs --network host --env-file /root/prod.env woojin8787/phochak-jib:latest
+            docker run --pull=always -d --name phochak_server -v /root/service/logs:/logs -e TZ=Asia/Seoul \
+            --network host --env-file /root/prod.env woojin8787/phochak-jib:latest
