@@ -49,6 +49,8 @@ jib {
 		tags = ["latest"]
 	}
 	container {
+		// Set docker image creation time
+		creationTime = 'USE_CURRENT_TIMESTAMP'
 		// Set JVM options.
 		jvmFlags = ['-Dspring.profiles.active=prod', '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8']
 		// Expose different port.
