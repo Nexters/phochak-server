@@ -74,7 +74,7 @@ class ReportPostServiceImplTest {
         reportPostService.processReport(userId, postId, request);
 
         // then
-        assertThat(reportPostRepository.countByPost(post)).isEqualTo(1);
+        assertThat(reportPostRepository.countByPost_Id(post.getId())).isEqualTo(1);
     }
 
     @Test
@@ -86,7 +86,7 @@ class ReportPostServiceImplTest {
         reportPostService.processReport(userId, postId, request);
 
         // when & then
-        assertThat(reportPostRepository.countByPost(post)).isEqualTo(1);
+        assertThat(reportPostRepository.countByPost_Id(post.getId())).isEqualTo(1);
         assertThatThrownBy(() -> reportPostService.processReport(userId, postId, request))
                 .isInstanceOf(PhochakException.class);
     }
