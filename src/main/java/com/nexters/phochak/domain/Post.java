@@ -5,6 +5,7 @@ import lombok.Builder;
 import lombok.Getter;
 import lombok.ToString;
 import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
@@ -52,6 +53,10 @@ public class Post extends BaseTime {
     @Enumerated(EnumType.STRING)
     private PostCategoryEnum postCategory;
 
+    @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    @Type(type = "yes_no")
+    private boolean isBlind;
+
     @OneToMany(mappedBy = "post")
     private List<Likes> likes;
 
@@ -73,4 +78,7 @@ public class Post extends BaseTime {
         this.shorts = shorts;
     }
 
+    public void blindPost() {
+        this.isBlind = true;
+    }
 }
