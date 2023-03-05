@@ -8,4 +8,5 @@ import lombok.Getter;
 public class SlackMessageFormDto {
     private String username;
     private String text;
+    private long count;
 }
