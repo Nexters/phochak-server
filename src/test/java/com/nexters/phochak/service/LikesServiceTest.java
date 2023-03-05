@@ -71,7 +71,7 @@ class LikesServiceTest {
 
         //when, then
         assertThatThrownBy(() -> likeService.addPhochak(0L, 0L))
-                .isInstanceOf(DataIntegrityViolationException.class);
+                .isInstanceOf(PhochakException.class);
     }
 
     @Test

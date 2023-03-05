@@ -13,6 +13,7 @@ import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.LikesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -29,14 +30,19 @@ public class LikeServiceImpl implements LikesService {
 
     @Override
     public void addPhochak(Long userId, Long postId) {
-        User user = userRepository.getReferenceById(userId);
-        Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        try {
+            User user = userRepository.getReferenceById(userId);
+            Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
 
-        Likes likes = Likes.builder()
-                .user(user)
-                .post(post)
-                .build();
-        likesRepository.save(likes);
+            Likes likes = Likes.builder()
+                    .user(user)
+                    .post(post)
+                    .build();
+            likesRepository.save(likes);
+        } catch (
+                DataIntegrityViolationException e) {
+            throw new PhochakException(ResCode.ALREADY_PHOCHAKED);
+        }
     }
 
     @Override
