@@ -1,4 +1,4 @@
-package com.nexters.phochak.service.impl;
+package com.nexters.phochak.integration;
 
 import com.nexters.phochak.client.SlackPostReportFeignClient;
 import com.nexters.phochak.domain.Post;
@@ -27,13 +27,11 @@ import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
-import static org.mockito.BDDMockito.any;
-import static org.mockito.BDDMockito.given;
 
 @Transactional
 @ActiveProfiles("test")
 @SpringBootTest
-class ReportPostServiceImplTest {
+class ReportPostServiceIntegrationTest {
 
     @Autowired
     ReportPostService reportPostService;
@@ -68,7 +66,6 @@ class ReportPostServiceImplTest {
         // given
         Long userId = user.getId();
         Long postId = post.getId();
-        given(slackPostReportFeignClient.call(any())).willReturn("");
 
         // when
         reportPostService.processReport(userId, postId, request);

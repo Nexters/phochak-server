@@ -61,7 +61,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureRestDocs
 @ActiveProfiles("test")
 @Transactional
-public class PostNcpIntegrationTest extends RestDocs {
+class PostNcpIntegrationTest extends RestDocs {
 
     @Autowired UserRepository userRepository;
     @Autowired JwtTokenServiceImpl jwtTokenService;
