@@ -82,7 +82,7 @@ public class PostController {
     @PostMapping("/{postId}/report")
     public CommonResponse<Void> reportPost(@PathVariable Long postId, @RequestBody ReportPostRequestDto reportPostRequestDto) {
         Long userId = UserContext.getContext();
-        reportPostService.notifyReport(userId, postId, reportPostRequestDto);
+        reportPostService.processReport(userId, postId, reportPostRequestDto);
         return new CommonResponse<>();
     }
 
