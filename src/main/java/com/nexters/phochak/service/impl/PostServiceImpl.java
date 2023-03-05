@@ -93,12 +93,12 @@ public class PostServiceImpl implements PostService {
 
     private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
         if (!command.hasLikedFilter()) {
-            return getNextCursorPageWithoutLikedFilter(command.getUserId(), postRepository.findNextPageByCommmand(command));
+            return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
         }
-        return getNextCursorPageWithoutLikedFilter(command.getUserId(), likesService.findLikedPostsByCommand(command));
+        return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
     }
 
-    private List<PostPageResponseDto> getNextCursorPageWithoutLikedFilter(Long userId, List<PostFetchDto> postFetchDtos) {
+    private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
         return createPostPageResponseDto(userId, postFetchDtos);
     }
 
