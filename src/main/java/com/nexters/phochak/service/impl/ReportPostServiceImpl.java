@@ -9,7 +9,7 @@ import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ReportPostRepository;
 import com.nexters.phochak.repository.UserRepository;
-import com.nexters.phochak.service.PostBlockService;
+import com.nexters.phochak.service.NotifyService;
 import com.nexters.phochak.service.ReportPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -19,9 +19,10 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ReportPostServiceImpl implements ReportPostService {
+    private static final Long BLOCK_CRITERIA = 20L;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final PostBlockService postBlockService;
+    private final NotifyService notifyService;
     private final ReportPostRepository reportPostRepository;
 
     @Override
@@ -39,6 +40,13 @@ public class ReportPostServiceImpl implements ReportPostService {
         } catch (DataIntegrityViolationException e) {
             throw new PhochakException(ResCode.ALREADY_REPORTED);
         }
-        postBlockService.notifyAndBlockIfRequired(postId, userId, reportPost.getReason());
+
+        Long reportCount = reportPostRepository.countByPost_Id(postId);
+        if (reportCount >= BLOCK_CRITERIA) {
+            post.blindPost();
+        }
+
+        // 슬랙알림 전송
+        notifyService.notifyReportedPost(postId, userId, reportPost.getReason(), reportCount);
     }
 }

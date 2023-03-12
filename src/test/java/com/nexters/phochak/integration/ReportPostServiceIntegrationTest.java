@@ -20,7 +20,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.transaction.annotation.Propagation;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
@@ -88,7 +87,6 @@ class ReportPostServiceIntegrationTest {
                 .isInstanceOf(PhochakException.class);
     }
 
-    @Transactional(propagation = Propagation.NEVER)
     @Test
     @DisplayName("신고 카운트가 20개 이상 쌓이면 포스트가 노출되지 않는다")
     void processReport_overCriteria() throws InterruptedException {
@@ -110,12 +108,8 @@ class ReportPostServiceIntegrationTest {
 
         // when
         reportPostService.processReport(userId, postId, request);
-        // 비동기 처리 위해 잠시 sleep
-        Thread.sleep(200L);
 
-        // when & then
-        userRepository.deleteAll(); // 테스트 롤백
-
+        // then
         Optional<Post> post = postRepository.findById(postId);
         assertThat(post).isPresent();
         assertThat(post.get().isBlind()).isTrue();

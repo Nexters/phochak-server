@@ -2,13 +2,10 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.client.SlackPostReportFeignClient;
 import com.nexters.phochak.config.property.SlackReportProperties;
-import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.dto.SlackMessageFormDto;
-import com.nexters.phochak.exception.PhochakException;
-import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ReportPostRepository;
-import com.nexters.phochak.service.PostBlockService;
+import com.nexters.phochak.service.NotifyService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -20,8 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 @RequiredArgsConstructor
 @Service
-public class PostBlockServiceImpl implements PostBlockService {
-    private static final Long BLOCK_CRITERIA = 20L;
+public class PostBlockServiceImpl implements NotifyService {
     private final ReportPostRepository reportPostRepository;
     private final SlackPostReportFeignClient slackPostReportFeignClient;
     private final PostRepository postRepository;
@@ -29,15 +25,8 @@ public class PostBlockServiceImpl implements PostBlockService {
 
     @Async
     @Override
-    public void notifyAndBlockIfRequired(Long postId, Long userId, String reason) {
+    public void notifyReportedPost(Long postId, Long userId, String reason, Long reportCount) {
         try {
-            Long reportCount = reportPostRepository.countByPost_Id(postId);
-            if (reportCount >= BLOCK_CRITERIA) {
-                Post post = postRepository.findById(postId)
-                        .orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-                post.blindPost();
-            }
-
             String message = generateReportMessage(userId, postId, reason, reportCount);
             SlackMessageFormDto test = SlackMessageFormDto.builder()
                     .username(slackReportProperties.getBotNickname())
