@@ -1,58 +1,52 @@
 package com.nexters.phochak.service.impl;
 
-import com.nexters.phochak.client.SlackPostReportFeignClient;
-import com.nexters.phochak.config.property.SlackReportProperties;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.ReportPost;
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.SlackMessageFormDto;
 import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ReportPostRepository;
 import com.nexters.phochak.repository.UserRepository;
+import com.nexters.phochak.service.NotifyService;
 import com.nexters.phochak.service.ReportPostService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
 public class ReportPostServiceImpl implements ReportPostService {
-
+    private static final Long BLOCK_CRITERIA = 20L;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+    private final NotifyService notifyService;
     private final ReportPostRepository reportPostRepository;
-    private final SlackPostReportFeignClient slackPostReportFeignClient;
-    private final SlackReportProperties slackReportProperties;
 
     @Override
     @Transactional
-    public void notifyReport(Long userId, Long postId, ReportPostRequestDto reportPostRequestDto) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
-        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+    public void processReport(Long userId, Long postId, ReportPostRequestDto reportPostRequestDto) {
+        User user = userRepository.getReferenceById(userId);
+        Post post = postRepository.getReferenceById(postId);
         ReportPost reportPost = ReportPost.builder()
                 .reporter(user)
                 .post(post)
                 .reason(reportPostRequestDto.getReason())
                 .build();
-        reportPostRepository.save(reportPost);
+        try {
+            reportPostRepository.save(reportPost);
+        } catch (DataIntegrityViolationException e) {
+            throw new PhochakException(ResCode.ALREADY_REPORTED);
+        }
 
-        String message = generateReportMessage(user, post, reportPostRequestDto.getReason());
-        SlackMessageFormDto test = SlackMessageFormDto.builder()
-                .username(slackReportProperties.getBotNickname())
-                .text(message)
-                .build();
-        slackPostReportFeignClient.call(test);
-    }
+        Long reportCount = reportPostRepository.countByPost_Id(postId);
+        if (reportCount >= BLOCK_CRITERIA) {
+            post.blindPost();
+        }
 
-    private String generateReportMessage(User user, Post post, String reason) {
-        Long reportCount = reportPostRepository.countByPost(post);
-        return "\uD83D\uDC6E\u200D 게시글 신고가 접수되었습니다 \uD83D\uDC6E\u200D"
-                + "\n포스트 id: " + post.getId()
-                + "\n누적 신고: " + reportCount
-                + "\n신고자: " + user.getNickname()
-                + "\n신고 사유: " + reason;
+        // 슬랙알림 전송
+        notifyService.notifyReportedPost(postId, userId, reportPost.getReason(), reportCount);
     }
 }
