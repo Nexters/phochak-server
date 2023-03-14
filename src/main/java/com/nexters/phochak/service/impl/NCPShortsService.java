@@ -44,9 +44,22 @@ public class NCPShortsService implements ShortsService {
     }
 
     @Override
+    public void processPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
+        switch (encodingCallbackRequestDto.getStatus()) {
+            case "WAITING":
+                break;
+            case "RUNNING":
+                break;
+            case "COMPLETE":
+                connectPost(encodingCallbackRequestDto.getFilePath());
+                break;
+        }
+    }
+
+    @Override
     @Transactional
-    public void connectPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
-        String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.getFilePath());
+    public void connectPost(String encodedFilePath) {
+        String uploadKey = getKeyFromFilePath(encodedFilePath);
 
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 

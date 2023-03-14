@@ -48,9 +48,7 @@ public class PostController {
 
     @PostMapping("/encoding-callback")
     public void encodingCallback(@RequestBody EncodingCallbackRequestDto encodingCallbackRequestDto) {
-        if (encodingCallbackRequestDto.getStatus().equals("COMPLETE")) {
-            shortsService.connectPost(encodingCallbackRequestDto);
-        }
+        shortsService.processPost(encodingCallbackRequestDto);
     }
 
     @Auth
