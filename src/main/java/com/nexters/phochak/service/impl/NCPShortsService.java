@@ -43,30 +43,44 @@ public class NCPShortsService implements ShortsService {
         }
     }
 
+    /**
+     * 인코딩 콜백은 다음 순서로 들어옵니다.
+     * 성공 시: WAITING - RUNNING - COMPLETE
+     * 성공 시: WAITING - RUNNING - FAILURE
+     * 인코딩 콜백 수신 시 다음과 같은 절차를 수행합니다.
+     * 1. Shorts 객체 Post 객체와 연결
+     * 2. Shorts 상태 변경
+     * 3. 각 상태에 대한 푸시 알람 발송
+     */
     @Override
     public void processPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
+        String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.getFilePath());
+
         switch (encodingCallbackRequestDto.getStatus()) {
             case "WAITING":
+                connectPost(uploadKey);
                 break;
             case "RUNNING":
                 break;
+            case "FAILURE":
+                shortsRepository.updateShortState(uploadKey, ShortsStateEnum.FAIL);
+                break;
             case "COMPLETE":
-                connectPost(encodingCallbackRequestDto.getFilePath());
+                shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
                 break;
         }
     }
 
     @Override
     @Transactional
-    public void connectPost(String encodedFilePath) {
-        String uploadKey = getKeyFromFilePath(encodedFilePath);
+    public void connectPost(String uploadKey) {
 
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
         if (optionalShorts.isPresent()) {
             // case: 포스트 생성이 먼저된 경우 -> 상태 변경
             Shorts shorts = optionalShorts.get();
-            shorts.updateShortsState(ShortsStateEnum.OK);
+            shorts.updateShortsState(ShortsStateEnum.IN_PROGRESS);
         } else {
             // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);

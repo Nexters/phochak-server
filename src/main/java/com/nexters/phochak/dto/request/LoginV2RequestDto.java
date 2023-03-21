@@ -8,7 +8,7 @@ import javax.validation.constraints.NotBlank;
 @Getter
 @AllArgsConstructor
 public class LoginV2RequestDto {
-    
+
     @NotBlank
     private String token;
 

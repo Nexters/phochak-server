@@ -101,7 +101,7 @@ class NCPShortsServiceTest {
         given(shortsRepository.findByUploadKey(any())).willReturn(Optional.of(shorts));
 
         //when
-        ncpShortsService.connectPost(encodingCallbackRequestDto);
+        ncpShortsService.connectPost(encodingCallbackRequestDto.getFilePath());
 
         //then
         assertThat(shorts.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
@@ -117,7 +117,7 @@ class NCPShortsServiceTest {
         given(shortsRepository.findByUploadKey(any())).willReturn(Optional.empty());
 
         //when
-        mock.connectPost(encodingCallbackRequestDto);
+        mock.connectPost(encodingCallbackRequestDto.getFilePath());
 
         //then
         verify(shortsRepository, times(1)).save(any());

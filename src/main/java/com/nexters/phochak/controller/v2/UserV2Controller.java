@@ -18,7 +18,7 @@ import javax.validation.Valid;
 @RequiredArgsConstructor
 @RequestMapping("/v2/user")
 @RestController
-public class UserController {
+public class UserV2Controller {
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
 
