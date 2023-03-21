@@ -5,6 +5,7 @@ import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.dto.EncodingCallbackRequestDto;
 import com.nexters.phochak.repository.ShortsRepository;
+import com.nexters.phochak.service.NotificationService;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
@@ -19,6 +20,7 @@ public class NCPShortsService implements ShortsService {
 
     private final ShortsRepository shortsRepository;
     private final NCPStorageProperties ncpStorageProperties;
+    private final NotificationService notificationService;
 
     @Override
     public void connectShorts(String uploadKey, Post post) {
@@ -59,16 +61,21 @@ public class NCPShortsService implements ShortsService {
         switch (encodingCallbackRequestDto.getStatus()) {
             case "WAITING":
                 connectPost(uploadKey);
+                notificationService.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
                 break;
             case "RUNNING":
                 break;
             case "FAILURE":
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.FAIL);
+                notificationService.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
                 break;
             case "COMPLETE":
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
+                notificationService.postEncodeState(uploadKey, ShortsStateEnum.OK);
                 break;
         }
+
+
     }
 
     @Override

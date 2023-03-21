@@ -4,6 +4,7 @@ import com.nexters.phochak.domain.FcmDeviceToken;
 import com.nexters.phochak.repository.FcmDeviceTokenRepository;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.service.NotificationService;
+import com.nexters.phochak.specification.ShortsStateEnum;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -14,9 +15,6 @@ public class NotificationServiceImpl implements NotificationService {
         this.fcmDeviceTokenRepository = fcmDeviceTokenRepository;
     }
 
-//    @Override
-//    public void
-
     @Override
     public void registryFcmDeviceToken(User user, String token) {
         fcmDeviceTokenRepository.save(
@@ -24,5 +22,10 @@ public class NotificationServiceImpl implements NotificationService {
                     .user(user)
                     .token(token)
                     .build());
+    }
+
+    @Override
+    public void postEncodeState(String uploadKey, ShortsStateEnum shortsStateEnum) {
+
     }
 }
