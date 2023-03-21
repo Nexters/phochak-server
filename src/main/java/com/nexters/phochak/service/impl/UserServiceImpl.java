@@ -11,6 +11,7 @@ import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.IgnoredUserRepository;
 import com.nexters.phochak.repository.UserRepository;
+import com.nexters.phochak.service.NotificationService;
 import com.nexters.phochak.service.OAuthService;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.UserService;
@@ -36,6 +37,7 @@ public class UserServiceImpl implements UserService {
     private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
     private final UserRepository userRepository;
     private final PostService postService;
+    private final NotificationService notificationService;
 
     @Override
     public Long login(String provider, String code) {
@@ -46,6 +48,19 @@ public class UserServiceImpl implements UserService {
 
         User user = getOrCreateUser(userInformation);
 
+        return user.getId();
+    }
+
+    @Override
+    public Long login(String provider, String code, String fcmDeviceToken) {
+        OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
+        OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
+
+        OAuthUserInformation userInformation = oAuthService.requestUserInformation(code);
+
+        User user = getOrCreateUser(userInformation);
+
+        notificationService.registryFcmDeviceToken(user, fcmDeviceToken);
         return user.getId();
     }
 
