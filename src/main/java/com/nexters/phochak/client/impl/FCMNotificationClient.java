@@ -11,6 +11,7 @@ import com.nexters.phochak.exception.ResCode;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Profile;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Component;
 
 import java.util.Map;
@@ -25,6 +26,7 @@ public class FCMNotificationClient implements NotificationClient {
 
     private final FirebaseMessaging fcm;
 
+    @Async
     @Override
     public void postToClient(NotificationFormDto notificationFormDto, String registrationToken) {
         Message msg = Message.builder()
