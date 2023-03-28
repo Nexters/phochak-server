@@ -23,7 +23,7 @@ public class UserV2Controller {
     private final JwtTokenService jwtTokenService;
 
     @GetMapping("/login/{provider}")
-    public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginV2RequestDto requestDto) {
+    public CommonResponse<JwtResponseDto> loginV2(@PathVariable String provider, @Valid LoginV2RequestDto requestDto) {
         Long loginUserId = userService.login(provider, requestDto.getToken(), requestDto.getToken());
         return new CommonResponse<>(jwtTokenService.issueToken(loginUserId));
     }

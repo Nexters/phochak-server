@@ -1,6 +1,6 @@
 == 회원 APIs
 
-=== 로그인
+=== 로그인 V1
 OAuth 2.0을 활용한 로그인 (및 회원가입) 을 진행한다.
 
 ==== 요청
@@ -25,6 +25,58 @@ include::{snippets}/user/login/http-response.adoc[]
 Response Parameters
 
 include::{snippets}/user/login/response-fields.adoc[]
+
+**로그인 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|로그인 성공
+
+|P100
+|서버 에러 발생
+|OAuth provider 서버측 문제 발생
+
+|P200
+|요청 값의 형식이 올바르지 않습니다
+|파라미터 형식 오류
+
+|P204
+|올바르지 않은 apple identifyToken입니다
+|OAuth provider 서버측 검증 실패
+
+|===
+
+=== 로그인 V2
+OAuth 2.0을 활용한 로그인 (및 회원가입) 을 진행한다.
+추가로 FCM 푸시 서비스를 위한 FCM client token이 필요하다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/v2/user/login/http-request.adoc[]
+
+Path Parameters
+
+include::{snippets}/v2/user/login/path-parameters.adoc[]
+
+Request Parameters
+
+include::{snippets}/v2/user/login/request-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/v2/user/login/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/v2/user/login/response-fields.adoc[]
 
 **로그인 API 응답코드**
 [cols="2,10,7"]
