@@ -75,7 +75,6 @@ public class NCPShortsService implements ShortsService {
                 break;
         }
 
-
     }
 
     @Override
