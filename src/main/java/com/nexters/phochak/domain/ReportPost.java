@@ -34,16 +34,13 @@ public class ReportPost extends BaseTime {
     @JoinColumn(name = "POST_ID", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Post post;
 
-    private String reason;
-
     public ReportPost() {
     }
 
     @Builder
-    public ReportPost(Long id, User reporter, Post post, String reason) {
+    public ReportPost(Long id, User reporter, Post post) {
         this.id = id;
         this.reporter = reporter;
         this.post = post;
-        this.reason = reason;
     }
 }

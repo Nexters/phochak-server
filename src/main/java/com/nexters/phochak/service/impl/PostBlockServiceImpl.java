@@ -25,9 +25,9 @@ public class PostBlockServiceImpl implements NotifyService {
 
     @Async
     @Override
-    public void notifyReportedPost(Long postId, Long userId, String reason, Long reportCount) {
+    public void notifyReportedPost(Long postId, Long userId, Long reportCount) {
         try {
-            String message = generateReportMessage(userId, postId, reason, reportCount);
+            String message = generateReportMessage(userId, postId, reportCount);
             SlackMessageFormDto test = SlackMessageFormDto.builder()
                     .username(slackReportProperties.getBotNickname())
                     .text(message)
@@ -38,7 +38,7 @@ public class PostBlockServiceImpl implements NotifyService {
         }
     }
 
-    private String generateReportMessage(Long userId, Long postId, String reason, long reportCount) {
+    private String generateReportMessage(Long userId, Long postId, long reportCount) {
         StringBuilder sb = new StringBuilder();
 
         sb.append("\uD83D\uDC6E\u200D 게시글 신고가 접수되었습니다 \uD83D\uDC6E\u200D")
@@ -48,8 +48,6 @@ public class PostBlockServiceImpl implements NotifyService {
                 .append(reportCount)
                 .append("\n신고자 id: ")
                 .append(userId)
-                .append("\n신고 사유: ")
-                .append(reason)
                 .append("\n누적 신고 횟수: ")
                 .append(reportCount);
 

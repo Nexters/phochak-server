@@ -5,7 +5,6 @@ import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.ReportPost;
 import com.nexters.phochak.domain.Shorts;
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.repository.PostRepository;
 import com.nexters.phochak.repository.ReportPostRepository;
@@ -44,13 +43,11 @@ class ReportPostServiceIntegrationTest {
     SlackPostReportFeignClient slackPostReportFeignClient;
 
 
-    ReportPostRequestDto request;
     User user;
     Post post;
 
     @BeforeEach
     void setUp() {
-        request = new ReportPostRequestDto("test");
         user = new User(1234L, OAuthProviderEnum.KAKAO, "testId", "report", "testImage");
         Shorts shorts = new Shorts(1L, "upload key", "shorts", "thumbnail");
         post = new Post(user, shorts, PostCategoryEnum.CAFE);
@@ -67,7 +64,7 @@ class ReportPostServiceIntegrationTest {
         Long postId = post.getId();
 
         // when
-        reportPostService.processReport(userId, postId, request);
+        reportPostService.processReport(userId, postId);
 
         // then
         assertThat(reportPostRepository.countByPost_Id(post.getId())).isEqualTo(1);
@@ -79,11 +76,11 @@ class ReportPostServiceIntegrationTest {
         // given
         Long userId = user.getId();
         Long postId = post.getId();
-        reportPostService.processReport(userId, postId, request);
+        reportPostService.processReport(userId, postId);
 
         // when & then
         assertThat(reportPostRepository.countByPost_Id(post.getId())).isEqualTo(1);
-        assertThatThrownBy(() -> reportPostService.processReport(userId, postId, request))
+        assertThatThrownBy(() -> reportPostService.processReport(userId, postId))
                 .isInstanceOf(PhochakException.class);
     }
 
@@ -102,12 +99,11 @@ class ReportPostServiceIntegrationTest {
             reportPostRepository.save(ReportPost.builder()
                     .post(post)
                     .reporter(reporter)
-                    .reason("reason")
                     .build());
         }
 
         // when
-        reportPostService.processReport(userId, postId, request);
+        reportPostService.processReport(userId, postId);
 
         // then
         Optional<Post> post = postRepository.findById(postId);

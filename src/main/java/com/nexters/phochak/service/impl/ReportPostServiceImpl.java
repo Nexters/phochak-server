@@ -3,7 +3,6 @@ package com.nexters.phochak.service.impl;
 import com.nexters.phochak.domain.Post;
 import com.nexters.phochak.domain.ReportPost;
 import com.nexters.phochak.domain.User;
-import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.repository.PostRepository;
@@ -27,13 +26,12 @@ public class ReportPostServiceImpl implements ReportPostService {
 
     @Override
     @Transactional
-    public void processReport(Long userId, Long postId, ReportPostRequestDto reportPostRequestDto) {
+    public void processReport(Long userId, Long postId) {
         User user = userRepository.getReferenceById(userId);
         Post post = postRepository.getReferenceById(postId);
         ReportPost reportPost = ReportPost.builder()
                 .reporter(user)
                 .post(post)
-                .reason(reportPostRequestDto.getReason())
                 .build();
         try {
             reportPostRepository.save(reportPost);
@@ -47,6 +45,6 @@ public class ReportPostServiceImpl implements ReportPostService {
         }
 
         // 슬랙알림 전송
-        notifyService.notifyReportedPost(postId, userId, reportPost.getReason(), reportCount);
+        notifyService.notifyReportedPost(postId, userId, reportCount);
     }
 }

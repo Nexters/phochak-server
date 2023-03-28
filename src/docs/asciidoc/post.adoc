@@ -270,10 +270,6 @@ Path Parameters
 
 include::{snippets}/post/report/path-parameters.adoc[]
 
-Request Body
-
-include::{snippets}/post/report/request-fields.adoc[]
-
 ==== 응답
 Response HTTP Example
 
