@@ -86,7 +86,7 @@ public class NCPShortsService implements ShortsService {
         if (optionalShorts.isPresent()) {
             // case: 포스트 생성이 먼저된 경우 -> 상태 변경
             Shorts shorts = optionalShorts.get();
-            shorts.updateShortsState(ShortsStateEnum.IN_PROGRESS);
+            shorts.updateShortsState(ShortsStateEnum.OK);
         } else {
             // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);

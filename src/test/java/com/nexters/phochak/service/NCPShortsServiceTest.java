@@ -36,13 +36,16 @@ class NCPShortsServiceTest {
     @Mock
     NCPStorageProperties ncpStorageProperties;
 
+    @Mock
+    NotificationService notificationService;
+
     @BeforeEach
     void setUp() {
         NCPStorageProperties.NCPS3Properties s3 = new NCPStorageProperties.NCPS3Properties("", "", "", "", "", "");
         NCPStorageProperties.NCPShortsProperties shorts = new NCPStorageProperties.NCPShortsProperties("", "", "", "");
         NCPStorageProperties.NCPThumbnailProperties thumbnail = new NCPStorageProperties.NCPThumbnailProperties("", "", "", "");
         ncpStorageProperties = new NCPStorageProperties(s3, shorts, thumbnail);
-        mock = new NCPShortsService(shortsRepository, ncpStorageProperties);
+        mock = new NCPShortsService(shortsRepository, ncpStorageProperties, notificationService);
     }
 
     @Test
