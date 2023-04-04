@@ -7,7 +7,6 @@ import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostFilter;
-import com.nexters.phochak.dto.request.ReportPostRequestDto;
 import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
@@ -80,9 +79,9 @@ public class PostController {
 
     @Auth
     @PostMapping("/{postId}/report")
-    public CommonResponse<Void> reportPost(@PathVariable Long postId, @RequestBody ReportPostRequestDto reportPostRequestDto) {
+    public CommonResponse<Void> reportPost(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
-        reportPostService.processReport(userId, postId, reportPostRequestDto);
+        reportPostService.processReport(userId, postId);
         return new CommonResponse<>();
     }
 
