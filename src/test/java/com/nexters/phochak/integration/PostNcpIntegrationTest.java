@@ -332,12 +332,8 @@ class PostNcpIntegrationTest extends RestDocs {
         postRepository.save(post);
         Long postId = post.getId();
 
-        Map<String, Object> body = new HashMap<>();
-        body.put("reason", "신고샤유");
-
         // when, then
         mockMvc.perform(post("/v1/post/{postId}/report", postId)
-                        .content(objectMapper.writeValueAsString(body))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
