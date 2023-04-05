@@ -9,11 +9,13 @@ import com.nexters.phochak.service.NotificationService;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Optional;
 
+@Slf4j
 @Service
 @RequiredArgsConstructor
 public class NCPShortsService implements ShortsService {
@@ -73,8 +75,10 @@ public class NCPShortsService implements ShortsService {
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
                 notificationService.postEncodeState(uploadKey, ShortsStateEnum.OK);
                 break;
+            default:
+                log.error("NCPShortsService|Undefined encoding callback status message: {}",
+                        encodingCallbackRequestDto.getStatus());
         }
-
     }
 
     @Override
