@@ -13,6 +13,7 @@ import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.config.property.NCPStorageProperties;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Repository;
 
 import java.net.URL;
@@ -57,6 +58,7 @@ public class NCPStorageClient implements StorageBucketClient {
         return s3Client.generatePresignedUrl(originalBucketName, objectName, expiration, HttpMethod.PUT);
     }
 
+    @Async
     @Override
     public void removeShortsObject(List<String> objectKeyList) {
         if (objectKeyList.isEmpty()) return;
