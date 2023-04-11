@@ -85,6 +85,7 @@ class PostControllerTest extends RestDocs {
                 .like(10)
                 .isLiked(Boolean.TRUE)
                 .hashtags(hashtags1)
+                .isBlind(Boolean.TRUE)
                 .build();
 
         post2 = PostPageResponseDto.builder()
@@ -96,6 +97,7 @@ class PostControllerTest extends RestDocs {
                 .like(21)
                 .isLiked(Boolean.FALSE)
                 .hashtags(hashtags2)
+                .isBlind(Boolean.FALSE)
                 .build();
     }
 
@@ -173,7 +175,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
                         )
                 ));
     }
@@ -199,6 +202,7 @@ class PostControllerTest extends RestDocs {
                 .like(75)
                 .isLiked(Boolean.TRUE)
                 .hashtags(hashtags)
+                .isBlind(Boolean.FALSE)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
@@ -244,7 +248,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
                         )
                 ));
     }
@@ -270,6 +275,7 @@ class PostControllerTest extends RestDocs {
                 .like(28)
                 .isLiked(Boolean.TRUE)
                 .hashtags(hashtags)
+                .isBlind(Boolean.FALSE)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
@@ -315,7 +321,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
                         )
                 ));
     }
@@ -349,6 +356,7 @@ class PostControllerTest extends RestDocs {
                 .like(120)
                 .isLiked(Boolean.TRUE)
                 .hashtags(hashtags)
+                .isBlind(Boolean.FALSE)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3);
@@ -397,7 +405,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
                         )
                 ));
     }
@@ -431,6 +440,7 @@ class PostControllerTest extends RestDocs {
                 .like(120)
                 .isLiked(Boolean.TRUE)
                 .hashtags(hashtags)
+                .isBlind(Boolean.FALSE)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post3, post1);
@@ -479,7 +489,8 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
                                 fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부")
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
                         )
                 ));
     }

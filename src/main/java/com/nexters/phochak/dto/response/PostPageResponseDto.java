@@ -26,6 +26,7 @@ public class PostPageResponseDto {
     private PostCategoryEnum category;
     private int like;
     private Boolean isLiked;
+    private Boolean isBlind;
 
     public static PostPageResponseDto of(
             PostFetchDto postFetchDto, HashtagFetchDto hashtagFetchDto, LikesFetchDto likesFetchDto) {
@@ -38,6 +39,7 @@ public class PostPageResponseDto {
                 .category(postFetchDto.getCategory())
                 .like(Objects.isNull(likesFetchDto) ? 0 : likesFetchDto.getLike())
                 .isLiked(Objects.isNull(likesFetchDto) ? false : likesFetchDto.isLiked())
+                .isBlind(postFetchDto.isBlind())
                 .build();
     }
 }

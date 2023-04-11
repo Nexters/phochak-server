@@ -70,7 +70,6 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .join(shorts).on(likes.post.shorts.eq(shorts))
                 .where(filterByCursor(command))
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
-                .where(post.isBlind.eq(false))
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
@@ -79,7 +78,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                         new QPostFetchDto(post.id,
                                 new QPostFetchDto_PostUserInformation(likes.user.id, likes.user.nickname, likes.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
-                                likes.post.view, likes.post.postCategory)
+                                likes.post.view, likes.post.postCategory, likes.post.isBlind)
                 ));
 
         return result.keySet().stream()

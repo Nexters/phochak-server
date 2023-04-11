@@ -17,14 +17,17 @@ public class PostFetchDto {
     private PostShortsInformation shorts;
     private long view;
     private PostCategoryEnum category;
+    private boolean isBlind;
 
     @QueryProjection
-    public PostFetchDto(long id, PostUserInformation user, PostShortsInformation shorts, long view, PostCategoryEnum category) {
+    public PostFetchDto(long id, PostUserInformation user, PostShortsInformation shorts, long view,
+                        PostCategoryEnum category, boolean isBlind) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
         this.view = view;
         this.category = category;
+        this.isBlind = isBlind;
     }
 
     @Builder
