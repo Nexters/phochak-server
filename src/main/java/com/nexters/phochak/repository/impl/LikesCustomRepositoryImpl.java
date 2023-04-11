@@ -78,7 +78,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                         new QPostFetchDto(post.id,
                                 new QPostFetchDto_PostUserInformation(likes.user.id, likes.user.nickname, likes.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
-                                likes.post.view, likes.post.postCategory)
+                                likes.post.view, likes.post.postCategory, likes.post.isBlind)
                 ));
 
         return result.keySet().stream()
