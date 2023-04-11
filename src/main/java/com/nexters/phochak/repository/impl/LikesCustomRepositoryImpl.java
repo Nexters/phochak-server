@@ -70,7 +70,6 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .join(shorts).on(likes.post.shorts.eq(shorts))
                 .where(filterByCursor(command))
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
-                .where(post.isBlind.eq(false))
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())

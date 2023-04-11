@@ -38,7 +38,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(getFilterExpression(command)) // 내가 업로드한 게시글
                 .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
-                .where(post.isBlind.eq(false))
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
