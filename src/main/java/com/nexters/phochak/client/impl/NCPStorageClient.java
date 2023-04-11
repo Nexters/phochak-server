@@ -59,6 +59,7 @@ public class NCPStorageClient implements StorageBucketClient {
 
     @Override
     public void removeShortsObject(List<String> objectKeyList) {
+        if (objectKeyList.isEmpty()) return;
         ArrayList<DeleteObjectsRequest.KeyVersion> keys = new ArrayList<>();
         for (String objectKey : objectKeyList) {
             keys.add(new DeleteObjectsRequest.KeyVersion(shortsLocationPrefixHead + objectKey + shortsLocationPrefixTail));
