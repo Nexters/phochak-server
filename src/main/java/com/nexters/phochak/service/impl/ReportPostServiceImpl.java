@@ -18,7 +18,6 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 @RequiredArgsConstructor
 public class ReportPostServiceImpl implements ReportPostService {
-    private static final Long BLOCK_CRITERIA = 20L;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final NotifyService notifyService;
@@ -40,9 +39,7 @@ public class ReportPostServiceImpl implements ReportPostService {
         }
 
         Long reportCount = reportPostRepository.countByPost_Id(postId);
-        if (reportCount >= BLOCK_CRITERIA) {
-            post.blindPost();
-        }
+        post.blindPostIfRequired(reportCount);
 
         // 슬랙알림 전송
         notifyService.notifyReportedPost(postId, userId, reportCount);

@@ -32,6 +32,8 @@ import java.util.List;
         {@Index(name = "idx01_post", columnList = "view, post_id"),
         @Index(name = "idx02_post", columnList = "user_id")})
 public class Post extends BaseTime {
+    private static final Long BLOCK_CRITERIA = 5L;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "POST_ID")
@@ -78,7 +80,9 @@ public class Post extends BaseTime {
         this.shorts = shorts;
     }
 
-    public void blindPost() {
-        this.isBlind = true;
+    public void blindPostIfRequired(Long reportCount) {
+        if (reportCount >= BLOCK_CRITERIA) {
+            this.isBlind = true;
+        }
     }
 }
