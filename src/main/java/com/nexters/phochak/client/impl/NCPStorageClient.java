@@ -6,21 +6,19 @@ import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.client.builder.AwsClientBuilder;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3ClientBuilder;
-import com.amazonaws.services.s3.model.DeleteObjectRequest;
 import com.amazonaws.services.s3.model.DeleteObjectsRequest;
-import com.amazonaws.services.s3.model.DeleteObjectsResult;
-import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.nexters.phochak.client.StorageBucketClient;
 import com.nexters.phochak.config.property.NCPStorageProperties;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.stereotype.Repository;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Component;
 
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-@Repository
+@Component
 @Slf4j
 public class NCPStorageClient implements StorageBucketClient {
     private final String encodedBucketName;
@@ -57,8 +55,12 @@ public class NCPStorageClient implements StorageBucketClient {
         return s3Client.generatePresignedUrl(originalBucketName, objectName, expiration, HttpMethod.PUT);
     }
 
+    @Async
     @Override
     public void removeShortsObject(List<String> objectKeyList) {
+        if (objectKeyList.isEmpty()) {
+            return;
+        }
         ArrayList<DeleteObjectsRequest.KeyVersion> keys = new ArrayList<>();
         for (String objectKey : objectKeyList) {
             keys.add(new DeleteObjectsRequest.KeyVersion(shortsLocationPrefixHead + objectKey + shortsLocationPrefixTail));
