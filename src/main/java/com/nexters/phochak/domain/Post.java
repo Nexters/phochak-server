@@ -85,4 +85,8 @@ public class Post extends BaseTime {
             this.isBlind = true;
         }
     }
+
+    public void updateContent(PostCategoryEnum postCategory) {
+        this.postCategory = postCategory;
+    }
 }
