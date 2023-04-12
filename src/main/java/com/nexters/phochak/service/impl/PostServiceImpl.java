@@ -12,6 +12,7 @@ import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
+import com.nexters.phochak.dto.request.PostUpdateRequestDto;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
@@ -66,6 +67,17 @@ public class PostServiceImpl implements PostService {
         postRepository.save(post);
         hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), post);
         shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
+    }
+
+    @Override
+    public void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto) {
+        User user = userRepository.getReferenceById(userId);
+        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        if (!post.getUser().equals(user)) {
+            throw new PhochakException(ResCode.NOT_POST_OWNER);
+        }
+        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
+        hashtagService.updateAll(post, postUpdateRequestDto.getHashtags());
     }
 
     @Override

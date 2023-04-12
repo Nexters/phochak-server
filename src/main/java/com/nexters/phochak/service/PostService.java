@@ -5,6 +5,7 @@ import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
+import com.nexters.phochak.dto.request.PostUpdateRequestDto;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
 
 import java.util.List;
@@ -21,6 +22,8 @@ public interface PostService {
      * @return
      */
     List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, PostFilter filter);
+
+    void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto);
 
     void delete(Long userId, Long postId);
 
