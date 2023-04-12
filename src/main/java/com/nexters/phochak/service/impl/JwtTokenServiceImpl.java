@@ -93,13 +93,13 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         String accessToken = refreshTokenRepository.findAccessToken(currentRefreshToken);
         refreshTokenRepository.expire(currentRefreshToken);
 
-        if(!currentAccessToken.equals(accessToken)) {
+        if (!currentAccessToken.equals(accessToken)) {
             log.warn("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }
 
         //AT 아직 유효기간 남음 -> RT 탈취로 판단하고 강제 만료
-        if(!isAccessTokenExpired(currentAccessToken)) {
+        if (!isAccessTokenExpired(currentAccessToken)) {
             log.warn("JwtTokenServiceImpl|Request reissue when AT was not expired: RT({})", currentRefreshToken);
             throw new PhochakException(ResCode.INVALID_TOKEN);
         }

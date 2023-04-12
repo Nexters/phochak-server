@@ -2,7 +2,6 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.domain.Hashtag;
 import com.nexters.phochak.domain.Post;
-import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.HashtagFetchDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
@@ -25,7 +24,7 @@ public class HashtagServiceImpl implements HashtagService {
 
     @Override
     public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, Post post) {
-        if(stringHashtagList.isEmpty()) {
+        if (stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
         validateHashtag(stringHashtagList);
@@ -52,7 +51,7 @@ public class HashtagServiceImpl implements HashtagService {
     private static void validateHashtag(List<String> stringHashtagList) {
         Pattern pattern = Pattern.compile("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣_]{1,20}$");
         for(String tag : stringHashtagList) {
-            if(!pattern.matcher(tag).matches()) {
+            if (!pattern.matcher(tag).matches()) {
                 throw new PhochakException(ResCode.INVALID_INPUT, "해시태그 형식이 올바르지 않습니다.");
             }
         }
