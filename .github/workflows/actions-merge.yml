@@ -47,3 +47,16 @@ jobs:
             docker images | grep phochak-jib | sort -k2 | awk '{if(NR>1) print $3}' | xargs docker rmi --force
             docker run --pull=always -d --name phochak_server -v /root/service/logs:/logs -e TZ=Asia/Seoul \
             --network host --env-file /root/prod.env woojin8787/phochak-jib:latest
+      - name: Deploy AWS Server
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.AWS_SERVER_HOST }}
+          username: ${{ secrets.AWS_SERVER_USERNAME }}
+          key: ${{ secrets.AWS_SSH_KEY }}
+          port: ${{ secrets.SERVER_PORT }}
+          script: |
+            sudo docker stop phochak_server
+            sudo docker rm phochak_server
+            sudo docker images | grep phochak-jib | sort -k2 | awk '{if(NR>1) print $3}' | xargs docker rmi --force
+            sudo docker run --pull=always -d --name phochak_server -v /root/service/logs:/logs -e TZ=Asia/Seoul \
+            --network host --env-file /home/ubuntu/app/prod.env woojin8787/phochak-jib:latest
