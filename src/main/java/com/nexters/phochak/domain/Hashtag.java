@@ -19,7 +19,9 @@ import javax.validation.constraints.Size;
 
 @Getter
 @Entity
-@Table(indexes = @Index(name = "idx_hashtag", columnList = "tag"))
+@Table(indexes =
+        {@Index(name = "idx01_hashtag", columnList = "TAG"),
+        @Index(name = "idx02_hashtag", columnList = "POST_ID")})
 public class Hashtag {
     public static final int HASHTAG_MAX_SIZE = 20;
 

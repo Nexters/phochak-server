@@ -7,6 +7,7 @@ import com.nexters.phochak.dto.PostUploadKeyResponseDto;
 import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostFilter;
+import com.nexters.phochak.dto.request.PostUpdateRequestDto;
 import com.nexters.phochak.dto.response.CommonPageResponse;
 import com.nexters.phochak.dto.response.CommonResponse;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -70,6 +72,14 @@ public class PostController {
     }
 
     @Auth
+    @PutMapping("/{postId}")
+    public CommonResponse<Void> updatePost(@RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto, @PathVariable Long postId) {
+        Long userId = UserContext.getContext();
+        postService.update(userId, postId, postUpdateRequestDto);
+        return new CommonResponse<>();
+    }
+
+    @Auth
     @DeleteMapping("/{postId}")
     public CommonResponse<Void> deletePost(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
@@ -91,4 +101,5 @@ public class PostController {
         postService.updateView(postId);
         return new CommonResponse<>();
     }
+
 }

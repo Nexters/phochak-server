@@ -50,9 +50,7 @@ import static org.mockito.BDDMockito.given;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.get;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -173,6 +171,66 @@ class PostNcpIntegrationTest extends RestDocs {
                         fieldWithPath("data").type(JsonFieldType.NULL).description("null")
                 )
         ));
+    }
+
+    @Test
+    @DisplayName("포스트 API - 게시글 수정 성공")
+    void updatePost_success() throws Exception {
+        //given
+        User user = userRepository.findByNickname("nickname").get();
+
+        Shorts shorts = Shorts.builder()
+                .thumbnailUrl("test")
+                .shortsUrl("test")
+                .uploadKey("test")
+                .build();
+        shortsRepository.save(shorts);
+
+        Post post = Post.builder()
+                .shorts(shorts)
+                .postCategory(PostCategoryEnum.TOUR)
+                .user(user)
+                .build();
+        postRepository.save(post);
+        Long postId = post.getId();
+
+        List<Hashtag> hashtags = List.of(new Hashtag(post, "hashtag1"), new Hashtag(post, "hashtag2"), new Hashtag(post, "hashtag3"));
+        hashtagRepository.saveAll(hashtags);
+
+        em.flush();
+        em.clear();
+
+        Map<String, Object> body = new HashMap<>();
+        body.put("category", "RESTAURANT");
+        body.put("hashtags", List.of("해시태그1", "해시태그2"));
+
+        // when, then
+        mockMvc.perform(put("/v1/post/{postId}", postId)
+                .content(objectMapper.writeValueAsString(body))
+                .contentType(MediaType.APPLICATION_JSON)
+                .header(AUTHORIZATION_HEADER, testToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
+                .andDo(document("post/PUT",
+                        preprocessRequest(prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("postId").description("(필수) 수정할 포스트의 id")
+                        ),
+                        requestFields(
+                                fieldWithPath("category").description("카테고리 ex) TOUR / RESTAURANT / CAFE"),
+                                fieldWithPath("hashtags").description("해시태그 배열 ex) [\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                        )
+                ));
     }
 
     @Test

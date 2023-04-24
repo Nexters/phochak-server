@@ -24,7 +24,7 @@ public class HashtagServiceImpl implements HashtagService {
 
     @Override
     public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, Post post) {
-        if(stringHashtagList.isEmpty()) {
+        if (stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
         validateHashtag(stringHashtagList);
@@ -42,10 +42,16 @@ public class HashtagServiceImpl implements HashtagService {
         return hashtagRepository.findHashTagsOfPost(postIds);
     }
 
+    @Override
+    public void updateAll(Post post, List<String> stringHashtagList) {
+        hashtagRepository.deleteAllByPostId(post.getId());
+        saveHashtagsByString(stringHashtagList, post);
+    }
+
     private static void validateHashtag(List<String> stringHashtagList) {
         Pattern pattern = Pattern.compile("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣_]{1,20}$");
         for(String tag : stringHashtagList) {
-            if(!pattern.matcher(tag).matches()) {
+            if (!pattern.matcher(tag).matches()) {
                 throw new PhochakException(ResCode.INVALID_INPUT, "해시태그 형식이 올바르지 않습니다.");
             }
         }
