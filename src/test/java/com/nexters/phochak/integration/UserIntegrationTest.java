@@ -46,7 +46,6 @@ class UserIntegrationTest {
         String nickname = "testUser";
 
         user = User.builder()
-                .id(1L)
                 .nickname(nickname)
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("test")
