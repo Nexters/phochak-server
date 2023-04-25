@@ -76,7 +76,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .groupBy(post.id)
                 .transform(groupBy(post.id).as(
                         new QPostFetchDto(post.id,
-                                new QPostFetchDto_PostUserInformation(likes.user.id, likes.user.nickname, likes.user.profileImgUrl),
+                                new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
                                 likes.post.view, likes.post.postCategory, likes.post.isBlind)
                 ));
