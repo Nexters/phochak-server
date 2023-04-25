@@ -83,7 +83,7 @@ public class NCPShortsService implements ShortsService {
 
     @Override
     @Transactional
-    public void connectPost(String uploadKey) {
+    private void connectPost(String uploadKey) {
 
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
