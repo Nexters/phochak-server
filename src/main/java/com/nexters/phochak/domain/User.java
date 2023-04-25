@@ -13,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.Table;
 import javax.validation.constraints.Size;
+import java.time.LocalDateTime;
 
 @Getter
 @Entity
@@ -36,6 +37,7 @@ public class User extends BaseTime {
     private String nickname;
 
     private String profileImgUrl;
+    private LocalDateTime leaveDate;
 
     public User() {
     }
@@ -58,5 +60,6 @@ public class User extends BaseTime {
         this.providerId = null;
         this.provider = null;
         this.profileImgUrl = null;
+        this.leaveDate = LocalDateTime.now();
     }
 }
