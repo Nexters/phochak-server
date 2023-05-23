@@ -22,7 +22,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class FCMNotificationClient implements NotificationClient {
 
-    static ObjectMapper objectMapper;
+    private final ObjectMapper objectMapper;
 
     private final FirebaseMessaging fcm;
 
