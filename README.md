@@ -1,8 +1,9 @@
 ![스크린샷 2023-05-24 오전 12 51 01](https://github.com/Nexters/phochak-server/assets/76773202/0f366955-87fe-4e15-9392-e3fa9af188ec)
+![IMG_2281](https://github.com/Nexters/phochak-server/assets/76773202/70ca8b0f-d364-4dfc-87f5-013651d52e2f)
 
 <div align="center">
 
-# 포착
+# "포착"
 
 **✈️ 포착은 여행에서의 소중했던 추억을 공유하는 쇼츠 컨텐츠 서비스입니다 ✈️**
 
@@ -16,16 +17,17 @@
   
 </div>
 
-<br/><br/><br/><br/>
+<br/><br/>
 
 **🟢 운영중 - Play Store / App Store**
-
-
 
 <a href="https://github.com/Nexters/phochak-android"> 🤖 Android Github </a>
 
 <a href="https://github.com/Nexters/phochak-iOS"> 🍎 iOS Github </a>
 
+<a herf="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
+
+<br/>
 
 ## Back-end Members
 
