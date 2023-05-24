@@ -25,7 +25,7 @@
 
 <a href="https://github.com/Nexters/phochak-iOS"> 🍎 iOS Github </a>
 
-<a herf="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
+<a href="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
 
 <br/>
 
