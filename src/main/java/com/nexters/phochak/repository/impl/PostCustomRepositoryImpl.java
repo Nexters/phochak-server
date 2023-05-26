@@ -45,7 +45,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                                 .select(reportPost.post.id)
                                 .from(reportPost)
                                 .where(reportPost.reporter.id.eq(command.getUserId())
-                ))) // 본인이 신고헌 게시글 제거
+                ))) // 본인이 신고한 게시글 제거
                 .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
