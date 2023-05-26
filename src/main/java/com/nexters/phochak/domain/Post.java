@@ -47,6 +47,9 @@ public class Post extends BaseTime {
     @JoinColumn(name = "SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private Shorts shorts;
 
+    @OneToMany(mappedBy = "post")
+    private List<ReportPost> reportPost;
+
     @Column(nullable = false)
     @ColumnDefault("0")
     private Long view;
