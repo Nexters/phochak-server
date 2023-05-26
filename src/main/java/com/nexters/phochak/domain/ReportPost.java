@@ -18,7 +18,9 @@ import javax.persistence.Table;
 
 @Getter
 @Entity
-@Table(indexes = {@Index(name = "idx01_unique_report_post", columnList = "USER_ID, POST_ID", unique = true)})
+@Table(indexes =
+        {@Index(name = "idx01_unique_report_post", columnList = "USER_ID, POST_ID", unique = true),
+        @Index(name = "idx02_report_post", columnList = "USER_ID")})
 public class ReportPost extends BaseTime {
 
     @Id
