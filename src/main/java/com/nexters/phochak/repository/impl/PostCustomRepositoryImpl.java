@@ -12,7 +12,9 @@ import com.nexters.phochak.specification.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
+import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,6 +23,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.nexters.phochak.domain.QReportPost.reportPost;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
@@ -37,6 +40,12 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .join(post.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(getFilterExpression(command)) // 내가 업로드한 게시글
+                .where(post.id.notIn(
+                        JPAExpressions
+                                .select(reportPost.post.id)
+                                .from(reportPost)
+                                .where(reportPost.reporter.id.eq(command.getUserId())
+                ))) // 본인이 신고헌 게시글 제거
                 .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
@@ -54,7 +63,6 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .map(resultMap::get)
                 .collect(Collectors.toList());
     }
-
 
     private static BooleanExpression getFilterExpression(PostFetchCommand command) {
         if (command.hasUploadedFilter()) {
