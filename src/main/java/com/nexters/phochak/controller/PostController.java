@@ -27,6 +27,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Slf4j
@@ -65,6 +66,16 @@ public class PostController {
     @GetMapping("/list")
     public CommonPageResponse<PostPageResponseDto> getPostList(@Valid CustomCursor customCursor, PostFilter filter) {
         List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor, filter);
+        if (nextCursorPage.size() < customCursor.getPageSize()) {
+            return new CommonPageResponse<>(nextCursorPage, true);
+        }
+        return new CommonPageResponse<>(nextCursorPage);
+    }
+
+    @Auth
+    @GetMapping("/list/search")
+    public CommonPageResponse<PostPageResponseDto> getPostListBySearchHashtag(@Valid CustomCursor customCursor, @RequestParam String hashtag) {
+        List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor, hashtag);
         if (nextCursorPage.size() < customCursor.getPageSize()) {
             return new CommonPageResponse<>(nextCursorPage, true);
         }
