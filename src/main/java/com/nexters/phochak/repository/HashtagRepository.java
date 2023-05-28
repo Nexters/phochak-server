@@ -1,12 +1,12 @@
 package com.nexters.phochak.repository;
 
 import com.nexters.phochak.domain.Hashtag;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
-import java.awt.print.Pageable;
 import java.util.List;
 
 public interface HashtagRepository extends JpaRepository<Hashtag, Long>, HashtagCustomRepository {
@@ -19,7 +19,7 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long>, Hashtag
     @Modifying
     void deleteAllByPostIdIn(@Param("postIdList") List<Long> postIdList);
 
-    @Query("select h from Hashtag h where h.tag like :hashtag%")
+    @Query("select h.tag from Hashtag h where h.tag like :hashtag% order by length(h.tag)")
     List<String> findByHashtagStartsWith(@Param("hashtag") String hashtag, Pageable pageable);
 
 }
