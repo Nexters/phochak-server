@@ -139,7 +139,7 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post2, post1);
 
-        when(postService.getNextCursorPage(any(), any())).thenReturn(result);
+        when(postService.getNextCursorPage(any(), PostFilter.NONE)).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -207,7 +207,7 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
 
-        when(postService.getNextCursorPage(any(), any())).thenReturn(result);
+        when(postService.getNextCursorPage(any(), PostFilter.NONE)).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -280,7 +280,7 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
 
-        when(postService.getNextCursorPage(any(), any())).thenReturn(result);
+        when(postService.getNextCursorPage(any(), PostFilter.NONE)).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -362,7 +362,7 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3);
 
 
-        when(postService.getNextCursorPage(any(), any())).thenReturn(result);
+        when(postService.getNextCursorPage(any(), PostFilter.UPLOADED)).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -446,7 +446,7 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3, post1);
 
 
-        when(postService.getNextCursorPage(any(), any())).thenReturn(result);
+        when(postService.getNextCursorPage(any(), PostFilter.LIKED)).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
