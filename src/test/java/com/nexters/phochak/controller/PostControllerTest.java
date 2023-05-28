@@ -6,6 +6,7 @@ import com.nexters.phochak.dto.PostFetchDto.PostUserInformation;
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
+import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import com.nexters.phochak.specification.PostSortOption;
@@ -25,8 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import java.util.List;
 
 import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -568,6 +568,42 @@ class PostControllerTest extends RestDocs {
                                 fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
                                 fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
                                 fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("포스트 API - 해시태그 자동완성")
+    void hastagAutocomplete() throws Exception {
+        String hashtag = "해시";
+        int resultSize = 3;
+        List<String> result = List.of("해시", "해시태", "해시태그123");
+
+        when(postService.getHashtagAutocomplete(anyString(), anyInt())).thenReturn(result);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/post/hashtag/autocomplete")
+                                .param("hashtag", hashtag)
+                                .param("resultSize", String.valueOf(resultSize))
+                                .header(AUTHORIZATION_HEADER, "access token")
+                )
+                .andExpect(status().isOk())
+                .andDo(document("post/hashtag/autocomplete",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("hashtag").description("(필수) 검색할 해시태그").optional(),
+                                parameterWithName("resultSize").description("(필수) 검색 결과 크기").optional()
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("자동완성 해시태그 리스트")
                         )
                 ));
     }

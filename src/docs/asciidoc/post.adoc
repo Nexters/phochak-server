@@ -149,6 +149,32 @@ Response Parameters
 
 include::{snippets}/post/list/search/response-fields.adoc[]
 
+==== 해시태그 검색 자동완성
+
+앞부분이 일치하는 해시태그를 검색하여 자동완성 기능을 제공합니다.
+
+HTTP Example
+
+include::{snippets}/post/hashtag/autocomplete/http-request.adoc[]
+
+Request Parameters
+
+include::{snippets}/post/hashtag/autocomplete/request-parameters.adoc[]
+
+Request Headers
+
+include::{snippets}/post/hashtag/autocomplete/request-headers.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/post/hashtag/autocomplete/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/post/hashtag/autocomplete/response-fields.adoc[]
+
 === Presigned URL 발급
 S3 버킷에 미디어를 업로드 하기 위해, Presigned URL, upload key를 발급한다.
 
