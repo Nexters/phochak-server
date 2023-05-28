@@ -27,7 +27,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
-import javax.websocket.server.PathParam;
 import java.util.List;
 
 @Slf4j
@@ -80,6 +79,12 @@ public class PostController {
             return new CommonPageResponse<>(nextCursorPage, true);
         }
         return new CommonPageResponse<>(nextCursorPage);
+    }
+
+    @Auth
+    @GetMapping("/hashtag/autocomplete")
+    public CommonResponse<List<String>> hashtagAutocomplete(@RequestParam String hashtag, @RequestParam int resultSize) {
+        return new CommonResponse<>(postService.getHashtagAutocomplete(hashtag, resultSize));
     }
 
     @Auth

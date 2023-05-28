@@ -38,4 +38,6 @@ public interface PostService {
     int updateView(Long postId);
 
     void deleteAllPostByUser(User user);
+
+    List<String> getHashtagAutocomplete(String hashtag, int size);
 }

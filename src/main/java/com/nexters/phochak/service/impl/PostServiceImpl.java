@@ -26,9 +26,11 @@ import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.awt.print.Pageable;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -160,6 +162,12 @@ public class PostServiceImpl implements PostService {
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);
         storageBucketClient.removeShortsObject(shortsKeyList);
+    }
+
+    @Override
+    public List<String> getHashtagAutocomplete(String hashtag, int resultSize) {
+        Pageable pageable = (Pageable) PageRequest.of(0, resultSize);
+        return hashtagRepository.findByHashtagStartsWith(hashtag, pageable);
     }
 
     private String generateObjectUploadKey() {
