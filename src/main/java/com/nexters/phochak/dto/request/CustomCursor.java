@@ -14,10 +14,10 @@ import java.util.Objects;
 @Getter
 public class CustomCursor {
     private static final int DEFAULT_PAGE_SIZE = 5;
+    private static final PostSortOption defaultPostSortOption = PostSortOption.LATEST;
 
     private Long lastId;
     private Integer pageSize;
-    @NotNull
     private PostSortOption sortOption;
     private Integer sortValue;
 
@@ -30,13 +30,10 @@ public class CustomCursor {
 
         // 첫 요청 시 lastId, sortValue는 null로, sortOption만 받음
         if (Objects.isNull(lastId) && Objects.isNull(sortValue)) {
-            if (Objects.isNull(sortOption)) {
-                throw new PhochakException(ResCode.NOT_FOUND_SORT_OPTION);
-            }
             this.lastId = Long.MAX_VALUE;
             this.sortValue = Integer.MAX_VALUE;
         } else {
-            if (Objects.isNull(sortValue) && sortOption != PostSortOption.LATEST) {
+            if (Objects.isNull(sortValue) && (sortOption != PostSortOption.LATEST && sortOption != null)) {
                 throw new PhochakException(ResCode.NOT_FOUND_SORT_VALUE);
             }
         }
