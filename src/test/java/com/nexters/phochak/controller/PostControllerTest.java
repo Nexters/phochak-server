@@ -26,6 +26,7 @@ import java.util.List;
 
 import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -468,6 +469,82 @@ class PostControllerTest extends RestDocs {
                                 parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
                                 parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
                                 parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
+                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
+                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
+                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                                fieldWithPath("data[].shorts.state").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태(OK, FAIL, IN_PROGRESS)"),
+                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
+                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
+                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
+                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("포스트 목록 조회 API - 해시태그 검색")
+    void getPostList_searched() throws Exception {
+        CustomCursor customCursor = CustomCursor.builder()
+                .pageSize(3)
+                .lastId(20L)
+                .build();
+
+        List<String> hashtags = List.of("해시태그1", "해시태그2");
+
+        PostUserInformation newUser = PostUserInformation.builder()
+                .id(4L)
+                .nickname("newUser")
+                .profileImgUrl("profileImage")
+                .build();
+
+        PostPageResponseDto post3 = PostPageResponseDto.builder()
+                .id(20L)
+                .user(newUser)
+                .shorts(shorts)
+                .view(1000)
+                .category(PostCategoryEnum.CAFE)
+                .like(120)
+                .isLiked(Boolean.TRUE)
+                .hashtags(hashtags)
+                .isBlind(Boolean.FALSE)
+                .build();
+
+        List<PostPageResponseDto> result = List.of(post3, post1);
+
+
+        when(postService.getNextCursorPage(any(), anyString())).thenReturn(result);
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/post/list/search")
+                                .param("lastId", String.valueOf(customCursor.getLastId()))
+                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .param("hashtag", String.valueOf(hashtags.get(1)))
+                                .header(AUTHORIZATION_HEADER, "access token")
+                )
+                .andExpect(status().isOk())
+                .andDo(document("post/list/search",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestParameters(
+                                parameterWithName("hashtag").description("(필수) 검색할 해시태그").optional(),
+                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
