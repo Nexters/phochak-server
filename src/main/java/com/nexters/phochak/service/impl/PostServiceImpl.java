@@ -34,6 +34,8 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
+import static com.nexters.phochak.specification.PostSortOption.LIKE;
+
 @Transactional
 @Service
 @RequiredArgsConstructor
@@ -103,11 +105,26 @@ public class PostServiceImpl implements PostService {
         return createPostPageResponseDto(command);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, String hashtag) {
+        final Long userId = UserContext.CONTEXT.get();
+
+        PostFetchCommand command = PostFetchCommand.of(customCursor, PostFilter.SEARCH, userId, hashtag);
+
+        return createPostPageResponseDto(command);
+    }
+
     private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
-        if (!command.hasLikedFilter()) {
-            return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
+        switch(command.getFilter()) {
+            case SEARCH:
+                return getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
+            case LIKED:
+                return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
+            case UPLOADED:
+            default:
+                return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
         }
-        return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
     }
 
     private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
