@@ -14,7 +14,6 @@ import java.util.Objects;
 @Getter
 public class CustomCursor {
     private static final int DEFAULT_PAGE_SIZE = 5;
-    private static final PostSortOption defaultPostSortOption = PostSortOption.LATEST;
 
     private Long lastId;
     private Integer pageSize;
@@ -25,15 +24,15 @@ public class CustomCursor {
     public CustomCursor(Long lastId, Integer pageSize, PostSortOption sortOption, Integer sortValue) {
         this.lastId = lastId;
         this.pageSize = Objects.isNull(pageSize) ? DEFAULT_PAGE_SIZE : pageSize;
-        this.sortOption = sortOption;
+        this.sortOption = Objects.isNull(sortOption) ? PostSortOption.LATEST : sortOption;
         this.sortValue = sortValue;
 
         // 첫 요청 시 lastId, sortValue는 null로, sortOption만 받음
-        if (Objects.isNull(lastId) && Objects.isNull(sortValue)) {
+        if (Objects.isNull(lastId) && Objects.isNull(this.sortValue)) {
             this.lastId = Long.MAX_VALUE;
             this.sortValue = Integer.MAX_VALUE;
         } else {
-            if (Objects.isNull(sortValue) && (sortOption != PostSortOption.LATEST && sortOption != null)) {
+            if (Objects.isNull(this.sortValue) && (this.sortOption != PostSortOption.LATEST)) {
                 throw new PhochakException(ResCode.NOT_FOUND_SORT_VALUE);
             }
         }
