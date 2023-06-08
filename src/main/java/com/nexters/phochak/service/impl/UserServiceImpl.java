@@ -107,6 +107,11 @@ public class UserServiceImpl implements UserService {
         }
     }
 
+    @Override
+    public void cancelIgnoreUser(Long me, Long pageOwnerId) {
+        ignoredUserRepository.deleteIgnore(me, pageOwnerId);
+    }
+
     private boolean isDuplicatedNickname(String nickname) {
         return userRepository.existsByNickname(nickname);
     }

@@ -103,4 +103,12 @@ public class UserController {
         userService.ignoreUser(me, pageOwnerId);
         return new CommonResponse<>();
     }
+
+    @Auth
+    @DeleteMapping("/{userId}/ignore")
+    public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "userId") Long pageOwnerId) {
+        Long me = UserContext.CONTEXT.get();
+        userService.cancelIgnoreUser(me, pageOwnerId);
+        return new CommonResponse<>();
+    }
 }
