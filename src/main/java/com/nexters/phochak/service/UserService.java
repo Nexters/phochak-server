@@ -40,4 +40,8 @@ public interface UserService {
     UserInfoResponseDto getInfo(Long pageOwnerId, Long userId);
 
     void withdraw(Long userId);
+
+    void ignoreUser(Long me, Long pageOwnerId);
+
+    void cancelIgnoreUser(Long me, Long pageOwnerId);
 }

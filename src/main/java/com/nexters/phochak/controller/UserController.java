@@ -18,6 +18,7 @@ import com.nexters.phochak.service.UserService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -92,6 +93,14 @@ public class UserController {
         Long userId = UserContext.CONTEXT.get();
         jwtTokenService.logout(withdrawRequestDto.getRefreshToken());
         userService.withdraw(userId);
+        return new CommonResponse<>();
+    }
+
+    @Auth
+    @PostMapping("/{userId}/ignore")
+    public CommonResponse<Void> ignoreUser(@PathVariable(value = "userId") Long pageOwnerId) {
+        Long me = UserContext.CONTEXT.get();
+        userService.ignoreUser(me, pageOwnerId);
         return new CommonResponse<>();
     }
 }
