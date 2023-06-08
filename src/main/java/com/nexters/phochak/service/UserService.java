@@ -1,7 +1,10 @@
 package com.nexters.phochak.service;
 
+import com.nexters.phochak.dto.response.IgnoredUserResponseDto;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.dto.response.UserInfoResponseDto;
+
+import java.util.List;
 
 public interface UserService {
 
@@ -44,4 +47,6 @@ public interface UserService {
     void ignoreUser(Long me, Long pageOwnerId);
 
     void cancelIgnoreUser(Long me, Long pageOwnerId);
+
+    List<IgnoredUserResponseDto> getIgnoreUserList(Long me);
 }

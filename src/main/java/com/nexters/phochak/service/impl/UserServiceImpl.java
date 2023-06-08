@@ -3,6 +3,7 @@ package com.nexters.phochak.service.impl;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.IgnoredUser;
 import com.nexters.phochak.domain.User;
+import com.nexters.phochak.dto.response.IgnoredUserResponseDto;
 import com.nexters.phochak.dto.OAuthUserInformation;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.dto.response.UserInfoResponseDto;
@@ -20,6 +21,7 @@ import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -110,6 +112,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public void cancelIgnoreUser(Long me, Long pageOwnerId) {
         ignoredUserRepository.deleteIgnore(me, pageOwnerId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<IgnoredUserResponseDto> getIgnoreUserList(Long me) {
+        List<IgnoredUser> ignoreUserListByUserId = ignoredUserRepository.getIgnoreUserListByUserId(me);
+        return IgnoredUserResponseDto.of(ignoreUserListByUserId);
     }
 
     private boolean isDuplicatedNickname(String nickname) {

@@ -2,6 +2,7 @@ package com.nexters.phochak.controller;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
+import com.nexters.phochak.dto.response.IgnoredUserResponseDto;
 import com.nexters.phochak.dto.request.LoginRequestDto;
 import com.nexters.phochak.dto.request.LogoutRequestDto;
 import com.nexters.phochak.dto.request.NicknameModifyRequestDto;
@@ -29,6 +30,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.validation.Valid;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -97,18 +99,25 @@ public class UserController {
     }
 
     @Auth
-    @PostMapping("/{userId}/ignore")
-    public CommonResponse<Void> ignoreUser(@PathVariable(value = "userId") Long pageOwnerId) {
+    @PostMapping("/ignore/{pageOwnerId}")
+    public CommonResponse<Void> ignoreUser(@PathVariable(value = "pageOwnerId") Long pageOwnerId) {
         Long me = UserContext.CONTEXT.get();
         userService.ignoreUser(me, pageOwnerId);
         return new CommonResponse<>();
     }
 
     @Auth
-    @DeleteMapping("/{userId}/ignore")
-    public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "userId") Long pageOwnerId) {
+    @DeleteMapping("/ignore/{pageOwnerId}")
+    public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "pageOwnerId") Long pageOwnerId) {
         Long me = UserContext.CONTEXT.get();
         userService.cancelIgnoreUser(me, pageOwnerId);
         return new CommonResponse<>();
+    }
+
+    @Auth
+    @GetMapping("/ignore")
+    public CommonResponse<List<IgnoredUserResponseDto>> getIgnoreUser(@PathVariable(value = "pageOwnerId") Long pageOwnerId) {
+        Long me = UserContext.CONTEXT.get();
+        return new CommonResponse<>(userService.getIgnoreUserList(me));
     }
 }
