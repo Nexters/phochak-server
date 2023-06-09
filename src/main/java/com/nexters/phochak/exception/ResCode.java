@@ -19,8 +19,8 @@ public enum ResCode {
     //P3xx: 유저 예외
     NOT_FOUND_USER("P300", "존재하지 않는 유저입니다"),
     DUPLICATED_NICKNAME("P301", "닉네임이 중복되었습니다"),
-    ALREADY_IGNORED_USER("P302", "이미 차단된 유저입니다"),
-    NOT_IGNORED_USER("P303", "차단하지 않았던 유저입니다"),
+    ALREADY_IGNORED_USER("P302", "이미 무시하기한 유저입니다"),
+    NOT_IGNORED_USER("P303", "무시하기 하지 않았던 유저입니다"),
 
     //P4xx: 게시글 예외
     NOT_FOUND_POST("P400", "존재하지 않는 게시글입니다"),
