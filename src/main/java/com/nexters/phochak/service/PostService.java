@@ -22,7 +22,7 @@ public interface PostService {
      * @param customCursor
      * @return
      */
-    List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, PostFilter filter);
+    List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor);
 
     void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto);
 
