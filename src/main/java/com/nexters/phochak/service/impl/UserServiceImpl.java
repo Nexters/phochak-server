@@ -77,6 +77,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional(readOnly = true)
     public UserInfoResponseDto getInfo(Long pageOwnerId, Long userId) {
         User pageOwner;
         Boolean isIgnored = false;
