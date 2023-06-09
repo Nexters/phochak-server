@@ -1,0 +1,1 @@
+alter table `user` add column is_blocked CHAR(1) DEFAULT 'N' not null;
