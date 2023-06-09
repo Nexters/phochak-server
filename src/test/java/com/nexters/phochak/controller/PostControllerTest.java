@@ -135,12 +135,13 @@ class PostControllerTest extends RestDocs {
     void getPostList_initial() throws Exception {
         CustomCursor customCursor = CustomCursor.builder()
                 .sortOption(PostSortOption.LATEST)
+                .filter(PostFilter.NONE)
                 .pageSize(2)
                 .build();
 
         List<PostPageResponseDto> result = List.of(post2, post1);
 
-        when(postService.getNextCursorPage(any(), (PostFilter) any())).thenReturn(result);
+        when(postService.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -188,6 +189,7 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
+                .filter(PostFilter.NONE)
                 .lastId(20L)
                 .sortValue(75)
                 .build();
@@ -208,7 +210,7 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
 
-        when(postService.getNextCursorPage(any(), (PostFilter) any())).thenReturn(result);
+        when(postService.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -261,6 +263,7 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(5)
                 .sortOption(PostSortOption.VIEW)
+                .filter(PostFilter.NONE)
                 .lastId(3L)
                 .sortValue(100)
                 .build();
@@ -281,7 +284,7 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
 
-        when(postService.getNextCursorPage(any(), (PostFilter) any())).thenReturn(result);
+        when(postService.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -334,11 +337,10 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
+                .filter(PostFilter.UPLOADED)
                 .lastId(20L)
                 .sortValue(75)
                 .build();
-
-        PostFilter postFilter = PostFilter.UPLOADED;
 
         List<String> hashtags = List.of("내가", "업로드");
 
@@ -363,7 +365,7 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3);
 
 
-        when(postService.getNextCursorPage(any(), (PostFilter) any())).thenReturn(result);
+        when(postService.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -372,7 +374,7 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .param("filter", postFilter.name())
+                                .param("filter", customCursor.getFilter().name())
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -418,11 +420,10 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
+                .filter(PostFilter.LIKED)
                 .lastId(20L)
                 .sortValue(75)
                 .build();
-
-        PostFilter postFilter = PostFilter.LIKED;
 
         List<String> hashtags = List.of("좋아요한", "게시글");
 
@@ -447,7 +448,7 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3, post1);
 
 
-        when(postService.getNextCursorPage(any(), (PostFilter) any())).thenReturn(result);
+        when(postService.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -456,7 +457,7 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .param("filter", postFilter.name())
+                                .param("filter", customCursor.getFilter().name())
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
