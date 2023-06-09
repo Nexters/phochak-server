@@ -2,11 +2,18 @@ package com.nexters.phochak.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.domain.Likes;
+import com.nexters.phochak.domain.Post;
+import com.nexters.phochak.domain.Shorts;
+import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.dto.response.UserInfoResponseDto;
 import com.nexters.phochak.dto.response.JwtResponseDto;
+import com.nexters.phochak.exception.PhochakException;
+import com.nexters.phochak.exception.ResCode;
 import com.nexters.phochak.service.JwtTokenService;
 import com.nexters.phochak.service.UserService;
+import com.nexters.phochak.specification.PostCategoryEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -24,6 +31,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.exception.ResCode.OK;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -31,6 +39,8 @@ import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.post;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.modifyUris;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessRequest;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.preprocessResponse;
@@ -41,6 +51,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.restdocs.request.RequestDocumentation.requestParameters;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @ExtendWith(MockitoExtension.class)
@@ -235,5 +246,66 @@ class UserControllerTest extends RestDocs {
                                 fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크")
                         )
                 ));
+    }
+
+    @Test
+    @DisplayName("유저 API - 유저 무시하기")
+    void ignoreUser() throws Exception {
+        //given
+        doNothing().when(userService).ignoreUser(any(), any());
+        //when, then
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .post("/v1/user/ignore/{ignoredUserId}", 10)
+                                .header(AUTHORIZATION_HEADER, "access token")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("user/ignore",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("ignoredUserId").description("(필수) 무시하기 하려는 유저의 id 설정")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("유저 API - 유저 무시하기 취소")
+    void cancelIgnoreUser() throws Exception {
+        //given
+        doNothing().when(userService).cancelIgnoreUser(any(), any());
+        //when, then
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .delete("/v1/user/ignore/{ignoredUserId}", 10)
+                                .header(AUTHORIZATION_HEADER, "access token")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk())
+                .andDo(document("user/ignore",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        pathParameters(
+                                parameterWithName("ignoredUserId").description("(필수) 무시하기 했던 유저의 id 설정")
+                        ),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+                        )
+                ));
+
     }
 }
