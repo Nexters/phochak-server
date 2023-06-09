@@ -327,3 +327,148 @@ include::{snippets}/user/modify/nickname/response-fields.adoc[]
 |닉네임이 중복되었습니다
 |저장하려는 시점에 닉네임 중복 발생, 수정하여 재시도 필요
 |===
+
+=== 유저 무시하기
+특정 유저의 게시글을 더 이상 볼 수 없게 무시합니다.
+
+* 무시하기: A유저가 B 유저를 무시(차단)
+* 차단하기: 시스템에 의한 글로벌 차단
+
+==== 요청
+HTTP Example
+
+include::{snippets}/user/ignore/POST/http-request.adoc[]
+
+Request Headers
+
+include::{snippets}/user/ignore/POST/request-headers.adoc[]
+
+Path Parameters
+
+include::{snippets}/user/ignore/POST/path-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/user/ignore/POST/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/user/ignore/POST/response-fields.adoc[]
+
+**유저 무시하기 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|유저 차단 성공
+
+|P200
+|요청 값의 형식이 올바르지 않습니다
+|파라미터 형식 오류
+
+|P206
+|요청 필수 값이 존재하지 않습니다
+|필수 파라미터 누락
+
+|P302
+|이미 무시하기한 유저입니다
+|이미 무시하기한 유저의 경우
+|===
+
+=== 유저 무시하기 해제
+유저 무시하기를 해제합니다.
+
+==== 요청
+HTTP Example
+
+include::{snippets}/user/ignore/DELETE/http-request.adoc[]
+
+Request Headers
+
+include::{snippets}/user/ignore/DELETE/request-headers.adoc[]
+
+Path Parameters
+
+include::{snippets}/user/ignore/DELETE/path-parameters.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/user/ignore/DELETE/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/user/ignore/DELETE/response-fields.adoc[]
+
+**유저 무시하기 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|유저 차단 성공
+
+|P200
+|요청 값의 형식이 올바르지 않습니다
+|파라미터 형식 오류
+
+|P206
+|요청 필수 값이 존재하지 않습니다
+|필수 파라미터 누락
+
+|P303
+|무시하기 하지 않았던 유저입니다
+|무시하기 하지 않았던 유저의 경우
+|===
+
+=== 무시한 유저 리스트 조회
+무시하기 처리했던 유저의 목록을 조회합니다
+
+==== 요청
+HTTP Example
+
+include::{snippets}/user/ignore/GET/http-request.adoc[]
+
+Request Headers
+
+include::{snippets}/user/ignore/GET/request-headers.adoc[]
+
+==== 응답
+Response HTTP Example
+
+*정상*
+include::{snippets}/user/ignore/GET/http-response.adoc[]
+
+Response Parameters
+
+include::{snippets}/user/ignore/GET/response-fields.adoc[]
+
+**유저 무시하기 API 응답코드**
+[cols="2,10,7"]
+|===
+|응답코드
+|응답메시지
+|설명
+
+|P000
+|정상 처리
+|유저 차단 성공
+
+|P200
+|요청 값의 형식이 올바르지 않습니다
+|파라미터 형식 오류
+
+|P206
+|요청 필수 값이 존재하지 않습니다
+|필수 파라미터 누락
+|===

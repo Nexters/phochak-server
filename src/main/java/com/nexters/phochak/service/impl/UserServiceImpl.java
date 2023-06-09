@@ -1,12 +1,15 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.auth.UserContext;
+import com.nexters.phochak.domain.IgnoredUsers;
 import com.nexters.phochak.domain.User;
+import com.nexters.phochak.dto.response.IgnoredUserResponseDto;
 import com.nexters.phochak.dto.OAuthUserInformation;
 import com.nexters.phochak.dto.response.UserCheckResponseDto;
 import com.nexters.phochak.dto.response.UserInfoResponseDto;
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.repository.IgnoredUserRepository;
 import com.nexters.phochak.repository.UserRepository;
 import com.nexters.phochak.service.OAuthService;
 import com.nexters.phochak.service.PostService;
@@ -14,9 +17,11 @@ import com.nexters.phochak.service.UserService;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
@@ -26,6 +31,7 @@ import java.util.UUID;
 @Service
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
+    private final IgnoredUserRepository ignoredUserRepository;
     private static final String NICKNAME_PREFIX = "여행자#";
     private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
     private final UserRepository userRepository;
@@ -86,6 +92,33 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         user.withdrawInformation();
         postService.deleteAllPostByUser(user);
+    }
+
+    @Override
+    public void ignoreUser(Long me, Long ignoredUserId) {
+        User user = userRepository.getReferenceById(me);
+        User pageOwner = userRepository.findById(ignoredUserId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        try {
+            ignoredUserRepository.save(IgnoredUsers.builder()
+                    .user(user)
+                    .ignoredUser(pageOwner)
+                    .build());
+        } catch (
+                DataIntegrityViolationException e) {
+            throw new PhochakException(ResCode.ALREADY_IGNORED_USER);
+        }
+    }
+
+    @Override
+    public void cancelIgnoreUser(Long me, Long ignoredUserId) {
+        ignoredUserRepository.deleteIgnore(me, ignoredUserId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<IgnoredUserResponseDto> getIgnoreUserList(Long me) {
+        List<IgnoredUsers> ignoreUserListByUserId = ignoredUserRepository.getIgnoreUserListByUserId(me);
+        return IgnoredUserResponseDto.of(ignoreUserListByUserId);
     }
 
     private boolean isDuplicatedNickname(String nickname) {
