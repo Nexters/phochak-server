@@ -122,6 +122,7 @@ public class PostServiceImpl implements PostService {
             case LIKED:
                 return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
             case UPLOADED:
+            case NONE:
             default:
                 return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
         }
