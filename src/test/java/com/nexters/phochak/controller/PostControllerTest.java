@@ -332,17 +332,18 @@ class PostControllerTest extends RestDocs {
     }
 
     @Test
-    @DisplayName("포스트 목록 조회 API - 내가 업로드한 영상")
+    @DisplayName("포스트 목록 조회 API - 나 또는 다른 유저가 업로드한 영상")
     void getPostList_uploaded() throws Exception {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
                 .filter(PostFilter.UPLOADED)
+                .targetUserId(10L)
                 .lastId(20L)
                 .sortValue(75)
                 .build();
 
-        List<String> hashtags = List.of("내가", "업로드");
+        List<String> hashtags = List.of("누군가가", "업로드");
 
         PostUserInformation newUser = PostUserInformation.builder()
                 .id(4L)
@@ -375,6 +376,7 @@ class PostControllerTest extends RestDocs {
                                 .param("sortOption", customCursor.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
                                 .param("filter", customCursor.getFilter().name())
+                                .param("targetUserId", String.valueOf(customCursor.getTargetUserId()))
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -386,7 +388,8 @@ class PostControllerTest extends RestDocs {
                                 parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
                                 parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
                                 parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-                                parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                                parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
+                                parameterWithName("targetUserId").description("(선택) 조회할 페이지의 유저 id (본인의 페이지라면 생략 가능)")
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
