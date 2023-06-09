@@ -41,11 +41,11 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .join(post.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(getFilterExpression(command)) // 내가 업로드한 게시글
-                .where(user.id.notIn(
+                .where(post.user.id.notIn(
                         JPAExpressions
                                 .select(ignoredUsers.ignoredUser.id)
                                 .from(ignoredUsers)
-                                .where(reportPost.reporter.id.eq(command.getUserId()))
+                                .where(ignoredUsers.ignoredUser.id.eq(command.getUserId()))
                 )) //본인이 ignore한 게시글 제거
                 .where(post.id.notIn(
                         JPAExpressions
