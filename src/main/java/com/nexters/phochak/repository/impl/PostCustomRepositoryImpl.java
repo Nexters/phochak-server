@@ -12,7 +12,6 @@ import com.nexters.phochak.specification.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -46,8 +45,8 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                         JPAExpressions
                                 .select(ignoredUsers.ignoredUser.id)
                                 .from(ignoredUsers)
-                                .where(reportPost.reporter.id.eq(command.getUserId())
-                ))) //본인이 ignore한 게시글 제거
+                                .where(reportPost.reporter.id.eq(command.getUserId()))
+                )) //본인이 ignore한 게시글 제거
                 .where(post.id.notIn(
                         JPAExpressions
                                 .select(reportPost.post.id)
