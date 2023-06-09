@@ -19,6 +19,7 @@ public class PostFetchCommand {
     private final PostSortOption sortOption;
     private final Integer sortValue;
     private final PostFilter filter;
+    private final Long targetUserId;
     private final String searchHashtag;
 
     public static PostFetchCommand of(CustomCursor customCursor, long userId) {
@@ -29,6 +30,7 @@ public class PostFetchCommand {
                 .sortOption(customCursor.getSortOption())
                 .sortValue(customCursor.getSortValue())
                 .filter(customCursor.getFilter())
+                .targetUserId(customCursor.getTargetUserId())
                 .searchHashtag(null)
                 .build();
     }
@@ -41,6 +43,7 @@ public class PostFetchCommand {
                 .sortOption(customCursor.getSortOption())
                 .sortValue(customCursor.getSortValue())
                 .filter(PostFilter.SEARCH)
+                .targetUserId(customCursor.getTargetUserId())
                 .searchHashtag(hashtag)
                 .build();
     }

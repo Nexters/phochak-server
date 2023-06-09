@@ -20,14 +20,16 @@ public class CustomCursor {
     private PostSortOption sortOption;
     private Integer sortValue;
     private PostFilter filter;
+    private Long targetUserId;
 
     @Builder
-    public CustomCursor(Long lastId, Integer pageSize, PostSortOption sortOption, Integer sortValue, PostFilter filter) {
+    public CustomCursor(Long lastId, Integer pageSize, PostSortOption sortOption, Integer sortValue, PostFilter filter, Long targetUserId) {
         this.lastId = lastId;
         this.pageSize = Objects.isNull(pageSize) ? DEFAULT_PAGE_SIZE : pageSize;
         this.sortOption = Objects.isNull(sortOption) ? PostSortOption.LATEST : sortOption;
         this.sortValue = sortValue;
         this.filter = Objects.isNull(filter) ? PostFilter.NONE : filter;
+        this.targetUserId = targetUserId;
 
         // 첫 요청 시 lastId, sortValue는 null로, sortOption만 받음
         if (Objects.isNull(lastId) && Objects.isNull(this.sortValue)) {

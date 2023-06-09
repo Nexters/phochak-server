@@ -73,7 +73,11 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     private static BooleanExpression getFilterExpression(PostFetchCommand command) {
         if (command.hasUploadedFilter()) {
-            return post.user.id.eq(command.getUserId());
+            if(command.getTargetUserId() == null) {
+                return post.user.id.eq(command.getUserId());
+            } else {
+                return post.user.id.eq(command.getTargetUserId());
+            }
         }
         return null;
     }
