@@ -2,6 +2,7 @@ package com.nexters.phochak.dto.response;
 
 import com.nexters.phochak.domain.IgnoredUsers;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -11,11 +12,12 @@ import java.util.stream.Collectors;
 @Getter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class IgnoredUserResponseDto {
 
     private Long id;
     private String nickname;
-    private String profileImageUrl;
+    private String profileImgUrl;
 
     public static IgnoredUserResponseDto of(IgnoredUsers ignoredUser) {
         return new IgnoredUserResponseDto(

@@ -116,7 +116,7 @@ public class UserController {
 
     @Auth
     @GetMapping("/ignore")
-    public CommonResponse<List<IgnoredUserResponseDto>> getIgnoreUser(@PathVariable(value = "pageOwnerId") Long pageOwnerId) {
+    public CommonResponse<List<IgnoredUserResponseDto>> getIgnoreUser() {
         Long me = UserContext.CONTEXT.get();
         return new CommonResponse<>(userService.getIgnoreUserList(me));
     }
