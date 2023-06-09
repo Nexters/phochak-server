@@ -11,8 +11,8 @@ import java.util.List;
 public interface IgnoredUserRepository extends JpaRepository<IgnoredUsers, Long> {
 
     @Modifying
-    @Query("delete from IgnoredUsers i where i.user.id = :me and i.ignoredUser.id = :pageOwnerId")
-    void deleteIgnore(@Param("me")Long me, @Param("pageOwnerId")Long pageOwnerId);
+    @Query("delete from IgnoredUsers i where i.user.id = :me and i.ignoredUser.id = :ignoredUserId")
+    void deleteIgnore(@Param("me")Long me, @Param("pageOwnerId")Long ignoredUserId);
 
     @Modifying
     @Query("select i from IgnoredUsers i left join fetch User u on i.ignoredUser.id = u.id where i.user.id = :me")

@@ -44,9 +44,9 @@ public interface UserService {
 
     void withdraw(Long userId);
 
-    void ignoreUser(Long me, Long pageOwnerId);
+    void ignoreUser(Long me, Long ignoredUserId);
 
-    void cancelIgnoreUser(Long me, Long pageOwnerId);
+    void cancelIgnoreUser(Long me, Long ignoredUserId);
 
     List<IgnoredUserResponseDto> getIgnoreUserList(Long me);
 }

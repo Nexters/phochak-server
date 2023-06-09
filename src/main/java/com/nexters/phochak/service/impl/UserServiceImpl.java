@@ -95,9 +95,9 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void ignoreUser(Long me, Long pageOwnerId) {
+    public void ignoreUser(Long me, Long ignoredUserId) {
         User user = userRepository.getReferenceById(me);
-        User pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        User pageOwner = userRepository.findById(ignoredUserId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         try {
             ignoredUserRepository.save(IgnoredUsers.builder()
                     .user(user)
@@ -110,8 +110,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void cancelIgnoreUser(Long me, Long pageOwnerId) {
-        ignoredUserRepository.deleteIgnore(me, pageOwnerId);
+    public void cancelIgnoreUser(Long me, Long ignoredUserId) {
+        ignoredUserRepository.deleteIgnore(me, ignoredUserId);
     }
 
     @Transactional(readOnly = true)

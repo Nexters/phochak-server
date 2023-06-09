@@ -99,18 +99,18 @@ public class UserController {
     }
 
     @Auth
-    @PostMapping("/ignore/{pageOwnerId}")
-    public CommonResponse<Void> ignoreUser(@PathVariable(value = "pageOwnerId") Long pageOwnerId) {
+    @PostMapping("/ignore/{ignoredUserId}")
+    public CommonResponse<Void> ignoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
         Long me = UserContext.CONTEXT.get();
-        userService.ignoreUser(me, pageOwnerId);
+        userService.ignoreUser(me, ignoredUserId);
         return new CommonResponse<>();
     }
 
     @Auth
-    @DeleteMapping("/ignore/{pageOwnerId}")
-    public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "pageOwnerId") Long pageOwnerId) {
+    @DeleteMapping("/ignore/{ignoredUserId}")
+    public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
         Long me = UserContext.CONTEXT.get();
-        userService.cancelIgnoreUser(me, pageOwnerId);
+        userService.cancelIgnoreUser(me, ignoredUserId);
         return new CommonResponse<>();
     }
 
