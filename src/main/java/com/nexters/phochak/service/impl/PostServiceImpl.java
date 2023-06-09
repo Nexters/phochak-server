@@ -26,6 +26,8 @@ import com.nexters.phochak.service.PostService;
 import com.nexters.phochak.service.ShortsService;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -103,11 +105,26 @@ public class PostServiceImpl implements PostService {
         return createPostPageResponseDto(command);
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, String hashtag) {
+        final Long userId = UserContext.CONTEXT.get();
+
+        PostFetchCommand command = PostFetchCommand.of(customCursor, PostFilter.SEARCH, userId, hashtag);
+
+        return createPostPageResponseDto(command);
+    }
+
     private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
-        if (!command.hasLikedFilter()) {
-            return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
+        switch(command.getFilter()) {
+            case SEARCH:
+                return getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
+            case LIKED:
+                return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
+            case UPLOADED:
+            default:
+                return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
         }
-        return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
     }
 
     private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
@@ -143,6 +160,12 @@ public class PostServiceImpl implements PostService {
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);
         storageBucketClient.removeShortsObject(shortsKeyList);
+    }
+
+    @Override
+    public List<String> getHashtagAutocomplete(String hashtag, int resultSize) {
+        Pageable pageable = PageRequest.of(0, resultSize);
+        return hashtagRepository.findByHashtagStartsWith(hashtag, pageable);
     }
 
     private String generateObjectUploadKey() {

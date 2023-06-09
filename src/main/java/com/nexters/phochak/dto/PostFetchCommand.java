@@ -19,6 +19,7 @@ public class PostFetchCommand {
     private final PostSortOption sortOption;
     private final Integer sortValue;
     private final PostFilter filter;
+    private final String searchHashtag;
 
     public static PostFetchCommand of(CustomCursor customCursor, PostFilter filter, long userId) {
         return PostFetchCommand.builder()
@@ -28,6 +29,19 @@ public class PostFetchCommand {
                 .sortOption(customCursor.getSortOption())
                 .sortValue(customCursor.getSortValue())
                 .filter(filter)
+                .searchHashtag(null)
+                .build();
+    }
+
+    public static PostFetchCommand of(CustomCursor customCursor, PostFilter filter, long userId, String hashtag) {
+        return PostFetchCommand.builder()
+                .userId(userId)
+                .lastId(customCursor.getLastId())
+                .pageSize(customCursor.getPageSize())
+                .sortOption(customCursor.getSortOption())
+                .sortValue(customCursor.getSortValue())
+                .filter(filter)
+                .searchHashtag(hashtag)
                 .build();
     }
 
@@ -35,7 +49,4 @@ public class PostFetchCommand {
         return Objects.equals(filter, PostFilter.UPLOADED);
     }
 
-    public boolean hasLikedFilter() {
-        return Objects.equals(filter, PostFilter.LIKED);
-    }
 }

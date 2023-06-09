@@ -7,6 +7,7 @@ import com.nexters.phochak.dto.request.PostCreateRequestDto;
 import com.nexters.phochak.dto.request.PostFilter;
 import com.nexters.phochak.dto.request.PostUpdateRequestDto;
 import com.nexters.phochak.dto.response.PostPageResponseDto;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -27,6 +28,9 @@ public interface PostService {
 
     void delete(Long userId, Long postId);
 
+    @Transactional(readOnly = true)
+    List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, String hashtag);
+
     /**
      * 특정 게시글의 조회수를 올린다.
      * @param postId
@@ -34,4 +38,6 @@ public interface PostService {
     int updateView(Long postId);
 
     void deleteAllPostByUser(User user);
+
+    List<String> getHashtagAutocomplete(String hashtag, int size);
 }

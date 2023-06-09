@@ -72,6 +72,22 @@ public class PostController {
     }
 
     @Auth
+    @GetMapping("/list/search")
+    public CommonPageResponse<PostPageResponseDto> getPostListBySearchHashtag(@Valid CustomCursor customCursor, @RequestParam String hashtag) {
+        List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor, hashtag);
+        if (nextCursorPage.size() < customCursor.getPageSize()) {
+            return new CommonPageResponse<>(nextCursorPage, true);
+        }
+        return new CommonPageResponse<>(nextCursorPage);
+    }
+
+    @Auth
+    @GetMapping("/hashtag/autocomplete")
+    public CommonResponse<List<String>> hashtagAutocomplete(@RequestParam String hashtag, @RequestParam int resultSize) {
+        return new CommonResponse<>(postService.getHashtagAutocomplete(hashtag, resultSize));
+    }
+
+    @Auth
     @PutMapping("/{postId}")
     public CommonResponse<Void> updatePost(@RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto, @PathVariable Long postId) {
         Long userId = UserContext.getContext();

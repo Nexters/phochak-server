@@ -18,6 +18,7 @@ import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
 import com.querydsl.core.types.dsl.BooleanExpression;
+import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
 import lombok.RequiredArgsConstructor;
 
@@ -26,6 +27,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.nexters.phochak.domain.QReportPost.reportPost;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
@@ -70,6 +72,12 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .join(shorts).on(likes.post.shorts.eq(shorts))
                 .where(filterByCursor(command))
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
+                .where(post.id.notIn(
+                        JPAExpressions
+                                .select(reportPost.post.id)
+                                .from(reportPost)
+                                .where(reportPost.reporter.id.eq(command.getUserId()))
+                )) // 본인이 신고한 게시글 제거
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
                 .orderBy(post.id.desc())
