@@ -3,6 +3,8 @@ package com.nexters.phochak.domain;
 import com.nexters.phochak.specification.OAuthProviderEnum;
 import lombok.Builder;
 import lombok.Getter;
+import org.hibernate.annotations.ColumnDefault;
+import org.hibernate.annotations.Type;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -37,6 +39,11 @@ public class User extends BaseTime {
     private String nickname;
 
     private String profileImgUrl;
+
+    @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    @Type(type = "yes_no")
+    private boolean isBlocked = false;
+
     private LocalDateTime leaveDate;
 
     public User() {
@@ -61,5 +68,9 @@ public class User extends BaseTime {
         this.provider = null;
         this.profileImgUrl = null;
         this.leaveDate = LocalDateTime.now();
+    }
+
+    public void block() {
+        this.isBlocked = true;
     }
 }
