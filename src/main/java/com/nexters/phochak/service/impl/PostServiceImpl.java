@@ -97,10 +97,10 @@ public class PostServiceImpl implements PostService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, PostFilter filter) {
+    public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor) {
         final Long userId = UserContext.CONTEXT.get();
 
-        PostFetchCommand command = PostFetchCommand.of(customCursor, filter, userId);
+        PostFetchCommand command = PostFetchCommand.of(customCursor, userId);
 
         return createPostPageResponseDto(command);
     }
@@ -110,7 +110,7 @@ public class PostServiceImpl implements PostService {
     public List<PostPageResponseDto> getNextCursorPage(CustomCursor customCursor, String hashtag) {
         final Long userId = UserContext.CONTEXT.get();
 
-        PostFetchCommand command = PostFetchCommand.of(customCursor, PostFilter.SEARCH, userId, hashtag);
+        PostFetchCommand command = PostFetchCommand.of(customCursor, userId, hashtag);
 
         return createPostPageResponseDto(command);
     }

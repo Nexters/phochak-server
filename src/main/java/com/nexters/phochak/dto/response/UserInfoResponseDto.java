@@ -14,13 +14,17 @@ public class UserInfoResponseDto {
     private String nickname;
     private String profileImgUrl;
     private Boolean isMyPage;
+    private Boolean isIgnored;
+    private Boolean isBlocked;
 
-    public static UserInfoResponseDto of(User user, Boolean isMyPage) {
+    public static UserInfoResponseDto of(User user, Boolean isMyPage, Boolean isIgnored) {
         return UserInfoResponseDto.builder()
-                .isMyPage(isMyPage)
                 .id(user.getId())
                 .nickname(user.getNickname())
                 .profileImgUrl(user.getProfileImgUrl())
+                .isMyPage(isMyPage)
+                .isIgnored(isIgnored)
+                .isBlocked(user.getIsBlocked())
                 .build();
     }
 }

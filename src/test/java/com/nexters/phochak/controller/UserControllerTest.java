@@ -171,10 +171,12 @@ class UserControllerTest extends RestDocs {
     @DisplayName("유저 API - 다른 유저 페이지 정보 조회하기")
     void getInfoOtherUserPage() throws Exception {
         UserInfoResponseDto response = UserInfoResponseDto.builder()
-                .isMyPage(false)
                 .id(1L)
                 .nickname("nickname")
                 .profileImgUrl("profile image url")
+                .isMyPage(false)
+                .isIgnored(true)
+                .isBlocked(false)
                 .build();
 
         given(userService.getInfo(any(),any())).willReturn(response);
@@ -197,10 +199,12 @@ class UserControllerTest extends RestDocs {
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인"),
                                 fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
                                 fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크")
+                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크"),
+                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인"),
+                                fieldWithPath("data.isBlocked").type(JsonFieldType.BOOLEAN).description("해당 유저 차단 여부"),
+                                fieldWithPath("data.isIgnored").type(JsonFieldType.BOOLEAN).description("해당 유저 무시 여부")
                         )
                 ));
     }
@@ -209,10 +213,12 @@ class UserControllerTest extends RestDocs {
     @DisplayName("유저 API - 본인 유저 페이지 정보 조회하기")
     void getInfoMyPage() throws Exception {
         UserInfoResponseDto response = UserInfoResponseDto.builder()
-                .isMyPage(true)
                 .id(1L)
                 .nickname("nickname")
                 .profileImgUrl("profile image url")
+                .isMyPage(true)
+                .isIgnored(false)
+                .isBlocked(false)
                 .build();
 
         given(userService.getInfo(any(),any())).willReturn(response);
@@ -232,10 +238,12 @@ class UserControllerTest extends RestDocs {
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
                                 fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인"),
                                 fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
                                 fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크")
+                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크"),
+                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인 (항상 true)"),
+                                fieldWithPath("data.isBlocked").type(JsonFieldType.BOOLEAN).description("해당 유저 차단 여부 (항상 false)"),
+                                fieldWithPath("data.isIgnored").type(JsonFieldType.BOOLEAN).description("해당 유저 무시 여부 (항상 false)")
                         )
                 ));
     }
