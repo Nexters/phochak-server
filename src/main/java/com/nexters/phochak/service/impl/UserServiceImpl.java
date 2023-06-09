@@ -1,7 +1,7 @@
 package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.domain.IgnoredUser;
+import com.nexters.phochak.domain.IgnoredUsers;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.response.IgnoredUserResponseDto;
 import com.nexters.phochak.dto.OAuthUserInformation;
@@ -99,7 +99,7 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getReferenceById(me);
         User pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         try {
-            ignoredUserRepository.save(IgnoredUser.builder()
+            ignoredUserRepository.save(IgnoredUsers.builder()
                     .user(user)
                     .ignoredUser(pageOwner)
                     .build());
@@ -117,7 +117,7 @@ public class UserServiceImpl implements UserService {
     @Transactional(readOnly = true)
     @Override
     public List<IgnoredUserResponseDto> getIgnoreUserList(Long me) {
-        List<IgnoredUser> ignoreUserListByUserId = ignoredUserRepository.getIgnoreUserListByUserId(me);
+        List<IgnoredUsers> ignoreUserListByUserId = ignoredUserRepository.getIgnoreUserListByUserId(me);
         return IgnoredUserResponseDto.of(ignoreUserListByUserId);
     }
 

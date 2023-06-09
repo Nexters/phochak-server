@@ -3,9 +3,7 @@ package com.nexters.phochak.domain;
 import lombok.Builder;
 import lombok.Getter;
 
-import javax.persistence.Column;
 import javax.persistence.ConstraintMode;
-import javax.persistence.EmbeddedId;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.ForeignKey;
@@ -19,7 +17,7 @@ import javax.persistence.Table;
 @Getter
 @Entity
 @Table(indexes = {@Index(name="idx02_unique_ignored_user", columnList = "USER_ID, IGNORED_USER_ID", unique = true)})
-public class IgnoredUser {
+public class IgnoredUsers {
 
     @Id
     private Long id;
@@ -34,11 +32,11 @@ public class IgnoredUser {
     private User ignoredUser;
 
     @Builder
-    public IgnoredUser(User user, User ignoredUser) {
+    public IgnoredUsers(User user, User ignoredUser) {
         this.user = user;
         this.ignoredUser = ignoredUser;
     }
 
-    public IgnoredUser() {
+    public IgnoredUsers() {
     }
 }

@@ -1,6 +1,6 @@
 package com.nexters.phochak.dto.response;
 
-import com.nexters.phochak.domain.IgnoredUser;
+import com.nexters.phochak.domain.IgnoredUsers;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -17,7 +17,7 @@ public class IgnoredUserResponseDto {
     private String nickname;
     private String profileImageUrl;
 
-    public static IgnoredUserResponseDto of(IgnoredUser ignoredUser) {
+    public static IgnoredUserResponseDto of(IgnoredUsers ignoredUser) {
         return new IgnoredUserResponseDto(
                 ignoredUser.getIgnoredUser().getId(),
                 ignoredUser.getIgnoredUser().getNickname(),
@@ -25,7 +25,7 @@ public class IgnoredUserResponseDto {
             );
     }
 
-    public static List<IgnoredUserResponseDto> of(List<IgnoredUser> ignoredUserList) {
+    public static List<IgnoredUserResponseDto> of(List<IgnoredUsers> ignoredUserList) {
         return ignoredUserList.stream()
                 .map(IgnoredUserResponseDto::of)
                 .collect(Collectors.toList());
