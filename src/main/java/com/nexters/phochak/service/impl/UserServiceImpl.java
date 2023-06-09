@@ -79,12 +79,14 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoResponseDto getInfo(Long pageOwnerId, Long userId) {
         User pageOwner;
+        Boolean isIgnored = false;
         if (pageOwnerId == null) {
             pageOwner = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         } else {
             pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+            isIgnored = ignoredUserRepository.existsByUserIdAndIgnoredUserId(userId, pageOwnerId);
         }
-        return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId));
+        return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId), isIgnored);
     }
 
     @Override

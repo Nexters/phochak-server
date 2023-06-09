@@ -42,7 +42,7 @@ public class User extends BaseTime {
 
     @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
     @Type(type = "yes_no")
-    private boolean isBlocked = false;
+    private Boolean isBlocked = false;
 
     private LocalDateTime leaveDate;
 

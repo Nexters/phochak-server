@@ -17,4 +17,6 @@ public interface IgnoredUserRepository extends JpaRepository<IgnoredUsers, Long>
     @Modifying
     @Query("select i from IgnoredUsers i left join fetch User u on i.ignoredUser.id = u.id where i.user.id = :me")
     List<IgnoredUsers> getIgnoreUserListByUserId(Long me);
+
+    Boolean existsByUserIdAndIgnoredUserId(Long userId, Long pageOwnerId);
 }
