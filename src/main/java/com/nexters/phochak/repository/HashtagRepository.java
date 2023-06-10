@@ -19,7 +19,7 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long>, Hashtag
     @Modifying
     void deleteAllByPostIdIn(@Param("postIdList") List<Long> postIdList);
 
-    @Query("select h.tag from Hashtag h where h.tag like :hashtag% order by length(h.tag)")
+    @Query("select distinct h.tag from Hashtag h where h.tag like :hashtag% order by length(h.tag)")
     List<String> findByHashtagStartsWith(@Param("hashtag") String hashtag, Pageable pageable);
 
 }

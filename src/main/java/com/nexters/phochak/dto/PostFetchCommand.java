@@ -2,6 +2,7 @@ package com.nexters.phochak.dto;
 
 import com.nexters.phochak.dto.request.CustomCursor;
 import com.nexters.phochak.dto.request.PostFilter;
+import com.nexters.phochak.specification.PostCategoryEnum;
 import com.nexters.phochak.specification.PostSortOption;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,6 +22,7 @@ public class PostFetchCommand {
     private final PostFilter filter;
     private final Long targetUserId;
     private final String searchHashtag;
+    private final PostCategoryEnum category;
 
     public static PostFetchCommand of(CustomCursor customCursor, long userId) {
         return PostFetchCommand.builder()
@@ -32,6 +34,7 @@ public class PostFetchCommand {
                 .filter(customCursor.getFilter())
                 .targetUserId(customCursor.getTargetUserId())
                 .searchHashtag(null)
+                .category(null)
                 .build();
     }
 
@@ -45,6 +48,7 @@ public class PostFetchCommand {
                 .filter(PostFilter.SEARCH)
                 .targetUserId(customCursor.getTargetUserId())
                 .searchHashtag(hashtag)
+                .category(customCursor.getCategory())
                 .build();
     }
 

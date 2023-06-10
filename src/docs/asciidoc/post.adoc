@@ -132,9 +132,13 @@ Response Parameters
 
 include::{snippets}/post/list/liked/response-fields.adoc[]
 
-=== 해시태그 검색 결과 게시글 목록
+=== 해시태그 및 카테고리 검색 결과 게시글 목록
 
 새롭게 명시된 내용 외에는, 위의 `게시글 불러오기` API와 동일합니다.
+
+검색어 해시태그와 완전 일치하는 해시태그를 포함한 경우 검색됩니다.
+
+해시태그 / 카테고리 / 해시태그+카테고리 조합으로 검색 가능합니다.
 
 HTTP Example
 
