@@ -2,6 +2,7 @@ package com.nexters.phochak.dto.request;
 
 import com.nexters.phochak.exception.PhochakException;
 import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.specification.PostCategoryEnum;
 import com.nexters.phochak.specification.PostSortOption;
 import lombok.Builder;
 import lombok.Getter;
@@ -21,15 +22,17 @@ public class CustomCursor {
     private Integer sortValue;
     private PostFilter filter;
     private Long targetUserId;
+    private PostCategoryEnum category;
 
     @Builder
-    public CustomCursor(Long lastId, Integer pageSize, PostSortOption sortOption, Integer sortValue, PostFilter filter, Long targetUserId) {
+    public CustomCursor(Long lastId, Integer pageSize, PostSortOption sortOption, Integer sortValue, PostFilter filter, Long targetUserId, PostCategoryEnum category) {
         this.lastId = lastId;
         this.pageSize = Objects.isNull(pageSize) ? DEFAULT_PAGE_SIZE : pageSize;
         this.sortOption = Objects.isNull(sortOption) ? PostSortOption.LATEST : sortOption;
         this.sortValue = sortValue;
         this.filter = Objects.isNull(filter) ? PostFilter.NONE : filter;
         this.targetUserId = targetUserId;
+        this.category = category;
 
         // 첫 요청 시 lastId, sortValue는 null로, sortOption만 받음
         if (Objects.isNull(lastId) && Objects.isNull(this.sortValue)) {
