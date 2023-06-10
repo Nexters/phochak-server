@@ -56,10 +56,10 @@ public class NCPShortsService implements ShortsService {
      * 2. Shorts 상태 변경
      * 3. 각 상태에 대한 푸시 알람 발송
      */
+    @Transactional
     @Override
     public void processPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
         String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.getFilePath());
-
         switch (encodingCallbackRequestDto.getStatus()) {
             case "WAITING":
                 connectPost(uploadKey);
@@ -81,12 +81,8 @@ public class NCPShortsService implements ShortsService {
         }
     }
 
-    @Override
-    @Transactional
     private void connectPost(String uploadKey) {
-
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
-
         if (optionalShorts.isPresent()) {
             // case: 포스트 생성이 먼저된 경우 -> 상태 변경
             Shorts shorts = optionalShorts.get();

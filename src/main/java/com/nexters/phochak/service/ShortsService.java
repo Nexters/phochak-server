@@ -9,6 +9,4 @@ public interface ShortsService {
     void connectShorts(String key, Post post);
 
     void processPost(EncodingCallbackRequestDto encodingCallbackRequestDto);
-
-    void connectPost(String encodedFilePath);
 }
