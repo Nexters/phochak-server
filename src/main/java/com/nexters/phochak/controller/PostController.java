@@ -73,7 +73,7 @@ public class PostController {
 
     @Auth
     @GetMapping("/list/search")
-    public CommonPageResponse<PostPageResponseDto> getPostListBySearchHashtag(@Valid CustomCursor customCursor, @RequestParam String hashtag) {
+    public CommonPageResponse<PostPageResponseDto> getPostListBySearchHashtag(@Valid CustomCursor customCursor, @RequestParam(required = false) String hashtag) {
         List<PostPageResponseDto> nextCursorPage = postService.getNextCursorPage(customCursor, hashtag);
         if (nextCursorPage.size() < customCursor.getPageSize()) {
             return new CommonPageResponse<>(nextCursorPage, true);

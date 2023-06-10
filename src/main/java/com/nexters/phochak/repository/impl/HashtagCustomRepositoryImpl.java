@@ -50,7 +50,7 @@ public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
                 .join(post.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(filterByCategory(command.getCategory()))
-                .where(post.hashtags.any().tag.eq(command.getSearchHashtag())) // 해당 해시태그를 가진 게시글
+                .where(searchByHashtag(command.getSearchHashtag()))
                 .where(post.user.id.notIn(
                         JPAExpressions
                                 .select(ignoredUsers.ignoredUser.id)
@@ -78,6 +78,13 @@ public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
         return resultMap.keySet().stream()
                 .map(resultMap::get)
                 .collect(Collectors.toList());
+    }
+
+    private BooleanExpression searchByHashtag(String searchHashtag) {
+        if(searchHashtag == null) {
+            return null;
+        }
+        return post.hashtags.any().tag.eq(searchHashtag);
     }
 
     private BooleanExpression filterByCategory(PostCategoryEnum category) {
