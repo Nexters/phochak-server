@@ -506,6 +506,7 @@ class PostControllerTest extends RestDocs {
         CustomCursor customCursor = CustomCursor.builder()
                 .pageSize(3)
                 .lastId(20L)
+                .category(PostCategoryEnum.CAFE)
                 .build();
 
         List<String> hashtags = List.of("해시태그1", "해시태그2");
@@ -539,6 +540,7 @@ class PostControllerTest extends RestDocs {
                                 .param("lastId", String.valueOf(customCursor.getLastId()))
                                 .param("pageSize", String.valueOf(customCursor.getPageSize()))
                                 .param("hashtag", String.valueOf(hashtags.get(1)))
+                                .param("category", String.valueOf(customCursor.getCategory()))
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -546,9 +548,10 @@ class PostControllerTest extends RestDocs {
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
                         requestParameters(
-                                parameterWithName("hashtag").description("(필수) 검색할 해시태그").optional(),
-                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                                parameterWithName("lastId").description("(선택) 마지막으로 받은 게시글 id"),
+                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                                parameterWithName("hashtag").description("(선택) 검색할 해시태그").optional(),
+                                parameterWithName("category").description("(선택) 게시글 카테고리 ex) CAFE").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)

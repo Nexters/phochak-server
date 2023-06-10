@@ -207,7 +207,7 @@ include::{snippets}/user/withdraw/response-fields.adoc[]
 |===
 
 === 유저페이지 유저 정보 조회
-현재 로그인된 유저의 정보를 가져온다.
+현재 로그인된 유저 또는 다른 유저의 정보를 불러온다.
 
 ==== 요청
 HTTP Example
