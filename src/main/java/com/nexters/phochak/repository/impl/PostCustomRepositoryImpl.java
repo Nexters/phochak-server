@@ -24,7 +24,6 @@ import java.util.stream.Collectors;
 
 import static com.nexters.phochak.domain.QIgnoredUsers.ignoredUsers;
 import static com.nexters.phochak.domain.QReportPost.reportPost;
-import static com.nexters.phochak.domain.QUser.user;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
@@ -43,9 +42,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .where(getFilterExpression(command)) // 내가 업로드한 게시글
                 .where(post.user.id.notIn(
                         JPAExpressions
-                                .select(ignoredUsers.ignoredUser.id)
+                                .select(ignoredUsers.ignoredUsersRelation.ignoredUser.id)
                                 .from(ignoredUsers)
-                                .where(ignoredUsers.ignoredUser.id.eq(command.getUserId()))
+                                .where(ignoredUsers.ignoredUsersRelation.user.id.eq(command.getUserId()))
                 )) //본인이 ignore한 게시글 제거
                 .where(post.id.notIn(
                         JPAExpressions
