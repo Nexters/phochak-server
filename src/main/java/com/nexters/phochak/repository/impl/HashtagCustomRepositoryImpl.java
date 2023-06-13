@@ -12,7 +12,6 @@ import com.nexters.phochak.dto.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.repository.HashtagCustomRepository;
 import com.nexters.phochak.specification.PostCategoryEnum;
 import com.nexters.phochak.specification.ShortsStateEnum;
-import com.querydsl.core.types.Predicate;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
 import com.querydsl.jpa.impl.JPAQueryFactory;
@@ -24,7 +23,6 @@ import java.util.stream.Collectors;
 
 import static com.nexters.phochak.domain.QIgnoredUsers.ignoredUsers;
 import static com.nexters.phochak.domain.QReportPost.reportPost;
-import static com.nexters.phochak.domain.QUser.user;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
@@ -53,9 +51,9 @@ public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
                 .where(searchByHashtag(command.getSearchHashtag()))
                 .where(post.user.id.notIn(
                         JPAExpressions
-                                .select(ignoredUsers.ignoredUser.id)
+                                .select(ignoredUsers.ignoredUsersRelation.ignoredUser.id)
                                 .from(ignoredUsers)
-                                .where(ignoredUsers.ignoredUser.id.eq(command.getUserId()))
+                                .where(ignoredUsers.ignoredUsersRelation.user.id.eq(command.getUserId()))
                 )) //본인이 ignore한 게시글 제거
                 .where(post.id.notIn(
                         JPAExpressions

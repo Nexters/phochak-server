@@ -21,9 +21,9 @@ public class IgnoredUserResponseDto {
 
     public static IgnoredUserResponseDto of(IgnoredUsers ignoredUser) {
         return new IgnoredUserResponseDto(
-                ignoredUser.getIgnoredUser().getId(),
-                ignoredUser.getIgnoredUser().getNickname(),
-                ignoredUser.getIgnoredUser().getProfileImgUrl()
+                ignoredUser.getIgnoredUsersRelation().getIgnoredUser().getId(),
+                ignoredUser.getIgnoredUsersRelation().getIgnoredUser().getNickname(),
+                ignoredUser.getIgnoredUsersRelation().getIgnoredUser().getProfileImgUrl()
             );
     }
 
