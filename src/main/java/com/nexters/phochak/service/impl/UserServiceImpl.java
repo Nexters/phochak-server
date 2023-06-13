@@ -2,6 +2,7 @@ package com.nexters.phochak.service.impl;
 
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.domain.IgnoredUsers;
+import com.nexters.phochak.domain.IgnoredUsersRelation;
 import com.nexters.phochak.domain.User;
 import com.nexters.phochak.dto.response.IgnoredUserResponseDto;
 import com.nexters.phochak.dto.OAuthUserInformation;
@@ -85,7 +86,12 @@ public class UserServiceImpl implements UserService {
             pageOwner = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         } else {
             pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
-            isIgnored = ignoredUserRepository.existsByUserIdAndIgnoredUserId(userId, pageOwnerId);
+            User user = userRepository.getReferenceById(userId);
+            IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
+                    .user(user)
+                    .ignoredUser(pageOwner)
+                    .build();
+            isIgnored = ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation);
         }
         return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId), isIgnored);
     }
@@ -102,10 +108,14 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.getReferenceById(me);
         User pageOwner = userRepository.findById(ignoredUserId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         try {
-            ignoredUserRepository.save(IgnoredUsers.builder()
+            IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
                     .user(user)
                     .ignoredUser(pageOwner)
-                    .build());
+                    .build();
+            IgnoredUsers ignoredUsers = IgnoredUsers.builder()
+                    .ignoredUsersRelation(ignoredUsersRelation)
+                    .build();
+            ignoredUserRepository.save(ignoredUsers);
         } catch (
                 DataIntegrityViolationException e) {
             throw new PhochakException(ResCode.ALREADY_IGNORED_USER);
