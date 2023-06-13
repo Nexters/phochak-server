@@ -7,19 +7,21 @@ import com.nexters.phochak.specification.OAuthProviderEnum;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-@Transactional
+@ActiveProfiles("test")
 @SpringBootTest
 class IgnoredUserRepositoryTest {
 
     @Autowired IgnoredUserRepository ignoredUserRepository;
     @Autowired UserRepository userRepository;
 
+    @Transactional
     @Test
     public void save() {
         // given
@@ -49,6 +51,7 @@ class IgnoredUserRepositoryTest {
         assertTrue(ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation));
     }
 
+    @Transactional
     @Test
     public void getIgnoreUserListByUserId() {
         // given
@@ -87,6 +90,9 @@ class IgnoredUserRepositoryTest {
 
         // then
         List<IgnoredUsers> list = ignoredUserRepository.getIgnoreUserListByUserId(me.getId());
+        for (IgnoredUsers users : list) {
+            System.out.println(users.getIgnoredUsersRelation().getIgnoredUser().getId());
+        }
         assertEquals(2, list.size());
         assertEquals(2L, list.get(0).getIgnoredUsersRelation().getIgnoredUser().getId());
         assertEquals(3L, list.get(1).getIgnoredUsersRelation().getIgnoredUser().getId());
