@@ -2,6 +2,7 @@ package com.nexters.phochak.config;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
 
+import com.nexters.phochak.config.property.FirebaseProperties;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -16,11 +17,14 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class FirebaseConfig {
 
-    @Value("${firebase.project.id}")
-    private String projectId;
+    private final String projectId;
 
-    @Value("${firebase.private.key}")
-    private String privateKey;
+    private final String privateKey;
+
+    public FirebaseConfig(FirebaseProperties firebaseProperties) {
+        this.projectId = firebaseProperties.getProjectId();
+        this.privateKey = firebaseProperties.getPrivateKey();
+    }
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
