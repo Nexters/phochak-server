@@ -36,6 +36,7 @@ public class NotificationServiceImpl implements NotificationService {
         List<Object[]> queryResult = fcmDeviceTokenRepository.findDeviceTokenAndPostIdByUploadKey(uploadKey);
 
         if(queryResult.isEmpty()) {
+            log.info("[NotificationServiceImpl|postEncodeState] FCM 미등록");
 //            log.error("[NotificationServiceImpl|postEncodeState] UploadKey 와 FCM 토큰 매칭 실패. 업로드 키: {}", uploadKey);
 //            throw new PhochakException(ResCode.INTERNAL_SERVER_ERROR);
             return; // 클라이언트 V2 구현 전까지 처리 보류
