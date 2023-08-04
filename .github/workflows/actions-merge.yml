@@ -45,6 +45,11 @@ jobs:
             sudo docker stop phochak_server
             sudo docker rm phochak_server
             sudo docker images | grep phochak-jib | sort -k2 | awk '{if(NR>1) print $3}' | xargs docker rmi --force
-            sudo docker run --pull=always -d --name phochak_server -v /home/ubuntu/logs:/logs -e TZ=Asia/Seoul \
-            --network host --env-file /home/ubuntu/app/prod.env woojin8787/phochak-jib:latest \
-            -v /home/ubuntu/app/fcm-config.json:/app/fcm-config.json 
+            
+            sudo docker pull woojin8787/phochak-jib:latest
+            sudo docker rm phochak_temp
+            sudo docker create --name phochak_temp -v /app woojin8787/phochak-jib:latest
+            sudo docker cp /home/ubuntu/app/fcm-config.json phochak_temp:/app/fcm-config.json
+            
+            sudo docker run -d --name phochak_server -v /home/ubuntu/logs:/logs -e TZ=Asia/Seoul \
+            --network host --env-file /home/ubuntu/app/prod.env --volumes-from phochak_temp woojin8787/phochak-jib:latest
