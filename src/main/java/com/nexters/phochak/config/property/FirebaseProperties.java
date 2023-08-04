@@ -10,6 +10,6 @@ import org.springframework.boot.context.properties.ConstructorBinding;
 @ConstructorBinding
 @ConfigurationProperties(prefix = "firebase")
 public class FirebaseProperties {
-    private final String projectId;
-    private final String privateKey;
+    private final String firebaseScope;
+    private final String privateKeyLocation;
 }

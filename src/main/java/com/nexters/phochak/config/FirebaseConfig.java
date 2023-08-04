@@ -1,9 +1,9 @@
 package com.nexters.phochak.config;
-import java.io.ByteArrayInputStream;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.util.List;
 
 import com.nexters.phochak.config.property.FirebaseProperties;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -17,24 +17,23 @@ import org.springframework.context.annotation.Profile;
 @Configuration
 public class FirebaseConfig {
 
-    private final String projectId;
-
-    private final String privateKey;
+    private final String firebaseScope;
+    private final String privateKeyLocation;
 
     public FirebaseConfig(FirebaseProperties firebaseProperties) {
-        this.projectId = firebaseProperties.getProjectId();
-        this.privateKey = firebaseProperties.getPrivateKey();
+        this.firebaseScope = firebaseProperties.getFirebaseScope();
+        this.privateKeyLocation = firebaseProperties.getPrivateKeyLocation();
     }
 
     @Bean
     public FirebaseApp firebaseApp() throws IOException {
-        FirebaseOptions options = new FirebaseOptions.Builder()
-                .setCredentials(GoogleCredentials.fromStream(
-                        new ByteArrayInputStream(privateKey.getBytes())))
-                .setProjectId(projectId)
-                .build();
+        GoogleCredentials googleCredentials = GoogleCredentials.fromStream(new FileInputStream(privateKeyLocation))
+                .createScoped((List.of(firebaseScope)));
 
-        return FirebaseApp.initializeApp(options);
+        FirebaseOptions secondaryAppConfig = FirebaseOptions.builder()
+                .setCredentials(googleCredentials)
+                .build();
+        return FirebaseApp.initializeApp(secondaryAppConfig);
     }
 
     @Bean
