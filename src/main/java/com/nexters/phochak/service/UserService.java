@@ -16,6 +16,8 @@ public interface UserService {
      */
     Long login(String provider, String token);
 
+    Long login(String provider, String code, String FCMDeviceToken);
+
     /**
      * 해당 id의 유저 정보를 조회한다.
      * @param userId

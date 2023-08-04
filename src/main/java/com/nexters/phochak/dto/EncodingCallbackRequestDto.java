@@ -1,10 +1,11 @@
 package com.nexters.phochak.dto;
 
 import lombok.Builder;
-import lombok.Data;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 
 @Getter
+@NoArgsConstructor
 public class EncodingCallbackRequestDto {
 
     private Integer categoryId;

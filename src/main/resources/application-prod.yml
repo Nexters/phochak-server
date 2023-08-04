@@ -61,3 +61,7 @@ slack:
   report:
     bot-nickname: ${report_slack_bot_nickname}
     web-hook-uri: ${report_slack_webhook_uri}
+
+firebase:
+  project-id: ${firebase_project_id}
+  private-key: ${firebase_private_key}

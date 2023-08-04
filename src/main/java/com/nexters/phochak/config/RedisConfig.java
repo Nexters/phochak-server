@@ -14,9 +14,9 @@ import org.springframework.data.redis.serializer.StringRedisSerializer;
 @Configuration
 public class RedisConfig {
 
-    private String host;
-    private int port;
-    private String password;
+    private final String host;
+    private final int port;
+    private final String password;
 
     public RedisConfig(RedisProperties redisProperties) {
         this.host = redisProperties.getHost();

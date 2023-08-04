@@ -76,6 +76,7 @@ public class Post extends BaseTime {
         this.user = user;
         this.shorts = shorts;
         this.postCategory = postCategory;
+        this.isBlind = false;
         this.view = 0L;
     }
 
