@@ -9,6 +9,7 @@ import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.OneToOne;
 
 @Getter
@@ -20,6 +21,7 @@ public class FcmDeviceToken extends BaseTime {
     @Column(name="FCM_DEVICE_TOKEN_ID")
     private Long id;
 
+    @JoinColumn(name = "USER_ID")
     @OneToOne(fetch = FetchType.LAZY)
     private User user;
 
