@@ -1,7 +1,6 @@
 package com.nexters.phochak.docs;
 
-import com.nexters.phochak.docs.RestDocs;
-import com.nexters.phochak.exception.ResCode;
+import com.nexters.phochak.common.exception.ResCode;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 

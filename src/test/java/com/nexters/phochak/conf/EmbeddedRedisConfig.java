@@ -1,6 +1,6 @@
 package com.nexters.phochak.conf;
 
-import com.nexters.phochak.config.property.RedisProperties;
+import com.nexters.phochak.common.config.property.RedisProperties;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Profile;
 import org.springframework.util.StringUtils;
