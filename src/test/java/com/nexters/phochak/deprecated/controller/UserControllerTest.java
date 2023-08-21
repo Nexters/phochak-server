@@ -37,7 +37,8 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.requestHe
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
 import static org.springframework.restdocs.payload.PayloadDocumentation.*;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Deprecated
@@ -85,8 +86,8 @@ class UserControllerTest extends RestDocs {
                                 pathParameters(
                                         parameterWithName("provider").description("(필수) OAuth 서비스 이름(ex. kakao, apple, naver)")
                                 ),
-                                requestParameters(
-                                        parameterWithName("token").description("(필수) token (Access token or Identify Token)")
+                                requestFields(
+                                        fieldWithPath("token").description("(필수) token (Access token or Identify Token)")
                                 ),
                                 responseFields(
                                         fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
@@ -116,8 +117,8 @@ class UserControllerTest extends RestDocs {
                 .andDo(document("user/check/nickname",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("nickname").description("(필수) 중복확인하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
+                        requestFields(
+                                fieldWithPath("nickname").description("(필수) 중복확인하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),

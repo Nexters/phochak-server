@@ -2,20 +2,21 @@ package com.nexters.phochak.user.domain;
 
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.notification.domain.FcmDeviceToken;
+import jakarta.persistence.Column;
+import jakarta.persistence.Convert;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
+import jakarta.validation.constraints.Size;
 import lombok.Builder;
 import lombok.Getter;
-import org.hibernate.annotations.Type;
+import org.hibernate.type.YesNoConverter;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.EnumType;
-import javax.persistence.Enumerated;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
-import javax.persistence.OneToOne;
-import javax.persistence.Table;
-import javax.validation.constraints.Size;
 import java.time.LocalDateTime;
 
 @Getter
@@ -45,7 +46,7 @@ public class User extends BaseTime {
     private String profileImgUrl;
 
     @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
-    @Type(type = "yes_no")
+    @Convert(converter = YesNoConverter.class)
     private Boolean isBlocked = false;
 
     private LocalDateTime leaveDate;

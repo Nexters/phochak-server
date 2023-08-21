@@ -1,10 +1,9 @@
 package com.nexters.phochak.ignore.domain;
 
+import jakarta.persistence.EmbeddedId;
+import jakarta.persistence.Entity;
 import lombok.Builder;
 import lombok.Getter;
-
-import javax.persistence.EmbeddedId;
-import javax.persistence.Entity;
 
 @Getter
 @Entity

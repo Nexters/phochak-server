@@ -3,7 +3,7 @@
 ### 1. 자바 및 스프링 버전 업그레이드
 record, lambda 최신 문법 등의 사용에 제약이 있었습니다. 
 - Java 11 -> Java 17
-- Spring Boot 2.4.5 -> Spring Boot 3.1.0
+- Spring Boot 2.7.7 -> Spring Boot 3.1.2
 
 ### 2. 패키지 구조 변경
 기존 방식들의 패키지 관리가 어려워졌습니다.

@@ -11,6 +11,7 @@ import com.nexters.phochak.post.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.report.application.ReportPostService;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -23,7 +24,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
-import javax.validation.Valid;
 import java.util.List;
 
 @Slf4j

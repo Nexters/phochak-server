@@ -21,9 +21,9 @@ import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Deprecated
@@ -72,9 +72,9 @@ class UserV2ControllerTest extends RestDocs {
                         pathParameters(
                                 parameterWithName("provider").description("(필수) OAuth 서비스 이름(ex. kakao, apple, naver)")
                         ),
-                        requestParameters(
-                                parameterWithName("token").description("(필수) token (Access token or Identify Token)"),
-                                parameterWithName("fcmDeviceToken").description("(필수) FCM client 식별 토큰")
+                        requestFields(
+                                fieldWithPath("token").description("(필수) token (Access token or Identify Token)"),
+                                fieldWithPath("fcmDeviceToken").description("(필수) FCM client 식별 토큰")
                         ),
                         responseFields(
                                 fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),

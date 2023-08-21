@@ -1,10 +1,9 @@
 package com.nexters.phochak.user;
 
 import com.nexters.phochak.user.domain.User;
+import jakarta.validation.constraints.NotNull;
+import jakarta.validation.constraints.Size;
 import lombok.Getter;
-
-import javax.validation.constraints.NotNull;
-import javax.validation.constraints.Size;
 
 @Getter
 public class NicknameModifyRequestDto {

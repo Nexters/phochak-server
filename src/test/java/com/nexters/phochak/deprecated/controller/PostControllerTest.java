@@ -32,9 +32,9 @@ import static org.springframework.restdocs.headers.HeaderDocumentation.headerWit
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
-import static org.springframework.restdocs.request.RequestDocumentation.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @Deprecated
@@ -149,9 +149,9 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/list/initial",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        requestFields(
+                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
@@ -221,11 +221,11 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/list/after",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-                                parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
-                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        requestFields(
+                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                fieldWithPath("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
+                                fieldWithPath("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
@@ -295,11 +295,11 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/list/last",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-                                parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
-                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        requestFields(
+                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                fieldWithPath("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
+                                fieldWithPath("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
@@ -379,13 +379,13 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/list/uploaded",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-                                parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
-                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-                                parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
-                                parameterWithName("targetUserId").description("(선택) 조회할 페이지의 유저 id (본인의 페이지라면 생략 가능)")
+                        requestFields(
+                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                fieldWithPath("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
+                                fieldWithPath("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                                fieldWithPath("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
+                                fieldWithPath("targetUserId").description("(선택) 조회할 페이지의 유저 id (본인의 페이지라면 생략 가능)")
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
@@ -463,12 +463,12 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/list/liked",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-                                parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
-                                parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-                                parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                        requestFields(
+                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                                fieldWithPath("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
+                                fieldWithPath("lastId").description("(필수) 마지막으로 받은 게시글 id"),
+                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                                fieldWithPath("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
@@ -543,11 +543,11 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/list/search",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("lastId").description("(선택) 마지막으로 받은 게시글 id"),
-                                parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-                                parameterWithName("hashtag").description("(선택) 검색할 해시태그").optional(),
-                                parameterWithName("category").description("(선택) 게시글 카테고리 ex) CAFE").optional()
+                        requestFields(
+                                fieldWithPath("lastId").description("(선택) 마지막으로 받은 게시글 id"),
+                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                                fieldWithPath("hashtag").description("(선택) 검색할 해시태그").optional(),
+                                fieldWithPath("category").description("(선택) 게시글 카테고리 ex) CAFE").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
@@ -595,9 +595,9 @@ class PostControllerTest extends RestDocs {
                 .andDo(document("post/hashtag/autocomplete",
                         preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                         preprocessResponse(prettyPrint()),
-                        requestParameters(
-                                parameterWithName("hashtag").description("(필수) 검색할 해시태그").optional(),
-                                parameterWithName("resultSize").description("(필수) 검색 결과 크기").optional()
+                        requestFields(
+                                fieldWithPath("hashtag").description("(필수) 검색할 해시태그").optional(),
+                                fieldWithPath("resultSize").description("(필수) 검색 결과 크기").optional()
                         ),
                         requestHeaders(
                                 headerWithName(AUTHORIZATION_HEADER)
