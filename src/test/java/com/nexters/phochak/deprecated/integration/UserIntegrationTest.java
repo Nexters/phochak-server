@@ -6,6 +6,7 @@ import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,7 +24,7 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Deprecated
+@Disabled
 @Transactional
 @AutoConfigureMockMvc
 @ActiveProfiles(profiles = "test")

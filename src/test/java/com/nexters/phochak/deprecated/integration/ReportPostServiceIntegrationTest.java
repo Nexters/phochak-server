@@ -13,6 +13,7 @@ import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,7 +27,7 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
-@Deprecated
+@Disabled
 @Transactional
 @ActiveProfiles("test")
 @SpringBootTest

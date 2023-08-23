@@ -1,12 +1,13 @@
 package com.nexters.phochak.user.presentation;
 
-import com.nexters.phochak.auth.JwtResponseDto;
-import com.nexters.phochak.auth.ReissueTokenRequestDto;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.annotation.Auth;
+import com.nexters.phochak.auth.application.AuthService;
 import com.nexters.phochak.auth.application.JwtTokenService;
+import com.nexters.phochak.auth.presentation.JwtResponseDto;
 import com.nexters.phochak.auth.presentation.LoginRequestDto;
 import com.nexters.phochak.auth.presentation.LogoutRequestDto;
+import com.nexters.phochak.auth.presentation.ReissueTokenRequestDto;
 import com.nexters.phochak.auth.presentation.WithdrawRequestDto;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
@@ -33,20 +34,14 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/user")
 @RestController
 public class UserController {
+    private final AuthService authService;
     private final UserService userService;
     private final JwtTokenService jwtTokenService;
 
     @GetMapping("/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
-        Long loginUserId = userService.login(provider, requestDto.getToken());
+        Long loginUserId = authService.login(provider, requestDto);
         return new CommonResponse<>(jwtTokenService.issueToken( loginUserId));
-    }
-
-    // test(web oauth) 용 api, provider를 kakao_test 로 명시
-    @GetMapping("/test/login/{provider}")
-    public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @RequestParam String code) {
-        Long loginUserId = userService.login(provider, code);
-        return new CommonResponse<>(jwtTokenService.issueToken(loginUserId));
     }
 
     @PostMapping("/reissue-token")

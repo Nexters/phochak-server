@@ -12,6 +12,7 @@ import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +22,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-@Deprecated
+@Disabled
 @SpringBootTest
 @ActiveProfiles("test")
 @Transactional

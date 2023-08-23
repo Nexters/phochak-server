@@ -1,17 +1,14 @@
-package com.nexters.phochak.auth;
+package com.nexters.phochak.auth.presentation;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
 @Getter
-@Builder
 @AllArgsConstructor
 @NoArgsConstructor
-public class JwtResponseDto {
+public class ReissueTokenRequestDto {
     private String accessToken;
-    private String expiresIn;
     private String refreshToken;
-    private String refreshTokenExpiresIn;
+
 }

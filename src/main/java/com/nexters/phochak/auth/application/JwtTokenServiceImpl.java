@@ -1,10 +1,9 @@
 package com.nexters.phochak.auth.application;
 
 import com.auth0.jwt.JWT;
-import com.nexters.phochak.auth.JwtResponseDto;
-import com.nexters.phochak.auth.ReissueTokenRequestDto;
-import com.nexters.phochak.auth.TokenDto;
 import com.nexters.phochak.auth.domain.RefreshTokenRepository;
+import com.nexters.phochak.auth.presentation.JwtResponseDto;
+import com.nexters.phochak.auth.presentation.ReissueTokenRequestDto;
 import com.nexters.phochak.common.config.property.JwtProperties;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
@@ -23,7 +22,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Objects;
 
-import static com.nexters.phochak.auth.TokenDto.TOKEN_TYPE;
+import static com.nexters.phochak.auth.application.JwtTokenService.TokenVo.TOKEN_TYPE;
 
 @Slf4j
 @Transactional
@@ -48,8 +47,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         if (Objects.isNull(userId)) {
             throw new PhochakException(ResCode.NOT_FOUND_USER);
         }
-        TokenDto accessToken = generateToken(userId, accessTokenExpireLength);
-        TokenDto refreshToken = generateToken(userId, refreshTokenExpireLength);
+        TokenVo accessToken = generateToken(userId, accessTokenExpireLength);
+        TokenVo refreshToken = generateToken(userId, refreshTokenExpireLength);
 
         refreshTokenRepository.saveWithAccessToken(refreshToken.getTokenString(), accessToken.getTokenString());
 
@@ -114,7 +113,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
     }
 
     @Override
-    public TokenDto generateToken(Long userId, Long expireLength) {
+    public TokenVo generateToken(Long userId, Long expireLength) {
         // header 설정
         Map<String, Object> headers = new HashMap<>();
         headers.put("typ", "JWT");
@@ -136,7 +135,7 @@ public class JwtTokenServiceImpl implements JwtTokenService {
                 .signWith(key)
                 .compact();
 
-        return new TokenDto(jwt, String.valueOf(expireLength));
+        return new TokenVo(jwt, String.valueOf(expireLength));
     }
 
     private boolean isAccessTokenExpired(String accessToken) {
@@ -150,8 +149,8 @@ public class JwtTokenServiceImpl implements JwtTokenService {
         return token.substring(TOKEN_TYPE.length()).trim();
     }
 
-    private static String createTokenStringForResponse(TokenDto accessToken) {
-        return TokenDto.TOKEN_TYPE + " " + accessToken.getTokenString();
+    private static String createTokenStringForResponse(TokenVo accessToken) {
+        return TOKEN_TYPE + " " + accessToken.getTokenString();
     }
 
 }

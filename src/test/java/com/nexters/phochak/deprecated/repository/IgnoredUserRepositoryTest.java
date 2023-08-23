@@ -6,6 +6,7 @@ import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -17,7 +18,7 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
-@Deprecated
+@Disabled
 @ActiveProfiles("test")
 @SpringBootTest
 class IgnoredUserRepositoryTest {

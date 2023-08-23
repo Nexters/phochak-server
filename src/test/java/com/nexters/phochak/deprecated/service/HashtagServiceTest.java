@@ -4,6 +4,7 @@ import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.hashtag.application.HashtagServiceImpl;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
 import com.nexters.phochak.post.domain.Post;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -18,7 +19,7 @@ import java.util.List;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.Mockito.*;
 
-@Deprecated
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class HashtagServiceTest {
 

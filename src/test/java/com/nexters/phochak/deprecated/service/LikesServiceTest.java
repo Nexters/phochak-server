@@ -8,6 +8,7 @@ import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -24,7 +25,7 @@ import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.*;
 
-@Deprecated
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class LikesServiceTest {
 

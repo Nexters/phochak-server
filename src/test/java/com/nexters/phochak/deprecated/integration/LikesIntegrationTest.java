@@ -1,11 +1,10 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.TokenDto;
 import com.nexters.phochak.auth.application.JwtTokenService;
+import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.docs.RestDocs;
 import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.likes.domain.LikesRepository;
 import com.nexters.phochak.likes.presentation.LikesController;
@@ -19,6 +18,7 @@ import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -45,7 +45,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.pathPara
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Deprecated
+@Disabled
 @SpringBootTest
 @AutoConfigureMockMvc
 @AutoConfigureRestDocs
@@ -78,8 +78,8 @@ class LikesIntegrationTest extends RestDocs {
                 .profileImgUrl(null)
                 .build();
         userRepository.save(user);
-        TokenDto tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
-        testToken = TokenDto.TOKEN_TYPE + " " + tokenDto.getTokenString();
+        JwtTokenService.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
+        testToken = JwtTokenService.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
     @Test

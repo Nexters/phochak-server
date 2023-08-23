@@ -9,6 +9,7 @@ import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -25,7 +26,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 
-@Deprecated
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 

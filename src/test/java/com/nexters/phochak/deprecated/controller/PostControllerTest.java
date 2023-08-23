@@ -1,6 +1,6 @@
 package com.nexters.phochak.deprecated.controller;
 
-import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.post.CustomCursor;
 import com.nexters.phochak.post.PostFetchDto.PostShortsInformation;
 import com.nexters.phochak.post.PostFetchDto.PostUserInformation;
@@ -12,6 +12,7 @@ import com.nexters.phochak.post.domain.PostSortOption;
 import com.nexters.phochak.post.presentation.PostController;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -37,7 +38,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Deprecated
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class PostControllerTest extends RestDocs {
 

@@ -1,4 +1,4 @@
-package com.nexters.phochak.docs;
+package com.nexters.phochak.common.docs;
 
 import com.nexters.phochak.common.exception.ResCode;
 import org.junit.jupiter.api.DisplayName;

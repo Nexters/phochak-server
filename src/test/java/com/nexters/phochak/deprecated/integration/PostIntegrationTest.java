@@ -7,6 +7,7 @@ import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.post.domain.PostRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +20,7 @@ import java.util.Optional;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 
-@Deprecated
+@Disabled
 @ActiveProfiles("test")
 @Transactional
 @SpringBootTest

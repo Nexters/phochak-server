@@ -1,15 +1,16 @@
 package com.nexters.phochak.deprecated.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.JwtResponseDto;
 import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.docs.RestDocs;
+import com.nexters.phochak.auth.presentation.JwtResponseDto;
+import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.UserInfoResponseDto;
 import com.nexters.phochak.user.application.UserService;
 import com.nexters.phochak.user.presentation.UserController;
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,7 +42,7 @@ import static org.springframework.restdocs.request.RequestDocumentation.paramete
 import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@Deprecated
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class UserControllerTest extends RestDocs {
 

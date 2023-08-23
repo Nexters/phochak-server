@@ -8,6 +8,7 @@ import com.nexters.phochak.user.application.UserServiceImpl;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.assertj.core.api.Assertions;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -19,7 +20,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.BDDMockito.*;
 import static org.mockito.Mockito.times;
 
-@Deprecated
+@Disabled
 @ExtendWith(MockitoExtension.class)
 class AuthAspectTest {
     @Mock

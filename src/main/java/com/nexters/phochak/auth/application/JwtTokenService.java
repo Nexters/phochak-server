@@ -1,10 +1,19 @@
 package com.nexters.phochak.auth.application;
 
-import com.nexters.phochak.auth.JwtResponseDto;
-import com.nexters.phochak.auth.ReissueTokenRequestDto;
-import com.nexters.phochak.auth.TokenDto;
+import com.nexters.phochak.auth.presentation.JwtResponseDto;
+import com.nexters.phochak.auth.presentation.ReissueTokenRequestDto;
+import lombok.AllArgsConstructor;
+import lombok.Getter;
 
 public interface JwtTokenService {
+    @AllArgsConstructor
+    @Getter
+    class TokenVo {
+        public static final String TOKEN_TYPE = "Bearer";
+        private String tokenString;
+        private String expiresIn;
+    }
+
     /**
      * 로그인 처리를 위한 토큰을 담은 응답 정보를 만든다
      * @param userId
@@ -26,7 +35,7 @@ public interface JwtTokenService {
      * @param expireLength
      * @return
      */
-    TokenDto generateToken(Long userId, Long expireLength);
+    TokenVo generateToken(Long userId, Long expireLength);
 
     /**
      * AT, RT 를 재발급한다.

@@ -1,19 +1,15 @@
 package com.nexters.phochak.user.application;
 
-import com.nexters.phochak.auth.OAuthUserInformation;
 import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.auth.application.OAuthService;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
 import com.nexters.phochak.ignore.domain.IgnoredUsers;
 import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
-import com.nexters.phochak.notification.application.NotificationService;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.UserInfoResponseDto;
-import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -23,9 +19,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.UUID;
 
 @Slf4j
 @Transactional
@@ -33,36 +26,8 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final IgnoredUserRepository ignoredUserRepository;
-    private static final String NICKNAME_PREFIX = "여행자#";
-    private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
     private final UserRepository userRepository;
     private final PostService postService;
-    private final NotificationService notificationService;
-
-    @Override
-    public Long login(String provider, String code) {
-        OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
-        OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
-
-        OAuthUserInformation userInformation = oAuthService.requestUserInformation(code);
-
-        User user = getOrCreateUser(userInformation);
-
-        return user.getId();
-    }
-
-    @Override
-    public Long login(String provider, String code, String fcmDeviceToken) {
-        OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
-        OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
-
-        OAuthUserInformation userInformation = oAuthService.requestUserInformation(code);
-
-        User user = getOrCreateUser(userInformation);
-
-        notificationService.registryFcmDeviceToken(user, fcmDeviceToken);
-        return user.getId();
-    }
 
     @Override
     public void validateUser(Long userId) {
@@ -80,9 +45,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyNickname(String nickname) {
         Long userId = UserContext.CONTEXT.get();
-
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        User user = userRepository.getBy(userId);
 
         if (isDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
@@ -97,9 +60,9 @@ public class UserServiceImpl implements UserService {
         User pageOwner;
         Boolean isIgnored = false;
         if (pageOwnerId == null) {
-            pageOwner = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+            pageOwner = userRepository.getBy(userId);
         } else {
-            pageOwner = userRepository.findById(pageOwnerId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+            pageOwner = userRepository.getBy(pageOwnerId);
             User user = userRepository.getReferenceById(userId);
             IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
                     .user(user)
@@ -112,7 +75,7 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void withdraw(Long userId) {
-        User user = userRepository.findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        User user = userRepository.getBy(userId);
         user.withdrawInformation();
         postService.deleteAllPostByUser(user);
     }
@@ -120,7 +83,7 @@ public class UserServiceImpl implements UserService {
     @Override
     public void ignoreUser(Long me, Long ignoredUserId) {
         User user = userRepository.getReferenceById(me);
-        User pageOwner = userRepository.findById(ignoredUserId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        User pageOwner = userRepository.getBy(ignoredUserId);
         try {
             IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
                     .user(user)
@@ -152,36 +115,4 @@ public class UserServiceImpl implements UserService {
         return userRepository.existsByNickname(nickname);
     }
 
-    private User getOrCreateUser(OAuthUserInformation userInformation) {
-        User user = null;
-        Optional<User> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
-
-        if (target.isPresent()) {
-            user = target.orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
-            log.info("UserServiceImpl|login(기존 회원): {}", userInformation);
-
-        } else {
-            log.info("UserServiceImpl|login(신규 회원): {}", userInformation);
-            String nickname = generateInitialNickname();
-
-            User newUser = User.builder()
-                    .provider(userInformation.getProvider())
-                    .providerId(userInformation.getProviderId())
-                    .nickname(nickname)
-                    .profileImgUrl(userInformation.getInitialProfileImage())
-                    .build();
-
-            user = userRepository.save(newUser);
-        }
-        return user;
-    }
-
-    private static String generateInitialNickname() {
-        // 초기 닉네임 여행자#난수 6자로 결정
-        return NICKNAME_PREFIX + generateUUID();
-    }
-
-    private static String generateUUID() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, User.NICKNAME_MAX_SIZE - NICKNAME_PREFIX.length());
-    }
 }

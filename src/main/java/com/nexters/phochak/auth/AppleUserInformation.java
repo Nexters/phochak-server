@@ -20,4 +20,5 @@ public class AppleUserInformation extends OAuthUserInformation {
     public OAuthProviderEnum getProvider() {
         return provider;
     }
+
 }

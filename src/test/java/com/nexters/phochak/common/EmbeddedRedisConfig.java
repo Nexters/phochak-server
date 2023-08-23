@@ -1,4 +1,4 @@
-package com.nexters.phochak.conf;
+package com.nexters.phochak.common;
 
 import com.nexters.phochak.common.config.property.RedisProperties;
 import org.springframework.context.annotation.Configuration;
@@ -16,8 +16,8 @@ import java.io.InputStreamReader;
 @Configuration
 public class EmbeddedRedisConfig {
 
-    private int redisPort;
-    private String redisPassword;
+    private final int redisPort;
+    private final String redisPassword;
     private RedisServer redisServer;
 
     public EmbeddedRedisConfig(RedisProperties redisProperties) {

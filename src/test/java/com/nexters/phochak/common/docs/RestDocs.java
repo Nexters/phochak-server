@@ -1,4 +1,4 @@
-package com.nexters.phochak.docs;
+package com.nexters.phochak.common.docs;
 
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.springframework.restdocs.RestDocumentationContextProvider;

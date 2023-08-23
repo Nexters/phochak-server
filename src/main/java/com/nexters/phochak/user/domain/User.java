@@ -21,7 +21,7 @@ import java.time.LocalDateTime;
 
 @Getter
 @Entity
-@Table(name = "`USER`")
+@Table(name = "USERS")
 public class User extends BaseTime {
     public static final int NICKNAME_MAX_SIZE = 10;
 

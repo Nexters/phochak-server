@@ -15,7 +15,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static com.nexters.phochak.auth.TokenDto.TOKEN_TYPE;
+import static com.nexters.phochak.auth.application.JwtTokenService.TokenVo.TOKEN_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor

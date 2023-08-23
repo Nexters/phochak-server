@@ -47,5 +47,21 @@ public class KakaoUserInformation extends OAuthUserInformation {
         @JsonProperty(value = "kakao_account")
         private String kakaoAccount;
     }
+
+    public KakaoUserInformation(
+            final String providerId,
+            final String connectedAt,
+            final String nickname,
+            final String profileImage,
+            final String thumbnailImage,
+            final String kakaoAccount) {
+        this.providerId = providerId;
+        this.connectedAt = connectedAt;
+        this.properties = new KakaoOAuthProperties(
+                nickname,
+                profileImage,
+                thumbnailImage,
+                kakaoAccount);
+    }
 }
 
