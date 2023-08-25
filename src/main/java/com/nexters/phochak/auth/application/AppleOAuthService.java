@@ -79,4 +79,21 @@ public class AppleOAuthServiceImpl implements OAuthService {
         }
         return isVerified;
     }
+
+    @Getter
+    public static class Keys {
+        @JsonProperty(value = "keys")
+        private List<Key> keyList;
+
+        @Getter
+        public static class Key {
+            private String kty;
+            private String kid;
+            private String use;
+            private String alg;
+            private String n;
+            private String e;
+        }
+    }
+
 }
