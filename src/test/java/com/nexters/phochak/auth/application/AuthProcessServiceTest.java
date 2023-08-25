@@ -22,11 +22,11 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+class AuthProcessServiceTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    AuthProcessService authService;
+    AuthProcessService authProcessService;
     KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
 
@@ -52,7 +52,7 @@ class AuthServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.empty());
 
         // when
-        authService.getOrCreateUser(userInformation);
+        authProcessService.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(atLeastOnce()).save(any());
@@ -66,7 +66,7 @@ class AuthServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.of(user));
 
         // when
-        authService.getOrCreateUser(userInformation);
+        authProcessService.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(never()).save(any());
