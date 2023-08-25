@@ -1,6 +1,6 @@
 package com.nexters.phochak.deprecated.repository;
 
-import com.nexters.phochak.auth.domain.RefreshTokenRepository;
+import com.nexters.phochak.auth.adapter.out.persistence.RefreshTokenRepository;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

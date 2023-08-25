@@ -1,7 +1,7 @@
 package com.nexters.phochak.likes.presentation;
 
-import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.auth.annotation.Auth;
+import com.nexters.phochak.auth.interceptor.Auth;
+import com.nexters.phochak.auth.interceptor.UserContext;
 import com.nexters.phochak.likes.application.LikesService;
 import com.nexters.phochak.post.CommonResponse;
 import lombok.RequiredArgsConstructor;

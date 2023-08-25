@@ -1,8 +1,6 @@
-package com.nexters.phochak.auth.application;
+package com.nexters.phochak.auth.application.port.in;
 
-import com.nexters.phochak.auth.presentation.LoginRequestDto;
-
-public interface AuthService {
+public interface AuthProcessUseCase {
     /**
      * OAuth 로그인을 진행한다.
      *

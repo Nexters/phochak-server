@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth;
+package com.nexters.phochak.auth.application.port.in;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;

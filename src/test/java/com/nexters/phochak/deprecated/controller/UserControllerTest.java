@@ -1,8 +1,8 @@
 package com.nexters.phochak.deprecated.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.presentation.JwtResponseDto;
+import com.nexters.phochak.auth.application.port.in.JwtResponseDto;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.user.UserCheckResponseDto;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;
@@ -49,7 +49,7 @@ class UserControllerTest extends RestDocs {
     @Mock
     UserService userService;
     @Mock
-    JwtTokenService jwtTokenService;
+    JwtTokenUseCase jwtTokenUseCase;
 
     @InjectMocks
     UserController userController;
@@ -73,7 +73,7 @@ class UserControllerTest extends RestDocs {
                 .refreshTokenExpiresIn("refresh token lifetime(ms)")
                 .build();
 
-        when(jwtTokenService.issueToken(any())).thenReturn(response);
+        when(jwtTokenUseCase.issueToken(any())).thenReturn(response);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders

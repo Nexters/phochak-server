@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth.presentation;
+package com.nexters.phochak.auth.application.port.in;
 
 import jakarta.validation.constraints.NotBlank;
 

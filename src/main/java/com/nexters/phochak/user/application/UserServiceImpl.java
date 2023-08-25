@@ -1,6 +1,6 @@
 package com.nexters.phochak.user.application;
 
-import com.nexters.phochak.auth.UserContext;
+import com.nexters.phochak.auth.interceptor.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;

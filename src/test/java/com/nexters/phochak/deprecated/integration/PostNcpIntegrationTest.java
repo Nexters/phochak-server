@@ -2,7 +2,7 @@ package com.nexters.phochak.deprecated.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.application.JwtTokenServiceImpl;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.CustomExceptionHandler;
 import com.nexters.phochak.hashtag.domain.Hashtag;
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.INVALID_INPUT;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.mockito.ArgumentMatchers.any;
@@ -68,7 +68,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostNcpIntegrationTest extends RestDocs {
 
     @Autowired UserRepository userRepository;
-    @Autowired JwtTokenServiceImpl jwtTokenService;
+    @Autowired
+    JwtTokenService jwtTokenService;
     @Autowired
     PostController postController;
     @Autowired EntityManager em;
@@ -99,8 +100,8 @@ class PostNcpIntegrationTest extends RestDocs {
                 .profileImgUrl(null)
                 .build();
         userRepository.save(user);
-        JwtTokenService.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
-        testToken = JwtTokenService.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
+        testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
     @Test

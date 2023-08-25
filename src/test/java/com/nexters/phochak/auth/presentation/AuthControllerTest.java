@@ -1,6 +1,8 @@
 package com.nexters.phochak.auth.presentation;
 
-import com.nexters.phochak.auth.KakaoUserInformation;
+import com.nexters.phochak.auth.adapter.in.web.AuthController;
+import com.nexters.phochak.auth.adapter.out.web.KakaoInformationFeignClient;
+import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
@@ -22,9 +24,11 @@ import static org.mockito.Mockito.when;
 
 class AuthControllerTest extends RestDocsApiTest {
 
-    @Autowired AuthController authController;
+    @Autowired
+    AuthController authController;
     @Autowired UserRepository userRepository;
-    @MockBean KakaoInformationFeignClient kakaoInformationFeignClient;
+    @MockBean
+    KakaoInformationFeignClient kakaoInformationFeignClient;
     MockMvc mockMvc;
 
     @BeforeEach
