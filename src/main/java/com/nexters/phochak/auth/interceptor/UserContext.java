@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth;
+package com.nexters.phochak.auth.interceptor;
 
 public class UserContext {
     public static final ThreadLocal<Long> CONTEXT = new ThreadLocal<>();

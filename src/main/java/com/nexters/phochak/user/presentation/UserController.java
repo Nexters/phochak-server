@@ -1,14 +1,14 @@
 package com.nexters.phochak.user.presentation;
 
-import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.auth.annotation.Auth;
-import com.nexters.phochak.auth.application.AuthService;
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.presentation.JwtResponseDto;
-import com.nexters.phochak.auth.presentation.LoginRequestDto;
-import com.nexters.phochak.auth.presentation.LogoutRequestDto;
-import com.nexters.phochak.auth.presentation.ReissueTokenRequestDto;
-import com.nexters.phochak.auth.presentation.WithdrawRequestDto;
+import com.nexters.phochak.auth.application.port.in.AuthProcessUseCase;
+import com.nexters.phochak.auth.application.port.in.JwtResponseDto;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.auth.application.port.in.LoginRequestDto;
+import com.nexters.phochak.auth.application.port.in.LogoutRequestDto;
+import com.nexters.phochak.auth.application.port.in.ReissueTokenRequestDto;
+import com.nexters.phochak.auth.application.port.in.WithdrawRequestDto;
+import com.nexters.phochak.auth.interceptor.Auth;
+import com.nexters.phochak.auth.interceptor.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.CommonResponse;
@@ -34,25 +34,25 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/user")
 @RestController
 public class UserController {
-    private final AuthService authService;
+    private final AuthProcessUseCase authService;
     private final UserService userService;
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenUseCase jwtTokenUseCase;
 
     @GetMapping("/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
         Long loginUserId = authService.login(provider, requestDto);
-        return new CommonResponse<>(jwtTokenService.issueToken( loginUserId));
+        return new CommonResponse<>(jwtTokenUseCase.issueToken( loginUserId));
     }
 
     @PostMapping("/reissue-token")
     public CommonResponse<JwtResponseDto> reissue(@RequestBody ReissueTokenRequestDto reissueTokenRequestDto) {
-        return new CommonResponse<>(jwtTokenService.reissueToken(reissueTokenRequestDto));
+        return new CommonResponse<>(jwtTokenUseCase.reissueToken(reissueTokenRequestDto));
     }
 
     @Auth
     @PostMapping("/logout")
     public CommonResponse<Void> logout(@RequestBody LogoutRequestDto logoutRequestDto) {
-        jwtTokenService.logout(logoutRequestDto.getRefreshToken());
+        jwtTokenUseCase.logout(logoutRequestDto.getRefreshToken());
         return new CommonResponse<>();
     }
 
@@ -84,7 +84,7 @@ public class UserController {
     @PostMapping("/withdraw")
     public CommonResponse<Void> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto) {
         Long userId = UserContext.CONTEXT.get();
-        jwtTokenService.logout(withdrawRequestDto.getRefreshToken());
+        jwtTokenUseCase.logout(withdrawRequestDto.getRefreshToken());
         userService.withdraw(userId);
         return new CommonResponse<>();
     }

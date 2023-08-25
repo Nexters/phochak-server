@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.service;
 
-import com.nexters.phochak.auth.KakaoUserInformation;
-import com.nexters.phochak.auth.application.JwtTokenService;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.UserCheckResponseDto;
@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.nexters.phochak.auth.KakaoUserInformation.KakaoOAuthProperties;
+import static com.nexters.phochak.auth.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -36,7 +36,7 @@ class UserServiceTest {
     MockUser user = new MockUser();
     KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
-    JwtTokenService.TokenVo tokenVo;
+    JwtTokenUseCase.TokenVo tokenVo;
 
 
     @BeforeEach
@@ -55,7 +55,7 @@ class UserServiceTest {
                 .properties(kakaoOAuthProperties)
                 .build();
 
-        tokenVo = new JwtTokenService.TokenVo(tokenString, expiresIn);
+        tokenVo = new JwtTokenUseCase.TokenVo(tokenString, expiresIn);
     }
 
     @Test

@@ -1,8 +1,7 @@
-package com.nexters.phochak.auth.aspect;
+package com.nexters.phochak.auth.interceptor;
 
-import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.application.JwtTokenServiceImpl;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.application.UserService;
@@ -15,7 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static com.nexters.phochak.auth.application.JwtTokenService.TokenVo.TOKEN_TYPE;
+import static com.nexters.phochak.auth.application.port.in.JwtTokenUseCase.TokenVo.TOKEN_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -25,10 +24,10 @@ public class AuthAspect {
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String WHITE_SPACE = " ";
     private final HttpServletRequest httpServletRequest;
-    private final JwtTokenService jwtTokenService;
+    private final JwtTokenUseCase jwtTokenUseCase;
     private final UserService userService;
 
-    @Around("@annotation(com.nexters.phochak.auth.annotation.Auth)")
+    @Around("@annotation(com.nexters.phochak.auth.interceptor.Auth)")
     public Object validateAccessToken(final ProceedingJoinPoint joinPoint) throws Throwable {
         String accessToken = httpServletRequest.getHeader(AUTHORIZATION_HEADER);
 
@@ -36,8 +35,8 @@ public class AuthAspect {
             throw new PhochakException(ResCode.TOKEN_NOT_FOUND);
         }
 
-        accessToken = JwtTokenServiceImpl.parseOnlyTokenFromRequest(accessToken);
-        Long userId = jwtTokenService.validateJwt(accessToken);
+        accessToken = JwtTokenService.parseOnlyTokenFromRequest(accessToken);
+        Long userId = jwtTokenUseCase.validateJwt(accessToken);
 
         // 유저 검증 후 Thread Local 변수에 할당
         try {

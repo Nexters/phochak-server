@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth.presentation;
+package com.nexters.phochak.auth.application.port.in;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

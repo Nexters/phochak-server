@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.auth.aspect;
 
-import com.nexters.phochak.auth.application.JwtTokenServiceImpl;
-import com.nexters.phochak.auth.aspect.AuthAspect;
+import com.nexters.phochak.auth.application.JwtTokenService;
+import com.nexters.phochak.auth.interceptor.AuthAspect;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.application.UserServiceImpl;
@@ -30,7 +30,7 @@ class AuthAspectTest {
     @Mock
     ProceedingJoinPoint joinPoint;
     @Mock
-    JwtTokenServiceImpl jwtTokenService;
+    JwtTokenService jwtTokenService;
     @InjectMocks
     AuthAspect aspect;
 

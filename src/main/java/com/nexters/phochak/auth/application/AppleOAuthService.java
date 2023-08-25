@@ -1,10 +1,12 @@
 package com.nexters.phochak.auth.application;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.AppleUserInformation;
-import com.nexters.phochak.auth.OAuthUserInformation;
-import com.nexters.phochak.auth.presentation.AppleAuthKeyFeignClient;
+import com.nexters.phochak.auth.adapter.out.web.AppleAuthKeyFeignClient;
+import com.nexters.phochak.auth.application.port.in.AppleUserInformation;
+import com.nexters.phochak.auth.application.port.in.OAuthUseCase;
+import com.nexters.phochak.auth.application.port.in.OAuthUserInformation;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -14,17 +16,19 @@ import com.nimbusds.jose.jwk.JWK;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jwt.JWTClaimsSet;
 import com.nimbusds.jwt.SignedJWT;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.security.interfaces.RSAPublicKey;
 import java.text.ParseException;
+import java.util.List;
 
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AppleOAuthServiceImpl implements OAuthService {
+public class AppleOAuthService implements OAuthUseCase {
     private static final OAuthProviderEnum OAUTH_PROVIDER = OAuthProviderEnum.APPLE;
     private final AppleAuthKeyFeignClient appleAuthKeyFeignClient;
 
@@ -79,4 +83,21 @@ public class AppleOAuthServiceImpl implements OAuthService {
         }
         return isVerified;
     }
+
+    @Getter
+    public static class Keys {
+        @JsonProperty(value = "keys")
+        private List<Key> keyList;
+
+        @Getter
+        public static class Key {
+            private String kty;
+            private String kid;
+            private String use;
+            private String alg;
+            private String n;
+            private String e;
+        }
+    }
+
 }

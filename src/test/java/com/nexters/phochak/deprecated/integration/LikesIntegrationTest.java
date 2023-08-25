@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.application.JwtTokenService;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
@@ -30,7 +30,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
@@ -54,7 +54,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class LikesIntegrationTest extends RestDocs {
 
     @Autowired UserRepository userRepository;
-    @Autowired JwtTokenService jwtTokenService;
+    @Autowired
+    JwtTokenUseCase jwtTokenUseCase;
     @Autowired ObjectMapper objectMapper;
     MockMvc mockMvc;
     @Autowired
@@ -78,8 +79,8 @@ class LikesIntegrationTest extends RestDocs {
                 .profileImgUrl(null)
                 .build();
         userRepository.save(user);
-        JwtTokenService.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
-        testToken = JwtTokenService.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenUseCase.generateToken(user.getId(), 999999999L);
+        testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
     @Test

@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.application.JwtTokenServiceImpl;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserRepository;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.FileInputStream;
 
-import static com.nexters.phochak.auth.aspect.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.INVALID_INPUT;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;
@@ -36,7 +36,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 public class PostLocalStorageIntegrationTest {
 
     @Autowired UserRepository userRepository;
-    @Autowired JwtTokenServiceImpl jwtTokenService;
+    @Autowired
+    JwtTokenService jwtTokenService;
     @Autowired MockMvc mockMvc;
 
     static String testToken;
@@ -50,8 +51,8 @@ public class PostLocalStorageIntegrationTest {
                         .profileImgUrl(null)
                         .build();
         userRepository.save(user);
-        JwtTokenService.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
-        testToken = JwtTokenService.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
+        testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
     @Test

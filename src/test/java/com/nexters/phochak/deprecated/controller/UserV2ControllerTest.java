@@ -1,8 +1,8 @@
 package com.nexters.phochak.deprecated.controller;
 
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.presentation.AuthController;
-import com.nexters.phochak.auth.presentation.JwtResponseDto;
+import com.nexters.phochak.auth.adapter.in.web.AuthController;
+import com.nexters.phochak.auth.application.port.in.JwtResponseDto;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.user.application.UserService;
 import org.junit.jupiter.api.BeforeEach;
@@ -34,7 +34,7 @@ class UserV2ControllerTest extends RestDocs {
     @Mock
     UserService userService;
     @Mock
-    JwtTokenService jwtTokenService;
+    JwtTokenUseCase jwtTokenUseCase;
 
     @InjectMocks
     AuthController userV2Controller;
@@ -58,7 +58,7 @@ class UserV2ControllerTest extends RestDocs {
                 .refreshTokenExpiresIn("refresh token lifetime(ms)")
                 .build();
 
-        when(jwtTokenService.issueToken(any())).thenReturn(response);
+        when(jwtTokenUseCase.issueToken(any())).thenReturn(response);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders

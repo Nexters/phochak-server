@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth.annotation;
+package com.nexters.phochak.auth.interceptor;
 
 import java.lang.annotation.ElementType;
 import java.lang.annotation.Retention;

@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth.presentation;
+package com.nexters.phochak.auth.application.port.in;
 
 import com.fasterxml.jackson.databind.PropertyNamingStrategies.SnakeCaseStrategy;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;

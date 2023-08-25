@@ -1,6 +1,6 @@
 package com.nexters.phochak.common;
 
-import com.nexters.phochak.auth.application.JwtTokenService;
+import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
@@ -22,7 +22,8 @@ public class RestDocsApiTest extends RestDocs {
     private DatabaseCleanup databaseCleanup;
 
     @Autowired UserRepository userRepository;
-    @Autowired JwtTokenService jwtTokenService;
+    @Autowired
+    JwtTokenUseCase jwtTokenUseCase;
 
     protected String testToken;
 
@@ -46,7 +47,7 @@ public class RestDocsApiTest extends RestDocs {
     }
 
     private void generateTestToken(final Long userId) {
-        JwtTokenService.TokenVo tokenDto = jwtTokenService.generateToken(userId, 999999999L);
-        testToken = JwtTokenService.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenUseCase.generateToken(userId, 999999999L);
+        testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 }

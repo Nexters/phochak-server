@@ -1,7 +1,9 @@
 package com.nexters.phochak.auth.application;
 
-import com.nexters.phochak.auth.OAuthUserInformation;
-import com.nexters.phochak.auth.presentation.LoginRequestDto;
+import com.nexters.phochak.auth.application.port.in.AuthProcessUseCase;
+import com.nexters.phochak.auth.application.port.in.LoginRequestDto;
+import com.nexters.phochak.auth.application.port.in.OAuthUseCase;
+import com.nexters.phochak.auth.application.port.in.OAuthUserInformation;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.notification.application.NotificationService;
@@ -21,9 +23,9 @@ import java.util.UUID;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class AuthServiceImpl implements AuthService {
+public class AuthProcessService implements AuthProcessUseCase {
 
-    private final Map<OAuthProviderEnum, OAuthService> oAuthServiceMap;
+    private final Map<OAuthProviderEnum, OAuthUseCase> oAuthServiceMap;
     private final NotificationService notificationService;
     private final UserRepository userRepository;
     private static final String NICKNAME_PREFIX = "여행자#";
@@ -31,8 +33,8 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public Long login(String provider, LoginRequestDto requestDto) {
         OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
-        OAuthService oAuthService = oAuthServiceMap.get(providerEnum);
-        OAuthUserInformation userInformation = oAuthService.requestUserInformation(requestDto.token());
+        OAuthUseCase oAuthUseCase = oAuthServiceMap.get(providerEnum);
+        OAuthUserInformation userInformation = oAuthUseCase.requestUserInformation(requestDto.token());
         User user = getOrCreateUser(userInformation);
         if (requestDto.fcmDeviceToken() != null) {
             notificationService.registryFcmDeviceToken(user, requestDto.fcmDeviceToken());

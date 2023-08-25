@@ -1,6 +1,6 @@
 package com.nexters.phochak.auth.application;
 
-import com.nexters.phochak.auth.KakaoUserInformation;
+import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.user.domain.User;
 import com.nexters.phochak.user.domain.UserFixture;
 import com.nexters.phochak.user.domain.UserRepository;
@@ -14,7 +14,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.nexters.phochak.auth.KakaoUserInformation.KakaoOAuthProperties;
+import static com.nexters.phochak.auth.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -22,11 +22,11 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
-class AuthServiceTest {
+class AuthProcessServiceTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    AuthServiceImpl authService;
+    AuthProcessService authProcessService;
     KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
 
@@ -52,7 +52,7 @@ class AuthServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.empty());
 
         // when
-        authService.getOrCreateUser(userInformation);
+        authProcessService.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(atLeastOnce()).save(any());
@@ -66,7 +66,7 @@ class AuthServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.of(user));
 
         // when
-        authService.getOrCreateUser(userInformation);
+        authProcessService.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(never()).save(any());
