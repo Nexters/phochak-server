@@ -1,8 +1,8 @@
 name: CI-workflow
 
 on:
-  pull_request
-
+  pull_request:
+    branches: ["release"]
 
 jobs:
   build:

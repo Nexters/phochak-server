@@ -1,23 +1,14 @@
-//querydsl 추가
-buildscript {
-	ext {
-		queryDslVersion = "5.0.0"
-	}
-}
-
 plugins {
 	id 'java'
-	id 'org.springframework.boot' version '2.7.7'
+	id 'org.springframework.boot' version '3.1.2'
 	id 'io.spring.dependency-management' version '1.0.15.RELEASE'
 	id 'org.asciidoctor.jvm.convert' version '3.3.2'
-	//querydsl 추가
-	id 'com.ewerk.gradle.plugins.querydsl' version '1.0.10'
 	id 'com.google.cloud.tools.jib' version '3.3.1'
 }
 
 group = 'com.nexters'
 version = '0.0.1-SNAPSHOT'
-sourceCompatibility = '11'
+sourceCompatibility = '17'
 
 configurations {
 	asciidoctorExtensions
@@ -49,11 +40,8 @@ jib {
 		tags = ["latest"]
 	}
 	container {
-		// Set docker image creation time
 		creationTime = 'USE_CURRENT_TIMESTAMP'
-		// Set JVM options.
 		jvmFlags = ['-Dspring.profiles.active=prod', '-XX:+UseContainerSupport', '-Dserver.port=8080', '-Dfile.encoding=UTF-8']
-		// Expose different port.
 		ports = ['8080']
 		extraDirectories {
 			paths {
@@ -72,8 +60,6 @@ tasks.named('jib') {
 
 asciidoctor {
 	forkOptions {
-		// jvm 옵션. spring rest docs가 sun.nio.ch과 java.io 패키지를 사용하게 할 수 있게끔 설정
-		// HTTP 테스트 중에 요청과 응답을 캡쳐하는데, 운영체제와 네트워크 레이어의 io를 획득하기 위해 사용.
 		jvmArgs('--add-opens', 'java.base/sun.nio.ch=ALL-UNNAMED')
 		jvmArgs('--add-opens', 'java.base/java.io=ALL-UNNAMED')
 	}
@@ -83,7 +69,7 @@ asciidoctor {
 	sources {
 		include("**/index.adoc")
 	}
-	baseDirFollowsSourceDir() // 특정 .adoc에 다른 adoc 파일을 가져와서 사용하고 싶을 경우 설정
+	baseDirFollowsSourceDir()
 }
 
 asciidoctor.doFirst {
@@ -108,7 +94,7 @@ build {
 }
 
 clean {
-	delete file('src/main/generated') // 인텔리제이 Annotation processor 생성물 생성 위치
+	delete file('src/main/generated')
 }
 
 dependencyManagement {
@@ -125,8 +111,7 @@ dependencies {
 	implementation 'com.nimbusds:nimbus-jose-jwt:9.29'
 	implementation 'io.jsonwebtoken:jjwt-api:0.11.5'
 	implementation 'org.springframework.boot:spring-boot-starter-validation'
-	implementation "com.querydsl:querydsl-jpa:${queryDslVersion}"
-	implementation "com.querydsl:querydsl-apt:${queryDslVersion}"
+	implementation "com.querydsl:querydsl-jpa:5.0.0:jakarta"
 	implementation platform('com.amazonaws:aws-java-sdk-bom:1.11.238')
 	implementation 'com.amazonaws:aws-java-sdk-s3'
 	implementation 'com.github.maricn:logback-slack-appender:1.4.0'
@@ -136,10 +121,9 @@ dependencies {
 	compileOnly 'org.projectlombok:lombok'
 	runtimeOnly 'io.jsonwebtoken:jjwt-impl:0.11.5', 'io.jsonwebtoken:jjwt-jackson:0.11.5'
 	runtimeOnly 'com.mysql:mysql-connector-j'
+	annotationProcessor "com.querydsl:querydsl-apt:5.0.0:jakarta"
 	annotationProcessor 'org.projectlombok:lombok'
-	// java.lang.NoClassDefFoundError(javax.annotation.Entity) 발생 대응
 	annotationProcessor "jakarta.persistence:jakarta.persistence-api"
-	// java.lang.NoClassDefFoundError(javax.annotation.Generated) 발생 대응
 	annotationProcessor "jakarta.annotation:jakarta.annotation-api"
 	testImplementation 'com.h2database:h2'
 	testImplementation 'org.springframework.boot:spring-boot-starter-test'
@@ -154,16 +138,13 @@ tasks.named('test') {
 //querydsl 추가
 def querydslDir = "$buildDir/generated/querydsl"
 
-querydsl {
-	jpa = true
-	querydslSourcesDir = querydslDir
+tasks.withType(JavaCompile) {
+	options.generatedSourceOutputDirectory = file(querydslDir)
 }
 sourceSets {
 	main.java.srcDir querydslDir
 }
-compileQuerydsl {
-	options.annotationProcessorPath = configurations.querydsl
-}
+
 configurations {
 	compileOnly {
 		extendsFrom annotationProcessor
