@@ -24,8 +24,11 @@
 <a href="https://github.com/Nexters/phochak-android"> 🤖 Android Github </a>
 
 <a href="https://github.com/Nexters/phochak-iOS"> 🍎 iOS Github </a>
-
 <a href="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
+
+### 리팩토링
+
+<a href="document/refactoring_1_0_0.md"> ⚙️ Ver 1.0 리팩토링 일지 (23.8) </a>
 
 <br/>
 

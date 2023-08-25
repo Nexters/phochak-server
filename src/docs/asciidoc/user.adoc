@@ -58,25 +58,25 @@ OAuth 2.0을 활용한 로그인 (및 회원가입) 을 진행한다.
 ==== 요청
 HTTP Example
 
-include::{snippets}/v2/user/login/http-request.adoc[]
+include::{snippets}/v2/auth/login/http-request.adoc[]
 
 Path Parameters
 
-include::{snippets}/v2/user/login/path-parameters.adoc[]
+include::{snippets}/v2/auth/login/path-parameters.adoc[]
 
 Request Parameters
 
-include::{snippets}/v2/user/login/request-parameters.adoc[]
+include::{snippets}/v2/auth/login/request-parameters.adoc[]
 
 ==== 응답
 Response HTTP Example
 
 *정상*
-include::{snippets}/v2/user/login/http-response.adoc[]
+include::{snippets}/v2/auth/login/http-response.adoc[]
 
 Response Parameters
 
-include::{snippets}/v2/user/login/response-fields.adoc[]
+include::{snippets}/v2/auth/login/response-fields.adoc[]
 
 **로그인 API 응답코드**
 [cols="2,10,7"]
