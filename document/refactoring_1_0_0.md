@@ -7,9 +7,16 @@ record, lambda 최신 문법 등의 사용에 제약이 있었습니다.
 
 ### 2. 패키지 구조 변경
 기존 방식들의 패키지 관리가 어려워졌습니다.
-- 기존 layerd 아키텍쳐에서 최상단을 도메인으로 분리
+- 기존 layerd 아키텍쳐에서 최상단을 feature 로 분리
+- 이후 기능별 리팩토링 시에 port-adapter 구조로 전환
 
-### 3. 기능별 코드 및 테스트 리팩토링
+### 3. Git - Flow 브랜치 전략 관리
+- 배포용 브랜치인 release 브랜치를 추가했습니다.
+- 기존 개발 단계에서 develop 브랜치를 향하던 CD 파이프라인을 release로 옮겼습니다.
+- 이제 다음 브랜치 전략을 준수해봅시다 !
+[우린 Git-flow를 사용하고 있어요](https://techblog.woowahan.com/2553/)
+
+### 4. 기능별 코드 및 테스트 리팩토링
 빠른 런칭을 위해서 구현에만 급급했어서, 이번 리팩토링을 진행하면서 지속 가능한 코드로 리팩토링합니다.
 
 <a href="#리팩토링-룰">기능 리팩토링은 아래의 '리팩토링 룰'을 따릅니다.</a>
@@ -47,3 +54,10 @@ record, lambda 최신 문법 등의 사용에 제약이 있었습니다.
      - Application Layer: Unit Test, Happy Test, Fail Test
      - Domain Layer: Unit Test, Happy Test, Fail Test
      - Query: 직접 정의한 쿼리 Happy Test
+
+### Reference
+[백명석님 유튜브](https://www.youtube.com/@codetemplate/videos)
+
+[]https://www.youtube.com/@ejoongseok/videos
+
+
