@@ -1,9 +1,10 @@
-name: CI-workflow
+name: CI-workflow-develop
 
 on:
   pull_request:
     branches: ["develop"]
-
+  push:
+    branches: ["develop"]
 
 jobs:
   build:
