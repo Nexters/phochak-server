@@ -1,4 +1,4 @@
-package com.nexters.phochak.auth.application;
+package com.nexters.phochak.user.application.port.out;
 
 import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
@@ -14,7 +14,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.nexters.phochak.auth.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -22,12 +21,12 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
-class AuthProcessServiceTest {
+class CreateUserPortTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    AuthService authProcessService;
-    KakaoOAuthProperties kakaoOAuthProperties;
+    CreateUserPort createUserPort;
+    KakaoUserInformation.KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
 
     @BeforeEach
@@ -35,7 +34,7 @@ class AuthProcessServiceTest {
         String providerId = "providerId";
         String kakaoNickname = "kakaoNickname";
 
-        kakaoOAuthProperties = KakaoOAuthProperties.builder()
+        kakaoOAuthProperties = KakaoUserInformation.KakaoOAuthProperties.builder()
                 .nickname(kakaoNickname)
                 .build();
 
@@ -52,7 +51,7 @@ class AuthProcessServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.empty());
 
         // when
-        authProcessService.getOrCreateUser(userInformation);
+        createUserPort.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(atLeastOnce()).save(any());
@@ -66,10 +65,9 @@ class AuthProcessServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.of(userEntity));
 
         // when
-        authProcessService.getOrCreateUser(userInformation);
+        createUserPort.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(never()).save(any());
     }
-
 }
