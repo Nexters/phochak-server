@@ -1,6 +1,6 @@
 package com.nexters.phochak.ignore.domain;
 
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;

@@ -1,7 +1,7 @@
 package com.nexters.phochak.post.domain;
 
 import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

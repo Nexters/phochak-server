@@ -1,5 +1,6 @@
 package com.nexters.phochak.user.domain;
 
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.assertj.core.util.VisibleForTesting;
 
 public class UserFixture {

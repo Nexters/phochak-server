@@ -1,10 +1,10 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.post.application.PostService;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.UserService;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.UserEntity;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

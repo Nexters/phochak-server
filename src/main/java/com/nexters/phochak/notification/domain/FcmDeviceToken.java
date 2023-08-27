@@ -1,7 +1,7 @@
 package com.nexters.phochak.notification.domain;
 
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;

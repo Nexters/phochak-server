@@ -1,6 +1,6 @@
 package com.nexters.phochak.user;
 
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

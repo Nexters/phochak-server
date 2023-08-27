@@ -2,9 +2,9 @@ package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.auth.application.JwtTokenService;
 import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.UserEntity;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

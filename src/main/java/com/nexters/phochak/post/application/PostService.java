@@ -5,7 +5,7 @@ import com.nexters.phochak.post.PostCreateRequestDto;
 import com.nexters.phochak.post.PostPageResponseDto;
 import com.nexters.phochak.post.PostUpdateRequestDto;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;

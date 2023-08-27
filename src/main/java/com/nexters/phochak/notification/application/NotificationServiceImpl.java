@@ -5,7 +5,7 @@ import com.nexters.phochak.notification.domain.FcmDeviceToken;
 import com.nexters.phochak.notification.domain.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.presentation.NotificationClient;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;

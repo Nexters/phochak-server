@@ -9,7 +9,7 @@ import com.nexters.phochak.shorts.application.NCPShortsService;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;

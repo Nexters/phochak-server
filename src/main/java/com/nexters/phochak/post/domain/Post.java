@@ -5,7 +5,7 @@ import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Convert;

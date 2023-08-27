@@ -2,7 +2,7 @@ package com.nexters.phochak.report.domain;
 
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.user.domain.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
