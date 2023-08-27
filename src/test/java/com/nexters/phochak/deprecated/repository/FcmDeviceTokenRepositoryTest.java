@@ -8,7 +8,7 @@ import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -42,13 +42,13 @@ class FcmDeviceTokenRepositoryTest {
     @DisplayName("uploadKey로 device 조회 쿼리가 정상적으로 조회된다.")
     @Test
     void findDeviceTokenAndPostIdByUploadKey() {
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .nickname("nickname")
                 .profileImgUrl("url")
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("id")
                 .build();
-        userRepository.save(user);
+        userRepository.save(userEntity);
 
         Shorts shorts = Shorts.builder()
                 .uploadKey("uploadKey")
@@ -60,14 +60,14 @@ class FcmDeviceTokenRepositoryTest {
         Post post = Post.builder()
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
-                .user(user)
+                .userEntity(userEntity)
                 .build();
         postRepository.save(post);
         Long postId = post.getId();
 
         FcmDeviceToken fcmDeviceToken = FcmDeviceToken.builder()
                 .token("deviceToken")
-                .user(user)
+                .userEntity(userEntity)
                 .build();
         fcmDeviceTokenRepository.save(fcmDeviceToken);
         em.flush();

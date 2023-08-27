@@ -40,8 +40,8 @@ public class UserFixture {
     }
 
     @VisibleForTesting
-    public User build() {
-        return new User(
+    public UserEntity build() {
+        return new UserEntity(
                 userId,
                 provider,
                 providerId,

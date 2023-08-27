@@ -6,13 +6,13 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface UserRepository extends JpaRepository<User, Long> {
-    default User getBy(Long userId) {
+public interface UserRepository extends JpaRepository<UserEntity, Long> {
+    default UserEntity getBy(Long userId) {
         return findById(userId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
     }
-    Optional<User> findByProviderAndProviderId(OAuthProviderEnum provider, String providerId);
+    Optional<UserEntity> findByProviderAndProviderId(OAuthProviderEnum provider, String providerId);
 
-    Optional<User> findByNickname(String nickname);
+    Optional<UserEntity> findByNickname(String nickname);
 
     boolean existsByNickname(String nickname);
 }

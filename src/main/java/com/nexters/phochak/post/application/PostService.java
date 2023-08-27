@@ -5,7 +5,7 @@ import com.nexters.phochak.post.PostCreateRequestDto;
 import com.nexters.phochak.post.PostPageResponseDto;
 import com.nexters.phochak.post.PostUpdateRequestDto;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
@@ -36,7 +36,7 @@ public interface PostService {
      */
     int updateView(Long postId);
 
-    void deleteAllPostByUser(User user);
+    void deleteAllPostByUser(UserEntity userEntity);
 
     List<String> getHashtagAutocomplete(String hashtag, int size);
 }

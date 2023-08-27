@@ -7,7 +7,7 @@ import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.report.domain.ReportPostRepository;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -25,10 +25,10 @@ public class ReportPostServiceImpl implements ReportPostService {
     @Override
     @Transactional
     public void processReport(Long userId, Long postId) {
-        User user = userRepository.getReferenceById(userId);
+        UserEntity userEntity = userRepository.getReferenceById(userId);
         Post post = postRepository.getReferenceById(postId);
         ReportPost reportPost = ReportPost.builder()
-                .reporter(user)
+                .reporter(userEntity)
                 .post(post)
                 .build();
         try {

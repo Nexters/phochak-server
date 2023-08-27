@@ -3,7 +3,7 @@ package com.nexters.phochak.deprecated.integration;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.user.application.UserService;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -40,13 +40,13 @@ class UserIntegrationTest {
     @MockBean
     PostService postService;
 
-    User user;
+    UserEntity userEntity;
 
     @BeforeEach
     void setUp() {
         String nickname = "testUser";
 
-        user = User.builder()
+        userEntity = UserEntity.builder()
                 .nickname(nickname)
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("test")
@@ -59,7 +59,7 @@ class UserIntegrationTest {
         // given
         String nickname = "testUser";
 
-        userRepository.save(user);
+        userRepository.save(userEntity);
 
         // when & then
         mockMvc.perform(get("/v1/user/check/nickname")
@@ -72,13 +72,13 @@ class UserIntegrationTest {
     @DisplayName("회원 탈퇴 시 탈퇴 일시가 기록된다")
     void withdrawTest() {
         // given
-        userRepository.save(user);
+        userRepository.save(userEntity);
 
         // when
-        userService.withdraw(user.getId());
+        userService.withdraw(userEntity.getId());
 
         // then
-        Optional<User> findUser = userRepository.findById(user.getId());
+        Optional<UserEntity> findUser = userRepository.findById(userEntity.getId());
         assertThat(findUser).isPresent();
         assertThat(findUser.get().getLeaveDate()).isNotNull();
     }

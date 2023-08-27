@@ -9,7 +9,7 @@ import com.nexters.phochak.shorts.application.NCPShortsService;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -56,7 +56,7 @@ class NCPShortsServiceTest {
         //given
         String uploadKey = "uploadKey";
         Post post = Post.builder()
-                .user(new User())
+                .userEntity(new UserEntity())
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
         Shorts shorts = Shorts.builder()
@@ -79,7 +79,7 @@ class NCPShortsServiceTest {
         //given
         String uploadKey = "uploadKey";
         Post post = Post.builder()
-                .user(new User())
+                .userEntity(new UserEntity())
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
         given(shortsRepository.findByUploadKey(uploadKey)).willReturn(Optional.empty());

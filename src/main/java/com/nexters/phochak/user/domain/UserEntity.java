@@ -22,7 +22,7 @@ import java.time.LocalDateTime;
 @Getter
 @Entity
 @Table(name = "USERS")
-public class User extends BaseTime {
+public class UserEntity extends BaseTime {
     public static final int NICKNAME_MAX_SIZE = 10;
 
     @Id
@@ -30,7 +30,7 @@ public class User extends BaseTime {
     @Column(name = "USER_ID")
     private Long id;
 
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "userEntity")
     private FcmDeviceToken fcmDeviceToken;
 
     @Enumerated(EnumType.STRING)
@@ -51,11 +51,11 @@ public class User extends BaseTime {
 
     private LocalDateTime leaveDate;
 
-    public User() {
+    public UserEntity() {
     }
 
     @Builder
-    public User(Long id, OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+    public UserEntity(Long id, OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
         this.id = id;
         this.provider = provider;
         this.providerId = providerId;

@@ -1,6 +1,6 @@
 package com.nexters.phochak.user;
 
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import lombok.AccessLevel;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -17,14 +17,14 @@ public class UserInfoResponseDto {
     private Boolean isIgnored;
     private Boolean isBlocked;
 
-    public static UserInfoResponseDto of(User user, Boolean isMyPage, Boolean isIgnored) {
+    public static UserInfoResponseDto of(UserEntity userEntity, Boolean isMyPage, Boolean isIgnored) {
         return UserInfoResponseDto.builder()
-                .id(user.getId())
-                .nickname(user.getNickname())
-                .profileImgUrl(user.getProfileImgUrl())
+                .id(userEntity.getId())
+                .nickname(userEntity.getNickname())
+                .profileImgUrl(userEntity.getProfileImgUrl())
                 .isMyPage(isMyPage)
                 .isIgnored(isIgnored)
-                .isBlocked(user.getIsBlocked())
+                .isBlocked(userEntity.getIsBlocked())
                 .build();
     }
 }

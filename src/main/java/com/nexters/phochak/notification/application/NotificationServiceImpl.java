@@ -5,7 +5,7 @@ import com.nexters.phochak.notification.domain.FcmDeviceToken;
 import com.nexters.phochak.notification.domain.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.presentation.NotificationClient;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -20,10 +20,10 @@ public class NotificationServiceImpl implements NotificationService {
     private final NotificationClient notificationClient;
 
     @Override
-    public void registryFcmDeviceToken(User user, String token) {
+    public void registryFcmDeviceToken(UserEntity userEntity, String token) {
         fcmDeviceTokenRepository.save(
                 FcmDeviceToken.builder()
-                    .user(user)
+                    .userEntity(userEntity)
                     .token(token)
                     .build());
     }

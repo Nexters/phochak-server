@@ -1,7 +1,7 @@
 package com.nexters.phochak.post.domain;
 
 import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -21,9 +21,9 @@ public interface PostRepository extends JpaRepository<Post, Long>, PostCustomRep
     int updateView(@Param("postId") Long postId);
 
     @Modifying
-    @Query("DELETE from Post p WHERE p.user = :user")
-    void deleteAllByUser(@Param("user") User user);
+    @Query("DELETE from Post p WHERE p.user = :userEntity")
+    void deleteAllByUser(@Param("user") UserEntity userEntity);
 
-    @Query("select p from Post p left join fetch p.shorts where p.user = :user")
-    List<Post> findAllPostByUserFetchJoin(@Param("user") User user);
+    @Query("select p from Post p left join fetch p.shorts where p.user = :userEntity")
+    List<Post> findAllPostByUserFetchJoin(@Param("user") UserEntity userEntity);
 }

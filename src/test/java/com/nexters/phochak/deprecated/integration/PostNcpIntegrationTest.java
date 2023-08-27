@@ -17,7 +17,7 @@ import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.NCPStorageClient;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -93,14 +93,14 @@ class PostNcpIntegrationTest extends RestDocs {
         this.mockMvc = getMockMvcBuilder(restDocumentation, postController)
                 .setControllerAdvice(CustomExceptionHandler.class)
                 .build();
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .providerId("1234")
                 .provider(OAuthProviderEnum.KAKAO)
                 .nickname("nickname")
                 .profileImgUrl(null)
                 .build();
-        userRepository.save(user);
-        JwtTokenUseCase.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
+        userRepository.save(userEntity);
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenService.generateToken(userEntity.getId(), 999999999L);
         testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
@@ -175,7 +175,7 @@ class PostNcpIntegrationTest extends RestDocs {
     @DisplayName("포스트 API - 게시글 수정 성공")
     void updatePost_success() throws Exception {
         //given
-        User user = userRepository.findByNickname("nickname").get();
+        UserEntity userEntity = userRepository.findByNickname("nickname").get();
 
         Shorts shorts = Shorts.builder()
                 .thumbnailUrl("test")
@@ -187,7 +187,7 @@ class PostNcpIntegrationTest extends RestDocs {
         Post post = Post.builder()
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
-                .user(user)
+                .userEntity(userEntity)
                 .build();
         postRepository.save(post);
         Long postId = post.getId();
@@ -235,7 +235,7 @@ class PostNcpIntegrationTest extends RestDocs {
     @DisplayName("포스트 API - 게시글 삭제 성공")
     void deletePost_success() throws Exception {
         //given
-        User user = userRepository.findByNickname("nickname").get();
+        UserEntity userEntity = userRepository.findByNickname("nickname").get();
 
         Shorts shorts = Shorts.builder()
                 .thumbnailUrl("test")
@@ -247,7 +247,7 @@ class PostNcpIntegrationTest extends RestDocs {
         Post post = Post.builder()
                         .shorts(shorts)
                         .postCategory(PostCategoryEnum.TOUR)
-                        .user(user)
+                        .userEntity(userEntity)
                         .build();
         postRepository.save(post);
         Long postId = post.getId();
@@ -371,7 +371,7 @@ class PostNcpIntegrationTest extends RestDocs {
     @Test
     @DisplayName("포스트 API - 게시글 신고하기 성공")
     void reportPost() throws Exception {
-        User user = userRepository.findByNickname("nickname").get();
+        UserEntity userEntity = userRepository.findByNickname("nickname").get();
 
         Shorts shorts = Shorts.builder()
                 .thumbnailUrl("test")
@@ -383,7 +383,7 @@ class PostNcpIntegrationTest extends RestDocs {
         Post post = Post.builder()
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
-                .user(user)
+                .userEntity(userEntity)
                 .build();
         postRepository.save(post);
         Long postId = post.getId();

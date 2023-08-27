@@ -6,7 +6,7 @@ import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.likes.domain.LikesRepository;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostRepository;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -41,11 +41,11 @@ class LikesServiceTest {
     @DisplayName("포착하기 성공")
     void addPhochak() {
         //given
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
         Post post = new Post();
-        Likes likes = new Likes(user, post);
+        Likes likes = new Likes(userEntity, post);
 
-        given(userRepository.getReferenceById(anyLong())).willReturn(user);
+        given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
         given(likesRepository.save(refEq(likes))).willReturn(likes);
 
@@ -60,12 +60,12 @@ class LikesServiceTest {
     @DisplayName("이미 포착된 게시글은 ALREADY_PHOCHAKED 예외가 발생한다")
     void addPhochak_alreadyPhochaked() {
         //given
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
         Post post = new Post();
 
-        given(userRepository.getReferenceById(anyLong())).willReturn(user);
+        given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
         given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(likesRepository.save(refEq(new Likes(user, post)))).willThrow(DataIntegrityViolationException.class);
+        given(likesRepository.save(refEq(new Likes(userEntity, post)))).willThrow(DataIntegrityViolationException.class);
 
         //when, then
         assertThatThrownBy(() -> likeService.addPhochak(0L, 0L))
@@ -76,13 +76,13 @@ class LikesServiceTest {
     @DisplayName("포착 취소하기 성공")
     void cancelPhochak() {
         //given
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
         Post post = new Post();
         Likes likes = new Likes();
 
-        given(userRepository.getReferenceById(anyLong())).willReturn(user);
+        given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
         given(postRepository.getReferenceById(anyLong())).willReturn(post);
-        given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.of(likes));
+        given(likesRepository.findByUserAndPost(userEntity, post)).willReturn(Optional.of(likes));
 
         //then
         likeService.cancelPhochak(0L, 0L);
@@ -95,12 +95,12 @@ class LikesServiceTest {
     @DisplayName("포착되지 않았던 게시글을 포착 취소하면 NOT_PHOCHAKED 예외가 발생한다")
     void cancelPhochak_notPhochaked() {
         //given
-        User user = new User();
+        UserEntity userEntity = new UserEntity();
         Post post = new Post();
 
-        given(userRepository.getReferenceById(anyLong())).willReturn(user);
+        given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
         given(postRepository.getReferenceById(anyLong())).willReturn(post);
-        given(likesRepository.findByUserAndPost(user, post)).willReturn(Optional.empty());
+        given(likesRepository.findByUserAndPost(userEntity, post)).willReturn(Optional.empty());
 
         //when, then
         assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> likeService.cancelPhochak(0L, 0L));

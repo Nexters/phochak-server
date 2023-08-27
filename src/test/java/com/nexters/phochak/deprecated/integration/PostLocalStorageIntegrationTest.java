@@ -3,7 +3,7 @@ package com.nexters.phochak.deprecated.integration;
 import com.nexters.phochak.auth.application.JwtTokenService;
 import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -44,14 +44,14 @@ public class PostLocalStorageIntegrationTest {
 
     @BeforeAll
     void setUp() {
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                         .providerId("1234")
                         .provider(OAuthProviderEnum.KAKAO)
                         .nickname("nickname")
                         .profileImgUrl(null)
                         .build();
-        userRepository.save(user);
-        JwtTokenUseCase.TokenVo tokenDto = jwtTokenService.generateToken(user.getId(), 999999999L);
+        userRepository.save(userEntity);
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenService.generateToken(userEntity.getId(), 999999999L);
         testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 

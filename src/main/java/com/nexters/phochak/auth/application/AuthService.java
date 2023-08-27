@@ -8,7 +8,7 @@ import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.notification.application.NotificationService;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -28,40 +28,43 @@ public class AuthService implements AuthUseCase {
     private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
     private final NotificationService notificationService;
     private final UserRepository userRepository;
+//    private final CreateUserPort createUserPort;
+
     private static final String NICKNAME_PREFIX = "여행자#";
 
     @Override
     public Long login(String provider, LoginRequestDto requestDto) {
         OAuthRequestPort oAuthRequestPort = getProperProviderPort(provider);
         OAuthUserInformation userInformation = oAuthRequestPort.requestUserInformation(requestDto.token());
-        User user = getOrCreateUser(userInformation);
+//        User user = createUserPort.getOrCreateUser(userInformation);
+        UserEntity userEntity = getOrCreateUser(userInformation);
         if (requestDto.fcmDeviceToken() != null) {
-            notificationService.registryFcmDeviceToken(user, requestDto.fcmDeviceToken());
+            notificationService.registryFcmDeviceToken(userEntity, requestDto.fcmDeviceToken());
         }
-        return user.getId();
+        return userEntity.getId();
     }
 
-    User getOrCreateUser(OAuthUserInformation userInformation) {
-        User user = null;
-        Optional<User> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
+    UserEntity getOrCreateUser(OAuthUserInformation userInformation) {
+        UserEntity userEntity = null;
+        Optional<UserEntity> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
 
         if (target.isPresent()) {
             log.info("UserServiceImpl|login(기존 회원): {}", userInformation);
-            user = target.orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+            userEntity = target.orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         } else {
             log.info("UserServiceImpl|login(신규 회원): {}", userInformation);
             String nickname = generateInitialNickname();
 
-            User newUser = User.builder()
+            UserEntity newUserEntity = UserEntity.builder()
                     .provider(userInformation.getProvider())
                     .providerId(userInformation.getProviderId())
                     .nickname(nickname)
                     .profileImgUrl(userInformation.getInitialProfileImage())
                     .build();
 
-            user = userRepository.save(newUser);
+            userEntity = userRepository.save(newUserEntity);
         }
-        return user;
+        return userEntity;
     }
 
     private OAuthRequestPort getProperProviderPort(final String provider) {
@@ -76,6 +79,6 @@ public class AuthService implements AuthUseCase {
     }
 
     private static String generateUUID() {
-        return UUID.randomUUID().toString().replace("-", "").substring(0, User.NICKNAME_MAX_SIZE - NICKNAME_PREFIX.length());
+        return UUID.randomUUID().toString().replace("-", "").substring(0, UserEntity.NICKNAME_MAX_SIZE - NICKNAME_PREFIX.length());
     }
 }

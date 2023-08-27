@@ -10,7 +10,7 @@ import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.UserInfoResponseDto;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.domain.UserEntity;
 import com.nexters.phochak.user.domain.UserRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -45,27 +45,27 @@ public class UserServiceImpl implements UserService {
     @Override
     public void modifyNickname(String nickname) {
         Long userId = UserContext.CONTEXT.get();
-        User user = userRepository.getBy(userId);
+        UserEntity userEntity = userRepository.getBy(userId);
 
         if (isDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
 
-        user.modifyNickname(nickname);
+        userEntity.modifyNickname(nickname);
     }
 
     @Override
     @Transactional(readOnly = true)
     public UserInfoResponseDto getInfo(Long pageOwnerId, Long userId) {
-        User pageOwner;
+        UserEntity pageOwner;
         Boolean isIgnored = false;
         if (pageOwnerId == null) {
             pageOwner = userRepository.getBy(userId);
         } else {
             pageOwner = userRepository.getBy(pageOwnerId);
-            User user = userRepository.getReferenceById(userId);
+            UserEntity userEntity = userRepository.getReferenceById(userId);
             IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
-                    .user(user)
+                    .user(userEntity)
                     .ignoredUser(pageOwner)
                     .build();
             isIgnored = ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation);
@@ -75,18 +75,18 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public void withdraw(Long userId) {
-        User user = userRepository.getBy(userId);
-        user.withdrawInformation();
-        postService.deleteAllPostByUser(user);
+        UserEntity userEntity = userRepository.getBy(userId);
+        userEntity.withdrawInformation();
+        postService.deleteAllPostByUser(userEntity);
     }
 
     @Override
     public void ignoreUser(Long me, Long ignoredUserId) {
-        User user = userRepository.getReferenceById(me);
-        User pageOwner = userRepository.getBy(ignoredUserId);
+        UserEntity userEntity = userRepository.getReferenceById(me);
+        UserEntity pageOwner = userRepository.getBy(ignoredUserId);
         try {
             IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
-                    .user(user)
+                    .user(userEntity)
                     .ignoredUser(pageOwner)
                     .build();
             IgnoredUsers ignoredUsers = IgnoredUsers.builder()
