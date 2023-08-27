@@ -1,7 +1,7 @@
 package com.nexters.phochak.auth.presentation;
 
 import com.nexters.phochak.auth.adapter.in.web.AuthController;
-import com.nexters.phochak.auth.adapter.out.web.KakaoInformationFeignClient;
+import com.nexters.phochak.auth.adapter.out.api.KakaoInformationFeignClient;
 import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
