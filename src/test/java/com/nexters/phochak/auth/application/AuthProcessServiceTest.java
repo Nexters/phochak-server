@@ -26,7 +26,7 @@ class AuthProcessServiceTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    AuthProcessService authProcessService;
+    AuthService authProcessService;
     KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
 

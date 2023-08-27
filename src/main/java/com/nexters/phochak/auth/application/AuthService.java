@@ -1,6 +1,6 @@
 package com.nexters.phochak.auth.application;
 
-import com.nexters.phochak.auth.application.port.in.AuthProcessUseCase;
+import com.nexters.phochak.auth.application.port.in.AuthUseCase;
 import com.nexters.phochak.auth.application.port.in.LoginRequestDto;
 import com.nexters.phochak.auth.application.port.in.OAuthUserInformation;
 import com.nexters.phochak.auth.application.port.out.OAuthRequestPort;
@@ -23,7 +23,7 @@ import java.util.UUID;
 @Transactional
 @Service
 @RequiredArgsConstructor
-public class AuthProcessService implements AuthProcessUseCase {
+public class AuthService implements AuthUseCase {
 
     private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
     private final NotificationService notificationService;

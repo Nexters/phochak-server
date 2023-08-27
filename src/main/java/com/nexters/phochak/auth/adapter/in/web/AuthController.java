@@ -1,6 +1,6 @@
 package com.nexters.phochak.auth.adapter.in.web;
 
-import com.nexters.phochak.auth.application.port.in.AuthProcessUseCase;
+import com.nexters.phochak.auth.application.port.in.AuthUseCase;
 import com.nexters.phochak.auth.application.port.in.JwtResponseDto;
 import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.auth.application.port.in.LoginRequestDto;
@@ -18,7 +18,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v2/auth")
 @RestController
 public class AuthController {
-    private final AuthProcessUseCase authService;
+    private final AuthUseCase authService;
     private final JwtTokenUseCase jwtTokenUseCase;
 
     @GetMapping("/login/{provider}")
