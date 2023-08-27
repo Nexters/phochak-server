@@ -14,7 +14,6 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.type.YesNoConverter;
 
@@ -66,9 +65,7 @@ public class UserEntity extends BaseTime {
         this.leaveDate = leaveDate;
     }
 
-    @Builder
-    public UserEntity(Long id, OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
-        this.id = id;
+    public UserEntity(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;
