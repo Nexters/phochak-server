@@ -50,7 +50,13 @@ class ReportPostServiceIntegrationTest {
 
     @BeforeEach
     void setUp() {
-        userEntity = new UserEntity(1234L, OAuthProviderEnum.KAKAO, "testId", "report", "testImage");
+        userEntity = UserEntity.builder()
+                .id(1234L)
+                .provider(OAuthProviderEnum.KAKAO)
+                .providerId("testId")
+                .nickname("report")
+                .profileImgUrl("testImage")
+                .build();
         Shorts shorts = new Shorts(1L, "upload key", "shorts", "thumbnail");
         post = new Post(userEntity, shorts, PostCategoryEnum.CAFE);
 

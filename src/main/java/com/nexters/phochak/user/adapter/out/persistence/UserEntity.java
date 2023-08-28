@@ -1,5 +1,6 @@
 package com.nexters.phochak.user.adapter.out.persistence;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.notification.domain.FcmDeviceToken;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -14,6 +15,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
+import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.type.YesNoConverter;
 
@@ -54,6 +56,8 @@ public class UserEntity extends BaseTime {
     public UserEntity() {
     }
 
+    @Builder //TODO: 기존 테스트 삭제 이후 빌더 제거
+    @VisibleForTesting
     public UserEntity(final Long id, final FcmDeviceToken fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.id = id;
         this.fcmDeviceToken = fcmDeviceToken;

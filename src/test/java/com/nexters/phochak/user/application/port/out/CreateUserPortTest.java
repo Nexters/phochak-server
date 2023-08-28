@@ -1,7 +1,9 @@
 package com.nexters.phochak.user.application.port.out;
 
 import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
+import com.nexters.phochak.user.adapter.out.persistence.CreateUserAdapter;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserMapper;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
@@ -22,10 +24,12 @@ import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
 class CreateUserPortTest {
+    @InjectMocks
+    CreateUserAdapter createUserAdapter;
     @Mock
     UserRepository userRepository;
-    @InjectMocks
-    CreateUserPort createUserPort;
+    @Mock
+    UserMapper userMapper;
     KakaoUserInformation.KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
 
@@ -51,7 +55,7 @@ class CreateUserPortTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.empty());
 
         // when
-        createUserPort.getOrCreateUser(userInformation);
+        createUserAdapter.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(atLeastOnce()).save(any());
@@ -65,7 +69,7 @@ class CreateUserPortTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.of(userEntity));
 
         // when
-        createUserPort.getOrCreateUser(userInformation);
+        createUserAdapter.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(never()).save(any());
