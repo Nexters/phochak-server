@@ -1,7 +1,7 @@
 package com.nexters.phochak.shorts.application;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
-import com.nexters.phochak.notification.application.port.in.NotificationUsecase;
+import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.domain.Shorts;

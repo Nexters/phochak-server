@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification.application.port.in;
+package com.nexters.phochak.notification.application.port.out;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

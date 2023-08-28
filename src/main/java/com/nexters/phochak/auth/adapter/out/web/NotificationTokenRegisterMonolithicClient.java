@@ -1,6 +1,6 @@
 package com.nexters.phochak.auth.adapter.out.web;
 
-import com.nexters.phochak.notification.application.port.in.RegisterTokenRequest;
+import com.nexters.phochak.notification.application.port.out.RegisterTokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Component;

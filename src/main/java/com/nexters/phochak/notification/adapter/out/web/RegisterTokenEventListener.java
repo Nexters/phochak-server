@@ -1,7 +1,7 @@
 package com.nexters.phochak.notification.adapter.out.web;
 
-import com.nexters.phochak.notification.application.port.in.NotificationUsecase;
-import com.nexters.phochak.notification.application.port.in.RegisterTokenRequest;
+import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
+import com.nexters.phochak.notification.application.port.out.RegisterTokenRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

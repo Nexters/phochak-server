@@ -2,10 +2,10 @@ package com.nexters.phochak.notification.application;
 
 import com.nexters.phochak.notification.adapter.out.api.NotificationClient;
 import com.nexters.phochak.notification.adapter.out.api.NotificationFormDto;
-import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
-import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
-import com.nexters.phochak.notification.application.port.in.NotificationUsecase;
-import com.nexters.phochak.notification.application.port.in.RegisterTokenRequest;
+import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
+import com.nexters.phochak.notification.application.port.out.RegisterFcmDeviceTokenPort;
+import com.nexters.phochak.notification.application.port.out.RegisterTokenRequest;
+import com.nexters.phochak.notification.domain.FcmDeviceToken;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,17 +17,22 @@ import java.util.List;
 @Slf4j
 @Service
 public class NotificationService implements NotificationUsecase {
-    private final FcmDeviceTokenRepository fcmDeviceTokenRepository;
+//    private final FcmDeviceTokenRepository fcmDeviceTokenRepository;
+    private final RegisterFcmDeviceTokenPort registerFcmDeviceTokenPort;
     private final NotificationClient notificationClient;
 
     @Override
     public void registryFcmDeviceToken(RegisterTokenRequest registerTokenRequest) {
-
-        fcmDeviceTokenRepository.save(
-                FcmDeviceTokenEntity.builder()
-                    .userEntity(userEntity)
-                    .token(token)
-                    .build());
+        FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(
+                registerTokenRequest.getUserEntity(),
+                registerTokenRequest.getToken()
+        );
+        registerFcmDeviceTokenPort.save(fcmDeviceToken);
+//        fcmDeviceTokenRepository.save(
+//                FcmDeviceTokenEntity.builder()
+//                    .userEntity(userEntity)
+//                    .token(token)
+//                    .build());
     }
 
     @Override

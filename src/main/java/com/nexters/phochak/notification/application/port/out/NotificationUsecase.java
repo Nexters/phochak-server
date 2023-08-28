@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification.application.port.in;
+package com.nexters.phochak.notification.application.port.out;
 
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 
