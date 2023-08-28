@@ -28,10 +28,10 @@ public class NotificationService implements NotificationUsecase {
                 registerTokenRequest.user(),
                 registerTokenRequest.token(),
                 registerTokenRequest.operatingSystem());
-        registerFcmDeviceTokenPort.save(fcmDeviceToken);
+        registerFcmDeviceTokenPort.saveOrUpdate(fcmDeviceToken);
     }
 
-    @Override //TODO shorts Service 로 이관
+    @Override //TODO shorts Service 로 이관 필요
     public void postEncodeState(String uploadKey, ShortsStateEnum shortsStateEnum) {
         List<Object[]> queryResult = fcmDeviceTokenRepository.findDeviceTokenAndPostIdByUploadKey(uploadKey);
 

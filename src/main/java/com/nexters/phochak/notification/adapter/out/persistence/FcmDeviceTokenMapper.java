@@ -12,7 +12,7 @@ public class FcmDeviceTokenMapper {
 
     public FcmDeviceToken toDomain(FcmDeviceTokenEntity fcmDeviceTokenEntity) {
         final FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(
-                userMapper.toDomain(fcmDeviceTokenEntity.getUserEntity()),
+                userMapper.toDomain(fcmDeviceTokenEntity.getUser()),
                 fcmDeviceTokenEntity.getToken(),
                 fcmDeviceTokenEntity.getOperatingSystem()
         );

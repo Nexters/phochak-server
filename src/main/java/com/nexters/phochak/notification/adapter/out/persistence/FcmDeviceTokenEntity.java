@@ -24,7 +24,7 @@ public class FcmDeviceTokenEntity extends BaseTime {
     private Long id;
     @JoinColumn(name = "USER_ID")
     @OneToOne(fetch = FetchType.LAZY)
-    private UserEntity userEntity;
+    private UserEntity user;
     @Column(nullable = false)
     private String token;
     @Column(nullable = false)
@@ -33,11 +33,11 @@ public class FcmDeviceTokenEntity extends BaseTime {
     @Builder
     public FcmDeviceTokenEntity(
             final Long id,
-            final UserEntity userEntity,
+            final UserEntity user,
             final String token,
             final OperatingSystem operatingSystem) {
         this.id = id;
-        this.userEntity = userEntity;
+        this.user = user;
         this.token = token;
         this.operatingSystem = operatingSystem;
     }

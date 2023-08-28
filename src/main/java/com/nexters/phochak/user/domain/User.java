@@ -45,7 +45,7 @@ public class User {
     public static User toDomain(UserEntity userEntity) {
         return new User(
                 userEntity.getId(),
-                userEntity.getFcmDeviceTokenEntity(),
+                userEntity.getFcmDeviceToken(),
                 userEntity.getProvider(),
                 userEntity.getProviderId(),
                 userEntity.getNickname(),

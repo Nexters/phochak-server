@@ -32,8 +32,8 @@ public class UserEntity extends BaseTime {
     @Column(name = "USER_ID")
     private Long id;
 
-    @OneToOne(mappedBy = "userEntity")
-    private FcmDeviceTokenEntity fcmDeviceTokenEntity;
+    @OneToOne(mappedBy = "user")
+    private FcmDeviceTokenEntity fcmDeviceToken;
 
     @Enumerated(EnumType.STRING)
     private OAuthProviderEnum provider;
@@ -58,9 +58,9 @@ public class UserEntity extends BaseTime {
 
     @Builder //TODO: 기존 테스트 삭제 이후 빌더 제거
     @VisibleForTesting
-    public UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    public UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.id = id;
-        this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
+        this.fcmDeviceToken = fcmDeviceToken;
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;
