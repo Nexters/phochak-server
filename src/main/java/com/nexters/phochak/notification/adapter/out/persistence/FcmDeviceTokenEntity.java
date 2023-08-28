@@ -15,7 +15,7 @@ import lombok.Getter;
 
 @Getter
 @Entity
-public class FcmDeviceToken extends BaseTime {
+public class FcmDeviceTokenEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -30,13 +30,13 @@ public class FcmDeviceToken extends BaseTime {
     private String token;
 
     @Builder
-    public FcmDeviceToken(Long id, UserEntity userEntity, String token) {
+    public FcmDeviceTokenEntity(Long id, UserEntity userEntity, String token) {
         this.id = id;
         this.userEntity = userEntity;
         this.token = token;
     }
 
-    public FcmDeviceToken() {
+    public FcmDeviceTokenEntity() {
     }
 
     public void updateDeviceToken(String token) {

@@ -2,7 +2,7 @@ package com.nexters.phochak.notification.application;
 
 import com.nexters.phochak.notification.adapter.out.api.NotificationClient;
 import com.nexters.phochak.notification.adapter.out.api.NotificationFormDto;
-import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.application.port.in.NotificationUsecase;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
@@ -23,7 +23,7 @@ public class NotificationService implements NotificationUsecase {
     @Override
     public void registryFcmDeviceToken(UserEntity userEntity, String token) {
         fcmDeviceTokenRepository.save(
-                FcmDeviceToken.builder()
+                FcmDeviceTokenEntity.builder()
                     .userEntity(userEntity)
                     .token(token)
                     .build());

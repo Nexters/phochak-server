@@ -12,7 +12,7 @@ public class UserMapper {
     public UserEntity toEntity(User user) {
         return new UserEntity(
                 user.getId(),
-                user.getFcmDeviceToken(),
+                user.getFcmDeviceTokenEntity(),
                 user.getProvider(),
                 user.getProviderId(),
                 user.getNickname(),

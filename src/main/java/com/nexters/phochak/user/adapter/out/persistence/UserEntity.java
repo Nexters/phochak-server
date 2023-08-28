@@ -2,7 +2,7 @@ package com.nexters.phochak.user.adapter.out.persistence;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;
@@ -33,7 +33,7 @@ public class UserEntity extends BaseTime {
     private Long id;
 
     @OneToOne(mappedBy = "userEntity")
-    private FcmDeviceToken fcmDeviceToken;
+    private FcmDeviceTokenEntity fcmDeviceTokenEntity;
 
     @Enumerated(EnumType.STRING)
     private OAuthProviderEnum provider;
@@ -58,9 +58,9 @@ public class UserEntity extends BaseTime {
 
     @Builder //TODO: 기존 테스트 삭제 이후 빌더 제거
     @VisibleForTesting
-    public UserEntity(final Long id, final FcmDeviceToken fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    public UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.id = id;
-        this.fcmDeviceToken = fcmDeviceToken;
+        this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;

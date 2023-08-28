@@ -1,6 +1,6 @@
 package com.nexters.phochak.deprecated.repository;
 
-import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
@@ -65,11 +65,11 @@ class FcmDeviceTokenRepositoryTest {
         postRepository.save(post);
         Long postId = post.getId();
 
-        FcmDeviceToken fcmDeviceToken = FcmDeviceToken.builder()
+        FcmDeviceTokenEntity fcmDeviceTokenEntity = FcmDeviceTokenEntity.builder()
                 .token("deviceToken")
                 .userEntity(userEntity)
                 .build();
-        fcmDeviceTokenRepository.save(fcmDeviceToken);
+        fcmDeviceTokenRepository.save(fcmDeviceTokenEntity);
         em.flush();
         em.clear();
 
