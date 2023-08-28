@@ -3,8 +3,8 @@ package com.nexters.phochak.auth.application;
 import com.nexters.phochak.auth.application.port.in.AuthUseCase;
 import com.nexters.phochak.auth.application.port.in.LoginRequestDto;
 import com.nexters.phochak.auth.application.port.in.OAuthUserInformation;
+import com.nexters.phochak.auth.application.port.out.NotificationTokenRegisterPort;
 import com.nexters.phochak.auth.application.port.out.OAuthRequestPort;
-import com.nexters.phochak.notification.application.NotificationService;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
@@ -20,8 +20,8 @@ import java.util.Map;
 public class AuthService implements AuthUseCase {
 
     private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
-    private final NotificationService notificationService;
     private final CreateUserPort createUserPort;
+    private final NotificationTokenRegisterPort notificationTokenRegisterPort;
 
     @Override
     public Long login(String provider, LoginRequestDto requestDto) {
@@ -29,14 +29,13 @@ public class AuthService implements AuthUseCase {
         OAuthUserInformation userInformation = oAuthRequestPort.requestUserInformation(requestDto.token());
         User user = createUserPort.getOrCreateUser(userInformation);
         if (requestDto.fcmDeviceToken() != null) {
-            notificationService.registryFcmDeviceToken(user, requestDto.fcmDeviceToken());
+            notificationTokenRegisterPort.register(user.getId(), requestDto.fcmDeviceToken());
         }
         return user.getId();
     }
 
     private OAuthRequestPort getProperProviderPort(final String provider) {
         OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
-        OAuthRequestPort oAuthRequestPort = oAuthRequestPortMap.get(providerEnum);
-        return oAuthRequestPort;
+        return oAuthRequestPortMap.get(providerEnum);
     }
 }
