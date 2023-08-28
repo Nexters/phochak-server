@@ -19,16 +19,14 @@ public class CreateUserAdapter implements CreateUserPort {
     private static final String NICKNAME_PREFIX = "여행자#";
 
     @Override
-    public User getOrCreateUser(OAuthUserInformation userInformation) {
-        Optional<UserEntity> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
-
+    public User getOrCreateUser(final OAuthUserInformation userInformation) {
+        final Optional<UserEntity> target = userRepository.findByProviderAndProviderId(userInformation.getProvider(), userInformation.getProviderId());
         if (target.isPresent()) {
-            log.info("UserServiceImpl|login(기존 회원): {}", userInformation);
+            log.info("CreateUserAdapter|getOrCreateUser(기존 회원 로그인): {}", userInformation);
             return userMapper.toDomain(target.get());
         } else {
-            log.info("UserServiceImpl|login(신규 회원): {}", userInformation);
-            UserEntity userEntity = userRepository.save(
-                    new UserEntity(
+            log.info("CreateUserAdapter|getOrCreateUser(신규 회원 가입): {}", userInformation);
+            final UserEntity userEntity = userRepository.save(new UserEntity(
                             userInformation.getProvider(),
                             userInformation.getProviderId(),
                             generateInitialNickname(),
