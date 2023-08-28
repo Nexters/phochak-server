@@ -5,8 +5,8 @@ import com.nexters.phochak.notification.adapter.out.api.NotificationFormDto;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.application.port.in.NotificationUsecase;
+import com.nexters.phochak.notification.application.port.in.RegisterTokenRequest;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
@@ -21,7 +21,8 @@ public class NotificationService implements NotificationUsecase {
     private final NotificationClient notificationClient;
 
     @Override
-    public void registryFcmDeviceToken(UserEntity userEntity, String token) {
+    public void registryFcmDeviceToken(RegisterTokenRequest registerTokenRequest) {
+
         fcmDeviceTokenRepository.save(
                 FcmDeviceTokenEntity.builder()
                     .userEntity(userEntity)
