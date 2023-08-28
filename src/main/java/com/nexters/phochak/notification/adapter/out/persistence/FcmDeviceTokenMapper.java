@@ -13,7 +13,8 @@ public class FcmDeviceTokenMapper {
     public FcmDeviceToken toDomain(FcmDeviceTokenEntity fcmDeviceTokenEntity) {
         final FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(
                 userMapper.toDomain(fcmDeviceTokenEntity.getUserEntity()),
-                fcmDeviceTokenEntity.getToken()
+                fcmDeviceTokenEntity.getToken(),
+                fcmDeviceTokenEntity.getOperatingSystem()
         );
         fcmDeviceToken.assignId(fcmDeviceTokenEntity.getId());
         return fcmDeviceToken;
@@ -23,7 +24,8 @@ public class FcmDeviceTokenMapper {
         return new FcmDeviceTokenEntity(
                 fcmDeviceToken.getId(),
                 userMapper.toEntity(fcmDeviceToken.getUser()),
-                fcmDeviceToken.getToken()
+                fcmDeviceToken.getToken(),
+                fcmDeviceToken.getOperatingSystem()
         );
     }
 }

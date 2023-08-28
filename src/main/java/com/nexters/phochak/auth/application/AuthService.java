@@ -29,7 +29,7 @@ public class AuthService implements AuthUseCase {
         OAuthUserInformation userInformation = oAuthRequestPort.requestUserInformation(requestDto.token());
         User user = createUserPort.getOrCreateUser(userInformation);
         if (requestDto.fcmDeviceToken() != null) {
-            notificationTokenRegisterPort.register(user, requestDto.fcmDeviceToken());
+            notificationTokenRegisterPort.register(user, requestDto.fcmDeviceToken(), requestDto.operatingSystem());
         }
         return user.getId();
     }

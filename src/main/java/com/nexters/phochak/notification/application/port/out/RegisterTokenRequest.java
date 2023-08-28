@@ -8,5 +8,5 @@ public record RegisterTokenRequest(
         @NotNull(message = "userId는 필수입니다.")
         User user,
         @NotBlank(message = "token은 필수입니다.")
-        String token) {
+        String token, com.nexters.phochak.notification.domain.OperatingSystem operatingSystem) {
 }

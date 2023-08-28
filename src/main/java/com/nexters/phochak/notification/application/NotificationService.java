@@ -24,7 +24,10 @@ public class NotificationService implements NotificationUsecase {
 
     @Override
     public void registryFcmDeviceToken(RegisterTokenRequest registerTokenRequest) {
-        FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(registerTokenRequest.user(), registerTokenRequest.token());
+        FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(
+                registerTokenRequest.user(),
+                registerTokenRequest.token(),
+                registerTokenRequest.operatingSystem());
         registerFcmDeviceTokenPort.save(fcmDeviceToken);
     }
 
