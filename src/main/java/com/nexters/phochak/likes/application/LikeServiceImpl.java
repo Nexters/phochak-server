@@ -9,8 +9,8 @@ import com.nexters.phochak.post.PostFetchCommand;
 import com.nexters.phochak.post.PostFetchDto;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostRepository;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
@@ -30,11 +30,11 @@ public class LikeServiceImpl implements LikesService {
     @Override
     public void addPhochak(Long userId, Long postId) {
         try {
-            User user = userRepository.getReferenceById(userId);
+            UserEntity userEntity = userRepository.getReferenceById(userId);
             Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
 
             Likes likes = Likes.builder()
-                    .user(user)
+                    .user(userEntity)
                     .post(post)
                     .build();
             likesRepository.save(likes);
@@ -46,10 +46,10 @@ public class LikeServiceImpl implements LikesService {
 
     @Override
     public void cancelPhochak(Long userId, Long postId) {
-        User user = userRepository.getReferenceById(userId);
+        UserEntity userEntity = userRepository.getReferenceById(userId);
         Post post = postRepository.getReferenceById(postId);
 
-        Likes likes = likesRepository.findByUserAndPost(user, post)
+        Likes likes = likesRepository.findByUserAndPost(userEntity, post)
                 .orElseThrow(() -> new PhochakException(ResCode.NOT_PHOCHAKED));
 
         likesRepository.delete(likes);

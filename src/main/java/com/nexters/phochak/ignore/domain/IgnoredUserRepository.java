@@ -17,7 +17,7 @@ public interface IgnoredUserRepository extends JpaRepository<IgnoredUsers, Ignor
 
     @Modifying
     @Query("select i from IgnoredUsers i " +
-            "left join fetch User u on i.ignoredUsersRelation.ignoredUser.id = u.id " +
+            "left join fetch UserEntity u on i.ignoredUsersRelation.ignoredUser.id = u.id " +
             "where i.ignoredUsersRelation.user.id = :me")
     List<IgnoredUsers> getIgnoreUserListByUserId(@Param("me") Long me);
 

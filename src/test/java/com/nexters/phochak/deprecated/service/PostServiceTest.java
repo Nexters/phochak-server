@@ -7,8 +7,8 @@ import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -56,12 +56,12 @@ class PostServiceTest {
     @DisplayName("포스트 주인이 아닌 유저가 삭제를 시도하면 NOT_POST_OWNER 예외가 발생한다")
     void deletePostByNotPostOwner() {
         //given
-        User user = new User();
-        User owner = new User();
+        UserEntity userEntity = new UserEntity();
+        UserEntity owner = new UserEntity();
         Post post = Post.builder()
-                        .user(owner)
+                        .userEntity(owner)
                         .build();
-        given(userRepository.getReferenceById(any())).willReturn(user);
+        given(userRepository.getReferenceById(any())).willReturn(userEntity);
         given(postRepository.findPostFetchJoin(any())).willReturn(Optional.of(post));
 
         //when, then

@@ -1,9 +1,11 @@
-package com.nexters.phochak.auth.application;
+package com.nexters.phochak.user.application.port.out;
 
 import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.adapter.out.persistence.CreateUserAdapter;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserMapper;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.UserFixture;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -14,7 +16,6 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.nexters.phochak.auth.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.BDDMockito.then;
@@ -22,12 +23,14 @@ import static org.mockito.Mockito.atLeastOnce;
 import static org.mockito.Mockito.never;
 
 @ExtendWith(MockitoExtension.class)
-class AuthProcessServiceTest {
+class CreateUserPortTest {
+    @InjectMocks
+    CreateUserAdapter createUserAdapter;
     @Mock
     UserRepository userRepository;
-    @InjectMocks
-    AuthProcessService authProcessService;
-    KakaoOAuthProperties kakaoOAuthProperties;
+    @Mock
+    UserMapper userMapper;
+    KakaoUserInformation.KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
 
     @BeforeEach
@@ -35,7 +38,7 @@ class AuthProcessServiceTest {
         String providerId = "providerId";
         String kakaoNickname = "kakaoNickname";
 
-        kakaoOAuthProperties = KakaoOAuthProperties.builder()
+        kakaoOAuthProperties = KakaoUserInformation.KakaoOAuthProperties.builder()
                 .nickname(kakaoNickname)
                 .build();
 
@@ -52,7 +55,7 @@ class AuthProcessServiceTest {
         given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.empty());
 
         // when
-        authProcessService.getOrCreateUser(userInformation);
+        createUserAdapter.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(atLeastOnce()).save(any());
@@ -62,14 +65,13 @@ class AuthProcessServiceTest {
     @DisplayName("로그인 시 기존 회원이면 회원가입이 호출되지 않는다")
     void login_alreadyUser() {
         // given
-        User user = UserFixture.anUser().build();
-        given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.of(user));
+        UserEntity userEntity = UserFixture.anUser().build();
+        given(userRepository.findByProviderAndProviderId(any(), any())).willReturn(Optional.of(userEntity));
 
         // when
-        authProcessService.getOrCreateUser(userInformation);
+        createUserAdapter.getOrCreateUser(userInformation);
 
         // then
         then(userRepository).should(never()).save(any());
     }
-
 }

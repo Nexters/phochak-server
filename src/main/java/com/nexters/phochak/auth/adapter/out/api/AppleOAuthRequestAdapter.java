@@ -1,12 +1,11 @@
-package com.nexters.phochak.auth.application;
+package com.nexters.phochak.auth.adapter.out.api;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.adapter.out.web.AppleAuthKeyFeignClient;
 import com.nexters.phochak.auth.application.port.in.AppleUserInformation;
-import com.nexters.phochak.auth.application.port.in.OAuthUseCase;
 import com.nexters.phochak.auth.application.port.in.OAuthUserInformation;
+import com.nexters.phochak.auth.application.port.out.OAuthRequestPort;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -28,7 +27,7 @@ import java.util.List;
 @Slf4j
 @RequiredArgsConstructor
 @Service
-public class AppleOAuthService implements OAuthUseCase {
+public class AppleOAuthRequestAdapter implements OAuthRequestPort {
     private static final OAuthProviderEnum OAUTH_PROVIDER = OAuthProviderEnum.APPLE;
     private final AppleAuthKeyFeignClient appleAuthKeyFeignClient;
 

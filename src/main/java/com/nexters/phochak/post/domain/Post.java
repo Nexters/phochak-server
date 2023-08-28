@@ -5,7 +5,7 @@ import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Convert;
@@ -45,7 +45,7 @@ public class Post extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private User user;
+    private UserEntity user;
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
@@ -76,8 +76,8 @@ public class Post extends BaseTime {
     }
 
     @Builder
-    public Post(User user, Shorts shorts, PostCategoryEnum postCategory) {
-        this.user = user;
+    public Post(UserEntity userEntity, Shorts shorts, PostCategoryEnum postCategory) {
+        this.user = userEntity;
         this.shorts = shorts;
         this.postCategory = postCategory;
         this.isBlind = false;

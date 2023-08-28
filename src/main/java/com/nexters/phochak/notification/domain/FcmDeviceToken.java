@@ -1,7 +1,7 @@
 package com.nexters.phochak.notification.domain;
 
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -24,15 +24,15 @@ public class FcmDeviceToken extends BaseTime {
 
     @JoinColumn(name = "USER_ID")
     @OneToOne(fetch = FetchType.LAZY)
-    private User user;
+    private UserEntity userEntity;
 
     @Column(nullable = false)
     private String token;
 
     @Builder
-    public FcmDeviceToken(Long id, User user, String token) {
+    public FcmDeviceToken(Long id, UserEntity userEntity, String token) {
         this.id = id;
-        this.user = user;
+        this.userEntity = userEntity;
         this.token = token;
     }
 

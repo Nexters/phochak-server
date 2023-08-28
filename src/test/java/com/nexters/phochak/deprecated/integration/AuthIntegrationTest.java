@@ -16,9 +16,9 @@ import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.NCPStorageClient;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
 import com.nexters.phochak.user.presentation.UserController;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -78,14 +78,14 @@ public class AuthIntegrationTest extends RestDocs {
         this.mockMvc = getMockMvcBuilder(restDocumentation, userController)
                 .setControllerAdvice(CustomExceptionHandler.class)
                 .build();
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .providerId("1234")
                 .provider(OAuthProviderEnum.KAKAO)
                 .nickname("nickname")
                 .profileImgUrl(null)
                 .build();
-        userRepository.save(user);
-        globalUserId = user.getId();
+        userRepository.save(userEntity);
+        globalUserId = userEntity.getId();
     }
 
     private static String createTokenStringForResponse(JwtTokenUseCase.TokenVo accessToken) {
@@ -236,7 +236,7 @@ public class AuthIntegrationTest extends RestDocs {
         JwtTokenUseCase.TokenVo currentAT = jwtTokenUseCase.generateToken(globalUserId, 1000000000L);
         JwtTokenUseCase.TokenVo currentRT = jwtTokenUseCase.generateToken(globalUserId, 9999999999L);
 
-        User user = userRepository.findById(globalUserId).get();
+        UserEntity userEntity = userRepository.findById(globalUserId).get();
 
         for (int i=0; i < 10; i++) {
             Shorts shorts = Shorts.builder()
@@ -249,7 +249,7 @@ public class AuthIntegrationTest extends RestDocs {
             Post post = Post.builder()
                     .shorts(shorts)
                     .postCategory(PostCategoryEnum.TOUR)
-                    .user(user)
+                    .userEntity(userEntity)
                     .build();
             postRepository.save(post);
 

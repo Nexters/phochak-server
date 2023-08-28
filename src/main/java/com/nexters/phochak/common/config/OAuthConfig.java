@@ -1,6 +1,6 @@
 package com.nexters.phochak.common.config;
 
-import com.nexters.phochak.auth.application.port.in.OAuthUseCase;
+import com.nexters.phochak.auth.application.port.out.OAuthRequestPort;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -14,9 +14,9 @@ import java.util.stream.Collectors;
 public class OAuthConfig {
 
     @Bean
-    public Map<OAuthProviderEnum, OAuthUseCase> oAuthServiceEnumMap(List<OAuthUseCase> oAuthUseCases) {
-        return new EnumMap<>(oAuthUseCases
+    public Map<OAuthProviderEnum, OAuthRequestPort> oAuthServiceEnumMap(List<OAuthRequestPort> oAuthRequestPorts) {
+        return new EnumMap<>(oAuthRequestPorts
                 .stream()
-                .collect(Collectors.toMap(OAuthUseCase::getOAuthProvider, u -> u)));
+                .collect(Collectors.toMap(OAuthRequestPort::getOAuthProvider, u -> u)));
     }
 }

@@ -1,6 +1,6 @@
 package com.nexters.phochak.auth.application.port.in;
 
-public interface AuthProcessUseCase {
+public interface AuthUseCase {
     /**
      * OAuth 로그인을 진행한다.
      *

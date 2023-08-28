@@ -9,9 +9,9 @@ import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.report.domain.ReportPostRepository;
 import com.nexters.phochak.report.presentation.ReportNotificationFeignClient;
 import com.nexters.phochak.shorts.domain.Shorts;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -45,16 +45,22 @@ class ReportPostServiceIntegrationTest {
     ReportNotificationFeignClient slackPostReportFeignClient;
 
 
-    User user;
+    UserEntity userEntity;
     Post post;
 
     @BeforeEach
     void setUp() {
-        user = new User(1234L, OAuthProviderEnum.KAKAO, "testId", "report", "testImage");
+        userEntity = UserEntity.builder()
+                .id(1234L)
+                .provider(OAuthProviderEnum.KAKAO)
+                .providerId("testId")
+                .nickname("report")
+                .profileImgUrl("testImage")
+                .build();
         Shorts shorts = new Shorts(1L, "upload key", "shorts", "thumbnail");
-        post = new Post(user, shorts, PostCategoryEnum.CAFE);
+        post = new Post(userEntity, shorts, PostCategoryEnum.CAFE);
 
-        userRepository.save(user);
+        userRepository.save(userEntity);
         postRepository.save(post);
     }
 
@@ -62,7 +68,7 @@ class ReportPostServiceIntegrationTest {
     @DisplayName("신고에 성공하면 신고 카운트가 1 올라간다")
     void processReport() {
         // given
-        Long userId = user.getId();
+        Long userId = userEntity.getId();
         Long postId = post.getId();
 
         // when
@@ -76,7 +82,7 @@ class ReportPostServiceIntegrationTest {
     @DisplayName("신고 시 중복된 신고가 존재하면 예외가 발생하여 저장에 실패한다")
     void processReport_fail() {
         // given
-        Long userId = user.getId();
+        Long userId = userEntity.getId();
         Long postId = post.getId();
         reportPostService.processReport(userId, postId);
 
@@ -90,10 +96,10 @@ class ReportPostServiceIntegrationTest {
     @DisplayName("신고 카운트가 20개 이상 쌓이면 포스트가 노출되지 않는다")
     void processReport_overCriteria() throws InterruptedException {
         // given
-        Long userId = user.getId();
+        Long userId = userEntity.getId();
         Long postId = post.getId();
         for (int i = 0; i < 19; i++) {
-            User reporter = userRepository.save(User.builder()
+            UserEntity reporter = userRepository.save(UserEntity.builder()
                     .nickname("nickname" + i)
                     .providerId("providerId" + i)
                     .provider(OAuthProviderEnum.KAKAO)

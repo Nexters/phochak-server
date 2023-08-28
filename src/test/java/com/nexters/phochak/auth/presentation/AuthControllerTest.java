@@ -1,13 +1,13 @@
 package com.nexters.phochak.auth.presentation;
 
 import com.nexters.phochak.auth.adapter.in.web.AuthController;
-import com.nexters.phochak.auth.adapter.out.web.KakaoInformationFeignClient;
+import com.nexters.phochak.auth.adapter.out.api.KakaoInformationFeignClient;
 import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

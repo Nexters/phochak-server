@@ -21,8 +21,8 @@ import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.shorts.application.ShortsService;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -59,9 +59,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
-        User user = userRepository.getReferenceById(userId);
+        UserEntity userEntity = userRepository.getReferenceById(userId);
         Post post = Post.builder()
-                .user(user)
+                .userEntity(userEntity)
                 .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
                 .build();
         postRepository.save(post);
@@ -71,9 +71,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        User user = userRepository.getReferenceById(userId);
+        UserEntity userEntity = userRepository.getReferenceById(userId);
         Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!post.getUser().equals(user)) {
+        if (!post.getUser().equals(userEntity)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
         post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
@@ -82,9 +82,9 @@ public class PostServiceImpl implements PostService {
 
     @Override
     public void delete(Long userId, Long postId) {
-        User user = userRepository.getReferenceById(userId);
+        UserEntity userEntity = userRepository.getReferenceById(userId);
         Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!post.getUser().equals(user)) {
+        if (!post.getUser().equals(userEntity)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
         String objectKey = post.getShorts().getUploadKey();
@@ -151,11 +151,11 @@ public class PostServiceImpl implements PostService {
     }
 
     @Override
-    public void deleteAllPostByUser(User user) {
-        List<Post> postList = postRepository.findAllPostByUserFetchJoin(user);
+    public void deleteAllPostByUser(UserEntity userEntity) {
+        List<Post> postList = postRepository.findAllPostByUserFetchJoin(userEntity);
         List<Long> postIdList = postList.stream().map(Post::getId).collect(Collectors.toList());
         List<String> shortsKeyList = postList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
-        postRepository.deleteAllByUser(user);
+        postRepository.deleteAllByUser(userEntity);
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);
         storageBucketClient.removeShortsObject(shortsKeyList);

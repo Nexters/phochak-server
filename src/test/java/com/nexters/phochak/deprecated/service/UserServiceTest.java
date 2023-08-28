@@ -5,9 +5,9 @@ import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.UserCheckResponseDto;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.UserServiceImpl;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -33,7 +33,7 @@ class UserServiceTest {
     @InjectMocks
     UserServiceImpl userService;
 
-    MockUser user = new MockUser();
+    MockUserEntity user = new MockUserEntity();
     KakaoOAuthProperties kakaoOAuthProperties;
     KakaoUserInformation userInformation;
     JwtTokenUseCase.TokenVo tokenVo;
@@ -98,7 +98,7 @@ class UserServiceTest {
                 .hasMessage(ResCode.DUPLICATED_NICKNAME.getMessage());
     }
 
-    static class MockUser extends User {
+    static class MockUserEntity extends UserEntity {
         @Override
         public Long getId() {
             return 1L;

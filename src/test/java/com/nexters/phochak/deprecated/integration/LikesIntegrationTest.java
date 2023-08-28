@@ -13,9 +13,9 @@ import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -72,14 +72,14 @@ class LikesIntegrationTest extends RestDocs {
     @BeforeEach
     void setUp(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = getMockMvcBuilder(restDocumentation, likesController).build();
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .providerId("1234")
                 .provider(OAuthProviderEnum.KAKAO)
                 .nickname("nickname")
                 .profileImgUrl(null)
                 .build();
-        userRepository.save(user);
-        JwtTokenUseCase.TokenVo tokenDto = jwtTokenUseCase.generateToken(user.getId(), 999999999L);
+        userRepository.save(userEntity);
+        JwtTokenUseCase.TokenVo tokenDto = jwtTokenUseCase.generateToken(userEntity.getId(), 999999999L);
         testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
@@ -87,7 +87,7 @@ class LikesIntegrationTest extends RestDocs {
     @DisplayName("포착하기 요청 API - 포착하기 성공")
     void addPhochak() throws Exception {
         //given
-        User user = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        UserEntity userEntity = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Shorts shorts = Shorts.builder()
                 .uploadKey("key")
                 .shortsUrl("shortsUrl")
@@ -96,7 +96,7 @@ class LikesIntegrationTest extends RestDocs {
         shortsRepository.save(shorts);
 
         Post post = Post.builder()
-                .user(user)
+                .userEntity(userEntity)
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
@@ -128,7 +128,7 @@ class LikesIntegrationTest extends RestDocs {
     @DisplayName("포착 취소하기 요청 API - 포착 취소하기 성공")
     void cancelPhochak() throws Exception {
         //given
-        User user = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
+        UserEntity userEntity = userRepository.findByNickname("nickname").orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_USER));
         Shorts shorts = Shorts.builder()
                 .uploadKey("key")
                 .shortsUrl("shortsUrl")
@@ -137,14 +137,14 @@ class LikesIntegrationTest extends RestDocs {
         shortsRepository.save(shorts);
 
         Post post = Post.builder()
-                .user(user)
+                .userEntity(userEntity)
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
         postRepository.save(post);
 
         Likes likes = Likes.builder()
-                        .user(user)
+                        .user(userEntity)
                         .post(post)
                         .build();
         likesRepository.save(likes);

@@ -3,9 +3,9 @@ package com.nexters.phochak.deprecated.repository;
 import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
 import com.nexters.phochak.ignore.domain.IgnoredUsers;
 import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
-import com.nexters.phochak.user.domain.User;
-import com.nexters.phochak.user.domain.UserRepository;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -32,7 +32,7 @@ class IgnoredUserRepositoryTest {
     @Test
     public void save() {
         // given
-        User me = User.builder()
+        UserEntity me = UserEntity.builder()
                 .id(1L)
                 .nickname("me")
                 .provider(OAuthProviderEnum.KAKAO)
@@ -40,17 +40,17 @@ class IgnoredUserRepositoryTest {
                 .profileImgUrl("some_url0")
                 .build();
         userRepository.save(me);
-        User user1 = User.builder()
+        UserEntity userEntity1 = UserEntity.builder()
                 .id(2L)
                 .nickname("user1")
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("111")
                 .profileImgUrl("some_url1")
                 .build();
-        userRepository.save(user1);
+        userRepository.save(userEntity1);
 
         // when
-        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(me, user1);
+        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(me, userEntity1);
         IgnoredUsers ignoredUsers = new IgnoredUsers(ignoredUsersRelation);
         ignoredUserRepository.save(ignoredUsers);
 
@@ -62,7 +62,7 @@ class IgnoredUserRepositoryTest {
     @Test
     public void getIgnoreUserListByUserId() {
         // given
-        User me = User.builder()
+        UserEntity me = UserEntity.builder()
                 .id(1L)
                 .nickname("me")
                 .provider(OAuthProviderEnum.KAKAO)
@@ -70,28 +70,28 @@ class IgnoredUserRepositoryTest {
                 .profileImgUrl("some_url1")
                 .build();
         userRepository.save(me);
-        User user2 = User.builder()
+        UserEntity userEntity2 = UserEntity.builder()
                 .id(2L)
                 .nickname("user2")
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("2")
                 .profileImgUrl("some_url2")
                 .build();
-        userRepository.save(user2);
-        User user3 = User.builder()
+        userRepository.save(userEntity2);
+        UserEntity userEntity3 = UserEntity.builder()
                 .id(3L)
                 .nickname("user3")
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("3")
                 .profileImgUrl("some_url3")
                 .build();
-        userRepository.save(user3);
+        userRepository.save(userEntity3);
 
         // when
-        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(me, user2);
+        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(me, userEntity2);
         IgnoredUsers ignoredUsers = new IgnoredUsers(ignoredUsersRelation);
         ignoredUserRepository.save(ignoredUsers);
-        IgnoredUsersRelation ignoredUsersRelation2 = new IgnoredUsersRelation(me, user3);
+        IgnoredUsersRelation ignoredUsersRelation2 = new IgnoredUsersRelation(me, userEntity3);
         IgnoredUsers ignoredUsers2 = new IgnoredUsers(ignoredUsersRelation2);
         ignoredUserRepository.save(ignoredUsers2);
 
