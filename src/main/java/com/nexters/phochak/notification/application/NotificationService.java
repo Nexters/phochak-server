@@ -2,6 +2,7 @@ package com.nexters.phochak.notification.application;
 
 import com.nexters.phochak.notification.adapter.out.api.NotificationClient;
 import com.nexters.phochak.notification.adapter.out.api.NotificationFormDto;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.notification.application.port.out.RegisterFcmDeviceTokenPort;
 import com.nexters.phochak.notification.application.port.out.RegisterTokenRequest;
@@ -17,25 +18,17 @@ import java.util.List;
 @Slf4j
 @Service
 public class NotificationService implements NotificationUsecase {
-//    private final FcmDeviceTokenRepository fcmDeviceTokenRepository;
+    private final FcmDeviceTokenRepository fcmDeviceTokenRepository;
     private final RegisterFcmDeviceTokenPort registerFcmDeviceTokenPort;
     private final NotificationClient notificationClient;
 
     @Override
     public void registryFcmDeviceToken(RegisterTokenRequest registerTokenRequest) {
-        FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(
-                registerTokenRequest.getUserEntity(),
-                registerTokenRequest.getToken()
-        );
+        FcmDeviceToken fcmDeviceToken = new FcmDeviceToken(registerTokenRequest.user(), registerTokenRequest.token());
         registerFcmDeviceTokenPort.save(fcmDeviceToken);
-//        fcmDeviceTokenRepository.save(
-//                FcmDeviceTokenEntity.builder()
-//                    .userEntity(userEntity)
-//                    .token(token)
-//                    .build());
     }
 
-    @Override
+    @Override //TODO shorts Service 로 이관
     public void postEncodeState(String uploadKey, ShortsStateEnum shortsStateEnum) {
         List<Object[]> queryResult = fcmDeviceTokenRepository.findDeviceTokenAndPostIdByUploadKey(uploadKey);
 
