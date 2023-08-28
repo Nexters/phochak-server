@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification.domain;
+package com.nexters.phochak.notification.adapter.out.persistence;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

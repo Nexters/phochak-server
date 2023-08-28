@@ -1,6 +1,6 @@
 package com.nexters.phochak.user.domain;
 
-import com.nexters.phochak.notification.domain.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceToken;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.Getter;
 

@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.repository;
 
-import com.nexters.phochak.notification.domain.FcmDeviceToken;
-import com.nexters.phochak.notification.domain.FcmDeviceTokenRepository;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.post.domain.PostRepository;

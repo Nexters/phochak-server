@@ -2,7 +2,7 @@ package com.nexters.phochak.user.adapter.out.persistence;
 
 import com.google.common.annotations.VisibleForTesting;
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.notification.domain.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceToken;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Convert;

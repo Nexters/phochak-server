@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification.domain;
+package com.nexters.phochak.notification.adapter.out.persistence;
 
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;

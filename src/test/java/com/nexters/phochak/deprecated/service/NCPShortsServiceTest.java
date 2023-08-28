@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.service;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
-import com.nexters.phochak.notification.application.NotificationService;
+import com.nexters.phochak.notification.application.port.in.NotificationUsecase;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
@@ -39,7 +39,7 @@ class NCPShortsServiceTest {
     NCPStorageProperties ncpStorageProperties;
 
     @Mock
-    NotificationService notificationService;
+    NotificationUsecase notificationUsecase;
 
     @BeforeEach
     void setUp() {
@@ -47,7 +47,7 @@ class NCPShortsServiceTest {
         NCPStorageProperties.NCPShortsProperties shorts = new NCPStorageProperties.NCPShortsProperties("", "", "", "");
         NCPStorageProperties.NCPThumbnailProperties thumbnail = new NCPStorageProperties.NCPThumbnailProperties("", "", "", "");
         ncpStorageProperties = new NCPStorageProperties(s3, shorts, thumbnail);
-        mock = new NCPShortsService(shortsRepository, ncpStorageProperties, notificationService);
+        mock = new NCPShortsService(shortsRepository, ncpStorageProperties, notificationUsecase);
     }
 
     @Test
