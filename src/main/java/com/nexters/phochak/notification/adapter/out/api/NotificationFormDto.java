@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification;
+package com.nexters.phochak.notification.adapter.out.api;
 
 import lombok.Builder;
 import lombok.Getter;

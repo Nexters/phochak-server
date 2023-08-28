@@ -1,6 +1,6 @@
 package com.nexters.phochak.user.domain;
 
-import com.nexters.phochak.notification.domain.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.assertj.core.util.VisibleForTesting;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 public class UserFixture {
 
     private Long userId = 1L;
-    private FcmDeviceToken fcmToken = null;
+    private FcmDeviceTokenEntity fcmToken = null;
     private OAuthProviderEnum provider = OAuthProviderEnum.KAKAO;
     private String providerId = "providerId";
     private String nickname = "nickname";
@@ -26,7 +26,7 @@ public class UserFixture {
         return this;
     }
 
-    public UserFixture fcmToken(final FcmDeviceToken fcmToken) {
+    public UserFixture fcmToken(final FcmDeviceTokenEntity fcmToken) {
         this.fcmToken = fcmToken;
         return this;
     }

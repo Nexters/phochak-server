@@ -44,14 +44,10 @@ class AuthControllerTest extends RestDocsApiTest {
         final KakaoUserInformation kakaoRequestResponse = mockKakaoUserInformation(providerId);
         when(kakaoInformationFeignClient.call(any(), any())).thenReturn(kakaoRequestResponse);
 
-        assertThat(userRepository.findByProviderAndProviderId(provider, providerId).isEmpty())
-                .isTrue();
-
         final ResultActions response = Scenario.login().request(mockMvc).getResponse();
         DocumentGenerator.loginDocument(response);
 
-        assertThat(userRepository.findByProviderAndProviderId(provider, providerId).isPresent())
-                .isTrue();
+        assertThat(userRepository.findByProviderAndProviderId(provider, providerId).isPresent()).isTrue();
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {

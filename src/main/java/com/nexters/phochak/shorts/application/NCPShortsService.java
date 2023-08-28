@@ -1,7 +1,7 @@
 package com.nexters.phochak.shorts.application;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
-import com.nexters.phochak.notification.application.NotificationService;
+import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.domain.Shorts;
@@ -21,7 +21,7 @@ public class NCPShortsService implements ShortsService {
 
     private final ShortsRepository shortsRepository;
     private final NCPStorageProperties ncpStorageProperties;
-    private final NotificationService notificationService;
+    private final NotificationUsecase notificationUsecase;
 
     @Override
     public void connectShorts(String uploadKey, Post post) {
@@ -62,17 +62,17 @@ public class NCPShortsService implements ShortsService {
         switch (encodingCallbackRequestDto.getStatus()) {
             case "WAITING":
                 connectPost(uploadKey);
-                notificationService.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
+                notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
                 break;
             case "RUNNING":
                 break;
             case "FAILURE":
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.FAIL);
-                notificationService.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
+                notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
                 break;
             case "COMPLETE":
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
-                notificationService.postEncodeState(uploadKey, ShortsStateEnum.OK);
+                notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.OK);
                 break;
             default:
                 log.error("NCPShortsService|Undefined encoding callback status message: {}",

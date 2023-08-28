@@ -1,7 +1,8 @@
 package com.nexters.phochak.deprecated.repository;
 
-import com.nexters.phochak.notification.domain.FcmDeviceToken;
-import com.nexters.phochak.notification.domain.FcmDeviceTokenRepository;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
+import com.nexters.phochak.notification.domain.OperatingSystem;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.post.domain.PostRepository;
@@ -47,6 +48,7 @@ class FcmDeviceTokenRepositoryTest {
                 .profileImgUrl("url")
                 .provider(OAuthProviderEnum.KAKAO)
                 .providerId("id")
+                .isBlocked(false)
                 .build();
         userRepository.save(userEntity);
 
@@ -65,11 +67,12 @@ class FcmDeviceTokenRepositoryTest {
         postRepository.save(post);
         Long postId = post.getId();
 
-        FcmDeviceToken fcmDeviceToken = FcmDeviceToken.builder()
+        FcmDeviceTokenEntity fcmDeviceTokenEntity = FcmDeviceTokenEntity.builder()
                 .token("deviceToken")
-                .userEntity(userEntity)
+                .operatingSystem(OperatingSystem.ANDROID)
+                .user(userEntity)
                 .build();
-        fcmDeviceTokenRepository.save(fcmDeviceToken);
+        fcmDeviceTokenRepository.save(fcmDeviceTokenEntity);
         em.flush();
         em.clear();
 

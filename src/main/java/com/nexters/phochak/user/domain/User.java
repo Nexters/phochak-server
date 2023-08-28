@@ -1,6 +1,6 @@
 package com.nexters.phochak.user.domain;
 
-import com.nexters.phochak.notification.domain.FcmDeviceToken;
+import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.Getter;
 
@@ -9,7 +9,7 @@ import java.time.LocalDateTime;
 @Getter
 public class User {
     private Long id;
-    private final FcmDeviceToken fcmDeviceToken;
+    private final FcmDeviceTokenEntity fcmDeviceTokenEntity;
     private final OAuthProviderEnum provider;
     private final String providerId;
     private final String nickname;
@@ -17,8 +17,8 @@ public class User {
     private final Boolean isBlocked;
     private final LocalDateTime leaveDate;
 
-    public User(final FcmDeviceToken fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
-        this.fcmDeviceToken = fcmDeviceToken;
+    public User(final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+        this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;
@@ -27,9 +27,9 @@ public class User {
         this.leaveDate = leaveDate;
     }
 
-    public User(final Long id, final FcmDeviceToken fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    public User(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.id = id;
-        this.fcmDeviceToken = fcmDeviceToken;
+        this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;

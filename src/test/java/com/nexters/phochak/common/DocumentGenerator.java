@@ -19,7 +19,8 @@ public class DocumentGenerator {
                 ),
                 queryParameters(
                         parameterWithName("token").description("(필수) token (Access token or Identify Token)"),
-                        parameterWithName("fcmDeviceToken").description("(필수) FCM client 식별 토큰")
+                        parameterWithName("fcmDeviceToken").description("(선택) FCM client 식별 토큰"),
+                        parameterWithName("operatingSystem").description("(선택) 운영체제 (ANDROID, IOS)")
                 ),
                 responseFields(
                         fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),

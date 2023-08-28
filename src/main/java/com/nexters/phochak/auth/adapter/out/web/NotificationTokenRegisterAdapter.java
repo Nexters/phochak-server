@@ -1,6 +1,8 @@
 package com.nexters.phochak.auth.adapter.out.web;
 
 import com.nexters.phochak.auth.application.port.out.NotificationTokenRegisterPort;
+import com.nexters.phochak.notification.domain.OperatingSystem;
+import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -11,7 +13,7 @@ public class NotificationTokenRegisterAdapter implements NotificationTokenRegist
     private final NotificationTokenRegisterNetworkClient notificationTokenRegisterNetworkClient;
 
     @Override
-    public void register(final Long userId, final String token) {
-        notificationTokenRegisterNetworkClient.register(userId, token);
+    public void register(final User user, final String token, final OperatingSystem operatingSystem) {
+        notificationTokenRegisterNetworkClient.register(user, token, operatingSystem);
     }
 }
