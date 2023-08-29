@@ -18,6 +18,7 @@ import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
 import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
+import com.nexters.phochak.user.application.port.out.UpdateUserNicknamePort;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -34,7 +35,9 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
 
+//    private final FindUserPort findUserPort;
     private final CreateUserPort createUserPort;
+    private final UpdateUserNicknamePort updateUserNicknamePort;
     private final UserRepository userRepository;
     private final PostService postService;
     private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
@@ -54,16 +57,17 @@ public class UserService implements UserUseCase {
 
     @Override
     public UserCheckResponseDto checkNicknameIsDuplicated(String nickname) {
-        return new UserCheckResponseDto(isDuplicatedNickname(nickname));
+        return new UserCheckResponseDto(updateUserNicknamePort.checkDuplicatedNickname(nickname));
     }
 
 
     @Override
     public void modifyNickname(String nickname) {
         Long userId = UserContext.CONTEXT.get();
+
         UserEntity userEntity = userRepository.getBy(userId);
 
-        if (isDuplicatedNickname(nickname)) {
+        if (updateUserNicknamePort.checkDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
 
@@ -130,10 +134,6 @@ public class UserService implements UserUseCase {
     private OAuthRequestPort getProperProviderPort(final String provider) {
         OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
         return oAuthRequestPortMap.get(providerEnum);
-    }
-
-    private boolean isDuplicatedNickname(String nickname) {
-        return userRepository.existsByNickname(nickname);
     }
 
 }
