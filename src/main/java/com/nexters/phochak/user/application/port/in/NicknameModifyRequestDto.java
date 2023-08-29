@@ -1,4 +1,4 @@
-package com.nexters.phochak.user;
+package com.nexters.phochak.user.application.port.in;
 
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.validation.constraints.NotNull;
