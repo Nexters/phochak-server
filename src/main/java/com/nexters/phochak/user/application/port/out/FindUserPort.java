@@ -1,4 +1,7 @@
 package com.nexters.phochak.user.application.port.out;
 
-public class FindUserPort {
+import com.nexters.phochak.user.domain.User;
+
+public interface FindUserPort {
+    User load(final Long userId);
 }

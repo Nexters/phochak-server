@@ -63,20 +63,11 @@ public class UserService implements UserUseCase {
 
     @Override
     public void modifyNickname(final Long userId, final String nickname) {
-        User user = findUserPort.load(userId);
-        UserEntity userEntity = userRepository.getBy(userId);
-
         if (updateUserNicknamePort.checkDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
-
-        try {
-            userEntity.modifyNickname(nickname);
-        } catch (DataIntegrityViolationException e) {
-
-            throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
-        }
-
+        User user = findUserPort.load(userId);
+        updateUserNicknamePort.modifyNickname(user, nickname);
     }
 
     @Override
