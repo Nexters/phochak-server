@@ -59,18 +59,6 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 회원이면 NOT_FOUND_USER 예외가 발생한다")
-    void validateUser() {
-        // given
-        given(userRepository.existsById(1L)).willReturn(false);
-
-        // when & then
-        assertThatThrownBy(() -> userService.validateUser(1L))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.NOT_FOUND_USER.getMessage());
-    }
-
-    @Test
     @DisplayName("닉네임 중복 체크 시 중복된 닉네임이 존재하면 true를 반환한다")
     void checkNickname_duplicated() {
         // given

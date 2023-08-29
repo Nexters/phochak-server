@@ -16,6 +16,7 @@ public class Scenario {
         public Scenario advance() {
             return new Scenario();
         }
+
     }
     public static LoginApi login() {
         return new LoginApi();

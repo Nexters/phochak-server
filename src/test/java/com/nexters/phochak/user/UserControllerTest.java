@@ -15,12 +15,16 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -58,10 +62,22 @@ class UserControllerTest extends RestDocsApiTest {
         String nickname = "여행자#123";
 
         mockMvc.perform(
-            RestDocumentationRequestBuilders
-                .get("/v1/user/check/nickname")
-                .param("nickname", nickname))
-            .andExpect(status().isOk());
+                    RestDocumentationRequestBuilders
+                            .get("/v1/user/check/nickname")
+                            .param("nickname", nickname))
+            .andExpect(status().isOk())
+            .andDo(document("user/check/nickname",
+                    preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    requestFields(
+                            fieldWithPath("nickname").description("(필수) 중복확인하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
+                    ),
+                    responseFields(
+                            fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                            fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                            fieldWithPath("data.isDuplicated").type(JsonFieldType.BOOLEAN).description("닉네임 중복여부")
+                    )
+            ));
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {

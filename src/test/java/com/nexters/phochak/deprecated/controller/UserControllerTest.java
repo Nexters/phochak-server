@@ -105,7 +105,7 @@ class UserControllerTest extends RestDocs {
     @DisplayName("유저 API - 닉네임 중복확인")
     void checkNicknameIsDuplicated() throws Exception {
         String nickname = "여행자#123";
-        UserCheckResponseDto response = UserCheckResponseDto.of(true);
+        UserCheckResponseDto response = new UserCheckResponseDto(true);
 
         when(userService.checkNicknameIsDuplicated(any())).thenReturn(response);
 

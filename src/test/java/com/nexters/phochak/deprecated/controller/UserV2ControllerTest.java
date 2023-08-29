@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.controller;
 
-import com.nexters.phochak.auth.adapter.in.web.AuthController;
 import com.nexters.phochak.common.docs.RestDocs;
+import com.nexters.phochak.user.adapter.in.web.UserController;
 import com.nexters.phochak.user.application.port.in.JwtResponseDto;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.application.port.in.UserUseCase;
@@ -37,7 +37,7 @@ class UserV2ControllerTest extends RestDocs {
     JwtTokenUseCase jwtTokenUseCase;
 
     @InjectMocks
-    AuthController userV2Controller;
+    UserController userV2Controller;
     MockMvc mockMvc;
 
     @BeforeEach
