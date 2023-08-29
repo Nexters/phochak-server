@@ -1,6 +1,6 @@
 package com.nexters.phochak.common.config;
 
-import com.nexters.phochak.user.application.application.port.out.OAuthRequestPort;
+import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;

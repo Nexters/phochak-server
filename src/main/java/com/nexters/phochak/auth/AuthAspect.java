@@ -2,9 +2,9 @@ package com.nexters.phochak.auth;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
+import com.nexters.phochak.user.application.JwtTokenService;
 import com.nexters.phochak.user.application.UserService;
-import com.nexters.phochak.user.application.application.JwtTokenService;
-import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -14,7 +14,7 @@ import org.aspectj.lang.annotation.Aspect;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 
-import static com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase.TokenVo.TOKEN_TYPE;
+import static com.nexters.phochak.user.application.port.in.JwtTokenUseCase.TokenVo.TOKEN_TYPE;
 
 @Slf4j
 @RequiredArgsConstructor

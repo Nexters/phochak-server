@@ -1,6 +1,6 @@
 package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.user.application.application.port.in.OAuthUserInformation;
+import com.nexters.phochak.user.application.port.in.OAuthUserInformation;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;

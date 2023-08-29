@@ -14,7 +14,7 @@ import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
-import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
