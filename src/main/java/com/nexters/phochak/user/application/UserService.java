@@ -54,7 +54,7 @@ public class UserService implements UserUseCase {
 
     @Override
     public UserCheckResponseDto checkNicknameIsDuplicated(String nickname) {
-        return UserCheckResponseDto.of(isDuplicatedNickname(nickname));
+        return new UserCheckResponseDto(isDuplicatedNickname(nickname));
     }
 
 
