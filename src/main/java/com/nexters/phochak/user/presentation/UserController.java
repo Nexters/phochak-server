@@ -34,13 +34,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/user")
 @RestController
 public class UserController {
-    private final AuthUseCase authService;
+    private final AuthUseCase authUserCase;
     private final UserService userService;
     private final JwtTokenUseCase jwtTokenUseCase;
 
     @GetMapping("/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
-        Long loginUserId = authService.login(provider, requestDto);
+        Long loginUserId = authUserCase.login(provider, requestDto);
         return new CommonResponse<>(jwtTokenUseCase.issueToken( loginUserId));
     }
 
