@@ -38,7 +38,7 @@ public class LoginApi {
 
         final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
-                                .get("/v2/auth/login/{provider}", provider)
+                                .get("/v1/user/login/{provider}", provider)
                                 .param("token", token)
                                 .param("fcmDeviceToken", fcmDeviceToken)
                                 .param("operatingSystem", operatingSystem))

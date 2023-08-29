@@ -21,6 +21,7 @@ import org.springframework.test.web.servlet.ResultActions;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
@@ -39,7 +40,7 @@ class UserControllerTest extends RestDocsApiTest {
     }
 
     @Test
-    @DisplayName("인증 API - 카카오 OAuth 회원가입 성공")
+    @DisplayName("[인증 API] 카카오 OAuth 회원가입")
     void sign_up() throws Exception {
         final OAuthProviderEnum provider = OAuthProviderEnum.KAKAO;
         final String providerId = "newProviderId";
@@ -53,7 +54,7 @@ class UserControllerTest extends RestDocsApiTest {
     }
 
     @Test
-    @DisplayName("유저 API - 닉네임 중복확인")
+    @DisplayName("[유저 API] 닉네임 중복확인")
     void checkNicknameIsDuplicated() throws Exception {
         String nickname = "여행자#123";
         final ResultActions response = mockMvc.perform(
@@ -62,7 +63,22 @@ class UserControllerTest extends RestDocsApiTest {
                                 .param("nickname", nickname))
                 .andExpect(status().isOk());
         DocumentGenerator.checkNickname(response);
+        response.andExpect(jsonPath("$.data.isDuplicated").value(false));
     }
+
+    //TODO: 닉네임 변경 리팩토링 이후 추가
+//    @Test
+//    @DisplayName("[유저 API] 닉네임 중복확인 - 실패: 이미 사용 중인 닉네임")
+//    void checkNicknameIsDuplicated_fail_already_exist() throws Exception {
+   // 회원 생성 및 닉네임 변경 시나리오 추가
+//        String nickname = "여행자#123";
+//        final ResultActions response = mockMvc.perform(
+//                        RestDocumentationRequestBuilders
+//                                .get("/v1/user/check/nickname")
+//                                .param("nickname", nickname))
+//                .andExpect(status().isOk())
+//                .andExpect(jsonPath("$.data.isDuplicated").value(true));
+//    }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {
         final String connectedAt = "connectedAt";
