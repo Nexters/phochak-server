@@ -1,6 +1,5 @@
 package com.nexters.phochak.user.application;
 
-import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
@@ -16,6 +15,7 @@ import com.nexters.phochak.user.application.port.in.UserCheckResponseDto;
 import com.nexters.phochak.user.application.port.in.UserInfoResponseDto;
 import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
+import com.nexters.phochak.user.application.port.out.FindUserPort;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
 import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
 import com.nexters.phochak.user.application.port.out.UpdateUserNicknamePort;
@@ -35,7 +35,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
 
-//    private final FindUserPort findUserPort;
+    private final FindUserPort findUserPort;
     private final CreateUserPort createUserPort;
     private final UpdateUserNicknamePort updateUserNicknamePort;
     private final UserRepository userRepository;
@@ -45,7 +45,7 @@ public class UserService implements UserUseCase {
     private final NotificationTokenRegisterPort notificationTokenRegisterPort;
 
     @Override
-    public Long login(String provider, LoginRequestDto requestDto) {
+    public Long login(final String provider, final LoginRequestDto requestDto) {
         OAuthRequestPort oAuthRequestPort = getProperProviderPort(provider);
         OAuthUserInformation userInformation = oAuthRequestPort.requestUserInformation(requestDto.token());
         User user = createUserPort.getOrCreateUser(userInformation);
@@ -56,22 +56,27 @@ public class UserService implements UserUseCase {
     }
 
     @Override
-    public UserCheckResponseDto checkNicknameIsDuplicated(String nickname) {
+    public UserCheckResponseDto checkNicknameIsDuplicated(final String nickname) {
         return new UserCheckResponseDto(updateUserNicknamePort.checkDuplicatedNickname(nickname));
     }
 
 
     @Override
-    public void modifyNickname(String nickname) {
-        Long userId = UserContext.CONTEXT.get();
-
+    public void modifyNickname(final Long userId, final String nickname) {
+        User user = findUserPort.load(userId);
         UserEntity userEntity = userRepository.getBy(userId);
 
         if (updateUserNicknamePort.checkDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
 
-        userEntity.modifyNickname(nickname);
+        try {
+            userEntity.modifyNickname(nickname);
+        } catch (DataIntegrityViolationException e) {
+
+            throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
+        }
+
     }
 
     @Override

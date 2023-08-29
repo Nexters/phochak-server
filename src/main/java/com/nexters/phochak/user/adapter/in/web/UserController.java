@@ -2,8 +2,6 @@ package com.nexters.phochak.user.adapter.in.web;
 
 import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.common.exception.PhochakException;
-import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.CommonResponse;
 import com.nexters.phochak.user.application.port.in.JwtResponseDto;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
@@ -18,7 +16,6 @@ import com.nexters.phochak.user.application.port.in.WithdrawRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -66,12 +63,8 @@ public class UserController {
     @Auth
     @PutMapping("nickname")
     public CommonResponse<Void> modifyNickname(@RequestBody @Valid NicknameModifyRequestDto request) {
-        try {
-            userUseCase.modifyNickname(request.getNickname());
-        } catch (DataIntegrityViolationException e) {
-            // 이미 중복된 nickname을 가진 row가 있는 경우
-            throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
-        }
+        Long userId = UserContext.CONTEXT.get();
+        userUseCase.modifyNickname(userId, request.getNickname());
         return new CommonResponse<>();
     }
 

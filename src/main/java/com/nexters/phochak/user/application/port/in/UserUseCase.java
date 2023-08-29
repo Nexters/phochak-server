@@ -22,9 +22,11 @@ public interface UserUseCase {
 
     /**
      * 원하는 닉네임으로 닉네임을 변경한다.
+     *
+     * @param userId
      * @param nickname
      */
-    void modifyNickname(String nickname);
+    void modifyNickname(final Long userId, String nickname);
 
     /**
      * 해당 유저의 정보를 조회한다.
