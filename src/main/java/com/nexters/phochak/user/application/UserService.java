@@ -34,12 +34,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
 
-    private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
     private final CreateUserPort createUserPort;
-    private final NotificationTokenRegisterPort notificationTokenRegisterPort;
-    private final IgnoredUserRepository ignoredUserRepository;
     private final UserRepository userRepository;
     private final PostService postService;
+    private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
+    private final IgnoredUserRepository ignoredUserRepository;
+    private final NotificationTokenRegisterPort notificationTokenRegisterPort;
 
     @Override
     public Long login(String provider, LoginRequestDto requestDto) {
@@ -50,13 +50,6 @@ public class UserService implements UserUseCase {
             notificationTokenRegisterPort.register(user, requestDto.fcmDeviceToken(), requestDto.operatingSystem());
         }
         return user.getId();
-    }
-
-    @Override
-    public void validateUser(Long userId) {
-        if (!userRepository.existsById(userId)) {
-            throw new PhochakException(ResCode.NOT_FOUND_USER);
-        }
     }
 
     @Override

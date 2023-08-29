@@ -42,11 +42,6 @@ public class UserController {
         return new CommonResponse<>(jwtTokenUseCase.issueToken( loginUserId));
     }
 
-    @PostMapping("/reissue-token")
-    public CommonResponse<JwtResponseDto> reissue(@RequestBody ReissueTokenRequestDto reissueTokenRequestDto) {
-        return new CommonResponse<>(jwtTokenUseCase.reissueToken(reissueTokenRequestDto));
-    }
-
     @Auth
     @PostMapping("/logout")
     public CommonResponse<Void> logout(@RequestBody LogoutRequestDto logoutRequestDto) {
@@ -54,9 +49,18 @@ public class UserController {
         return new CommonResponse<>();
     }
 
-    @GetMapping("/check/nickname")
-    public CommonResponse<UserCheckResponseDto> checkNicknameIsDuplicated(@RequestParam String nickname) {
-        return new CommonResponse<>(userUseCase.checkNicknameIsDuplicated(nickname));
+    @PostMapping("/reissue-token")
+    public CommonResponse<JwtResponseDto> reissue(@RequestBody ReissueTokenRequestDto reissueTokenRequestDto) {
+        return new CommonResponse<>(jwtTokenUseCase.reissueToken(reissueTokenRequestDto));
+    }
+
+    @Auth
+    @PostMapping("/withdraw")
+    public CommonResponse<Void> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto) {
+        Long userId = UserContext.CONTEXT.get();
+        jwtTokenUseCase.logout(withdrawRequestDto.getRefreshToken());
+        userUseCase.withdraw(userId);
+        return new CommonResponse<>();
     }
 
     @Auth
@@ -71,6 +75,12 @@ public class UserController {
         return new CommonResponse<>();
     }
 
+    @GetMapping("/check/nickname")
+    public CommonResponse<UserCheckResponseDto> checkNicknameIsDuplicated(@RequestParam String nickname) {
+        return new CommonResponse<>(userUseCase.checkNicknameIsDuplicated(nickname));
+    }
+
+
     @Auth
     @GetMapping({"/{userId}", "/"})
     public CommonResponse<UserInfoResponseDto> getInfo(@PathVariable(value = "userId", required = false) Long pageOwnerId) {
@@ -78,13 +88,5 @@ public class UserController {
         return new CommonResponse<>(userUseCase.getInfo(pageOwnerId, userId));
     }
 
-    @Auth
-    @PostMapping("/withdraw")
-    public CommonResponse<Void> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto) {
-        Long userId = UserContext.CONTEXT.get();
-        jwtTokenUseCase.logout(withdrawRequestDto.getRefreshToken());
-        userUseCase.withdraw(userId);
-        return new CommonResponse<>();
-    }
 
 }

@@ -4,7 +4,6 @@ import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.application.JwtTokenService;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
-import com.nexters.phochak.user.application.port.in.UserUseCase;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -21,11 +20,10 @@ import static com.nexters.phochak.user.application.port.in.JwtTokenUseCase.Token
 @Aspect
 @Component
 public class AuthAspect {
+    private final JwtTokenUseCase jwtTokenUseCase;
+    private final HttpServletRequest httpServletRequest;
     public static final String AUTHORIZATION_HEADER = "Authorization";
     public static final String WHITE_SPACE = " ";
-    private final HttpServletRequest httpServletRequest;
-    private final JwtTokenUseCase jwtTokenUseCase;
-    private final UserUseCase userService;
 
     @Around("@annotation(com.nexters.phochak.auth.Auth)")
     public Object validateAccessToken(final ProceedingJoinPoint joinPoint) throws Throwable {
@@ -38,13 +36,6 @@ public class AuthAspect {
         accessToken = JwtTokenService.parseOnlyTokenFromRequest(accessToken);
         Long userId = jwtTokenUseCase.validateJwt(accessToken);
 
-        // 유저 검증 후 Thread Local 변수에 할당
-        try {
-            userService.validateUser(userId);
-        } catch (PhochakException e) {
-            log.warn("AuthAspect|Invalid User: {}", userId, e);
-            throw e;
-        }
         UserContext.CONTEXT.set(userId);
 
         return joinPoint.proceed();
