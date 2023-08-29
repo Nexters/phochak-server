@@ -6,9 +6,9 @@ import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.UserInfoResponseDto;
 import com.nexters.phochak.user.adapter.in.web.UserController;
-import com.nexters.phochak.user.application.UserService;
 import com.nexters.phochak.user.application.port.in.JwtResponseDto;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.port.in.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -47,7 +47,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserControllerTest extends RestDocs {
 
     @Mock
-    UserService userService;
+    UserUseCase userService;
     @Mock
     JwtTokenUseCase jwtTokenUseCase;
 

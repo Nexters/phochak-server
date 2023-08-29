@@ -5,7 +5,7 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
-import com.nexters.phochak.user.application.UserServiceImpl;
+import com.nexters.phochak.user.application.UserService;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.application.port.in.KakaoUserInformation;
 import org.junit.jupiter.api.BeforeEach;
@@ -31,7 +31,7 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    UserServiceImpl userService;
+    UserService userService;
 
     MockUserEntity user = new MockUserEntity();
     KakaoOAuthProperties kakaoOAuthProperties;

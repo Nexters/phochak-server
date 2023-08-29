@@ -4,7 +4,7 @@ import com.nexters.phochak.auth.AuthAspect;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.application.JwtTokenService;
-import com.nexters.phochak.user.application.UserServiceImpl;
+import com.nexters.phochak.user.application.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.assertj.core.api.Assertions;
@@ -24,7 +24,7 @@ import static org.mockito.Mockito.times;
 @ExtendWith(MockitoExtension.class)
 class AuthAspectTest {
     @Mock
-    UserServiceImpl userService;
+    UserService userService;
     @Mock
     HttpServletRequest httpServletRequest;
     @Mock

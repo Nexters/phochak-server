@@ -4,7 +4,7 @@ import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.post.CommonResponse;
-import com.nexters.phochak.user.application.UserService;
+import com.nexters.phochak.user.application.port.in.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -18,7 +18,7 @@ import java.util.List;
 @RestController
 public class IgnoreController {
 
-    private final UserService userService;
+    private final UserUseCase userService;
 
     @Auth
     @GetMapping("/v1/user/ignore")

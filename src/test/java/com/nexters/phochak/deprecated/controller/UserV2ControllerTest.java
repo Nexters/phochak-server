@@ -2,9 +2,9 @@ package com.nexters.phochak.deprecated.controller;
 
 import com.nexters.phochak.auth.adapter.in.web.AuthController;
 import com.nexters.phochak.common.docs.RestDocs;
-import com.nexters.phochak.user.application.UserService;
 import com.nexters.phochak.user.application.port.in.JwtResponseDto;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.port.in.UserUseCase;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserV2ControllerTest extends RestDocs {
 
     @Mock
-    UserService userService;
+    UserUseCase userService;
     @Mock
     JwtTokenUseCase jwtTokenUseCase;
 

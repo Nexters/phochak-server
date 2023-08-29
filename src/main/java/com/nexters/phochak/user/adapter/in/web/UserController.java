@@ -8,13 +8,12 @@ import com.nexters.phochak.post.CommonResponse;
 import com.nexters.phochak.user.NicknameModifyRequestDto;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.UserInfoResponseDto;
-import com.nexters.phochak.user.application.UserService;
-import com.nexters.phochak.user.application.port.in.AuthUseCase;
 import com.nexters.phochak.user.application.port.in.JwtResponseDto;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.application.port.in.LoginRequestDto;
 import com.nexters.phochak.user.application.port.in.LogoutRequestDto;
 import com.nexters.phochak.user.application.port.in.ReissueTokenRequestDto;
+import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.application.port.in.WithdrawRequestDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -34,13 +33,12 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/v1/user")
 @RestController
 public class UserController {
-    private final AuthUseCase authUserCase;
-    private final UserService userService;
+    private final UserUseCase userUseCase;
     private final JwtTokenUseCase jwtTokenUseCase;
 
     @GetMapping("/login/{provider}")
     public CommonResponse<JwtResponseDto> login(@PathVariable String provider, @Valid LoginRequestDto requestDto) {
-        Long loginUserId = authUserCase.login(provider, requestDto);
+        Long loginUserId = userUseCase.login(provider, requestDto);
         return new CommonResponse<>(jwtTokenUseCase.issueToken( loginUserId));
     }
 
@@ -58,14 +56,14 @@ public class UserController {
 
     @GetMapping("/check/nickname")
     public CommonResponse<UserCheckResponseDto> checkNicknameIsDuplicated(@RequestParam String nickname) {
-        return new CommonResponse<>(userService.checkNicknameIsDuplicated(nickname));
+        return new CommonResponse<>(userUseCase.checkNicknameIsDuplicated(nickname));
     }
 
     @Auth
     @PutMapping("nickname")
     public CommonResponse<Void> modifyNickname(@RequestBody @Valid NicknameModifyRequestDto request) {
         try {
-            userService.modifyNickname(request.getNickname());
+            userUseCase.modifyNickname(request.getNickname());
         } catch (DataIntegrityViolationException e) {
             // 이미 중복된 nickname을 가진 row가 있는 경우
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
@@ -77,7 +75,7 @@ public class UserController {
     @GetMapping({"/{userId}", "/"})
     public CommonResponse<UserInfoResponseDto> getInfo(@PathVariable(value = "userId", required = false) Long pageOwnerId) {
         Long userId = UserContext.CONTEXT.get();
-        return new CommonResponse<>(userService.getInfo(pageOwnerId, userId));
+        return new CommonResponse<>(userUseCase.getInfo(pageOwnerId, userId));
     }
 
     @Auth
@@ -85,7 +83,7 @@ public class UserController {
     public CommonResponse<Void> withdraw(@RequestBody WithdrawRequestDto withdrawRequestDto) {
         Long userId = UserContext.CONTEXT.get();
         jwtTokenUseCase.logout(withdrawRequestDto.getRefreshToken());
-        userService.withdraw(userId);
+        userUseCase.withdraw(userId);
         return new CommonResponse<>();
     }
 

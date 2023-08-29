@@ -3,7 +3,7 @@ package com.nexters.phochak.deprecated.integration;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
-import com.nexters.phochak.user.application.UserService;
+import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -32,7 +32,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class UserIntegrationTest {
 
     @Autowired
-    UserService userService;
+    UserUseCase userService;
     @Autowired
     MockMvc mockMvc;
     @Autowired
