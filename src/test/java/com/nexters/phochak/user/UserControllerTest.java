@@ -14,12 +14,14 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 class UserControllerTest extends RestDocsApiTest {
@@ -48,6 +50,18 @@ class UserControllerTest extends RestDocsApiTest {
         DocumentGenerator.loginDocument(response);
 
         assertThat(userRepository.findByProviderAndProviderId(provider, providerId).isPresent()).isTrue();
+    }
+
+    @Test
+    @DisplayName("유저 API - 닉네임 중복확인")
+    void checkNicknameIsDuplicated() throws Exception {
+        String nickname = "여행자#123";
+
+        mockMvc.perform(
+            RestDocumentationRequestBuilders
+                .get("/v1/user/check/nickname")
+                .param("nickname", nickname))
+            .andExpect(status().isOk());
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {
