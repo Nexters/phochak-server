@@ -10,7 +10,7 @@ import static org.springframework.restdocs.payload.PayloadDocumentation.response
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 public class DocumentGenerator {
-    public static void loginDocument(final ResultActions response) throws Exception {
+    public static void login(final ResultActions response) throws Exception {
         response.andDo(document("v2/auth/login",
                 preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
                 preprocessResponse(prettyPrint()),
@@ -29,6 +29,21 @@ public class DocumentGenerator {
                         fieldWithPath("data.expiresIn").type(JsonFieldType.STRING).description("access token 유효기간(ms)"),
                         fieldWithPath("data.refreshToken").type(JsonFieldType.STRING).description("refresh token"),
                         fieldWithPath("data.refreshTokenExpiresIn").type(JsonFieldType.STRING).description("refresh token 유효기간(ms)")
+                )
+        ));
+    }
+
+    public static void checkNickname(final ResultActions response) throws Exception {
+        response.andDo(document("user/check/nickname",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("nickname").description("(필수) 중복확인하고자 하는 닉네임 ('#' 때문에 URL 인코딩 처리해주세요)")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data.isDuplicated").type(JsonFieldType.BOOLEAN).description("닉네임 중복여부")
                 )
         ));
     }
