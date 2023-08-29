@@ -1,10 +1,11 @@
 package com.nexters.phochak.common;
 
-import com.nexters.phochak.auth.presentation.api.LoginApi;
+import com.nexters.phochak.user.api.LoginApi;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class Scenario {
 
+    @lombok.Getter
     public static class ScenarioStep {
         public ResultActions response;
 
@@ -14,9 +15,6 @@ public class Scenario {
 
         public Scenario advance() {
             return new Scenario();
-        }
-        public ResultActions getResponse() {
-            return response;
         }
     }
     public static LoginApi login() {

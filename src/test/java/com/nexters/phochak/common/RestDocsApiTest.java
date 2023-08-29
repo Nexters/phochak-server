@@ -1,9 +1,9 @@
 package com.nexters.phochak.common;
 
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.springframework.beans.factory.annotation.Autowired;

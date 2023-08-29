@@ -1,7 +1,6 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
@@ -15,6 +14,7 @@ import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import jakarta.transaction.Transactional;
 import org.junit.jupiter.api.BeforeEach;
@@ -30,7 +30,7 @@ import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.web.servlet.MockMvc;
 
-import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;

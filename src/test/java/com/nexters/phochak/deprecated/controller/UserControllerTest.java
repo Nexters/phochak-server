@@ -1,13 +1,13 @@
 package com.nexters.phochak.deprecated.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.application.port.in.JwtResponseDto;
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.UserInfoResponseDto;
 import com.nexters.phochak.user.application.UserService;
+import com.nexters.phochak.user.application.application.port.in.JwtResponseDto;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.presentation.UserController;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -28,7 +28,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.doNothing;

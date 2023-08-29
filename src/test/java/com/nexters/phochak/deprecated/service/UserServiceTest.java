@@ -1,13 +1,13 @@
 package com.nexters.phochak.deprecated.service;
 
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
-import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.UserServiceImpl;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.application.port.in.KakaoUserInformation;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.nexters.phochak.auth.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
+import static com.nexters.phochak.user.application.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;

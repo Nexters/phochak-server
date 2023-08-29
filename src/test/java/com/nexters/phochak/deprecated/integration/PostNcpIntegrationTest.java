@@ -1,8 +1,6 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.CustomExceptionHandler;
 import com.nexters.phochak.hashtag.domain.Hashtag;
@@ -18,6 +16,8 @@ import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.NCPStorageClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.application.JwtTokenService;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import jakarta.persistence.EntityManager;
 import org.assertj.core.api.Assertions;
@@ -43,7 +43,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.INVALID_INPUT;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.mockito.ArgumentMatchers.any;

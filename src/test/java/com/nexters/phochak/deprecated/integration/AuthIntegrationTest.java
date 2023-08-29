@@ -1,11 +1,6 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.nexters.phochak.auth.adapter.out.persistence.RefreshTokenRepository;
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
-import com.nexters.phochak.auth.application.port.in.LogoutRequestDto;
-import com.nexters.phochak.auth.application.port.in.ReissueTokenRequestDto;
-import com.nexters.phochak.auth.application.port.in.WithdrawRequestDto;
 import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.CustomExceptionHandler;
 import com.nexters.phochak.hashtag.domain.Hashtag;
@@ -16,8 +11,13 @@ import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.NCPStorageClient;
+import com.nexters.phochak.user.adapter.adapter.out.persistence.RefreshTokenRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.application.port.in.LogoutRequestDto;
+import com.nexters.phochak.user.application.application.port.in.ReissueTokenRequestDto;
+import com.nexters.phochak.user.application.application.port.in.WithdrawRequestDto;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.presentation.UserController;
 import jakarta.persistence.EntityManager;
@@ -40,7 +40,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.*;
 import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
 import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;

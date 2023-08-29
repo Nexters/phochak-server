@@ -1,9 +1,9 @@
 package com.nexters.phochak.deprecated.integration;
 
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.application.JwtTokenService;
+import com.nexters.phochak.user.application.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Disabled;
@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.MockMvc;
 
 import java.io.FileInputStream;
 
-import static com.nexters.phochak.auth.interceptor.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.INVALID_INPUT;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.multipart;

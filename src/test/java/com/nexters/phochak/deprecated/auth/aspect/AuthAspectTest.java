@@ -1,10 +1,10 @@
 package com.nexters.phochak.deprecated.auth.aspect;
 
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.interceptor.AuthAspect;
+import com.nexters.phochak.auth.AuthAspect;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.user.application.UserServiceImpl;
+import com.nexters.phochak.user.application.application.JwtTokenService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.assertj.core.api.Assertions;

@@ -1,7 +1,7 @@
 package com.nexters.phochak.post.presentation;
 
-import com.nexters.phochak.auth.interceptor.Auth;
-import com.nexters.phochak.auth.interceptor.UserContext;
+import com.nexters.phochak.auth.Auth;
+import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.post.CommonPageResponse;
 import com.nexters.phochak.post.CommonResponse;
 import com.nexters.phochak.post.CustomCursor;
