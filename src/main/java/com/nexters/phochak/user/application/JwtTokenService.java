@@ -21,7 +21,6 @@ import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Objects;
 
 @Slf4j
 @Transactional
@@ -43,14 +42,9 @@ public class JwtTokenService implements JwtTokenUseCase {
 
     @Override
     public JwtResponseDto issueToken(Long userId) {
-        if (Objects.isNull(userId)) {
-            throw new PhochakException(ResCode.NOT_FOUND_USER);
-        }
         TokenVo accessToken = generateToken(userId, accessTokenExpireLength);
         TokenVo refreshToken = generateToken(userId, refreshTokenExpireLength);
-
         refreshTokenRepository.saveWithAccessToken(refreshToken.getTokenString(), accessToken.getTokenString());
-
         return JwtResponseDto.builder()
                 .accessToken(createTokenStringForResponse(accessToken))
                 .expiresIn(accessToken.getExpiresIn())

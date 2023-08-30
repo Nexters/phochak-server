@@ -5,7 +5,6 @@ import org.springframework.test.web.servlet.ResultActions;
 
 public class Scenario {
 
-    @lombok.Getter
     public static class NextScenarioStep {
         public ResultActions response;
 
@@ -17,10 +16,19 @@ public class Scenario {
             return new Scenario();
         }
 
+        public ResultActions getResponse() {
+            return response;
+        }
+
     }
     public static CreateUserQuery createUser() {
         return new CreateUserQuery();
     }
+
+    public static CreateAccessTokenQuery createAccessToken() {
+        return new CreateAccessTokenQuery();
+    }
+
     public static LoginApi login() {
         return new LoginApi();
     }

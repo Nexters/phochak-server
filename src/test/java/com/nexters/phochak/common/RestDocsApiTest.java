@@ -32,7 +32,8 @@ public class RestDocsApiTest extends RestDocs {
     void setUp() {
         databaseCleanup.afterPropertiesSet();
         databaseCleanup.execute();
-
+        Util.setUserRepository(userRepository);
+        Util.setJwtTokenUseCase(jwtTokenUseCase);
         generateTestUser();
     }
 
@@ -40,7 +41,7 @@ public class RestDocsApiTest extends RestDocs {
         UserEntity userEntity = UserFixture.anUser().build();
         userRepository.save(userEntity);
         generateTestToken(userEntity.getId());
-        Util.setUserRepository(userRepository);
+
     }
 
     private void generateTestToken(final Long userId) {
@@ -50,10 +51,14 @@ public class RestDocsApiTest extends RestDocs {
 
     public static class Util {
         public static UserRepository userRepository;
+        public static JwtTokenUseCase jwtTokenUseCase;
         public static MockMvc mockMvc;
 
         public static void setUserRepository(final UserRepository userRepository) {
             Util.userRepository = userRepository;
+        }
+        public static void setJwtTokenUseCase(final JwtTokenUseCase jwtTokenUseCase) {
+            Util.jwtTokenUseCase = jwtTokenUseCase;
         }
 
         public static void setMockMvc(final MockMvc mockMvc) {
