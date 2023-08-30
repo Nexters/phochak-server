@@ -64,7 +64,8 @@ class UserControllerTest extends RestDocsApiTest {
     void modifyNickname() throws Exception {
         final String accessToken = Scenario.createUser().request()
                 .advance().createAccessToken().getAccessToken();
-        NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto("새로운_여행자");
+        final String newNickname = "새로운_여행자";
+        NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto(newNickname);
 
         final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
@@ -75,6 +76,7 @@ class UserControllerTest extends RestDocsApiTest {
                 .andExpect(status().isOk());
         DocumentGenerator.modifyNickname(response);
 
+        assertThat(userRepository.findById(1L).get().getNickname()).isEqualTo(newNickname);
     }
 
     @Test
@@ -90,7 +92,6 @@ class UserControllerTest extends RestDocsApiTest {
         response.andExpect(jsonPath("$.data.isDuplicated").value(false));
     }
 
-    //TODO: 닉네임 변경 리팩토링 이후 추가
     @Test
     @DisplayName("[유저 API] 닉네임 중복확인 - 실패: 이미 사용 중인 닉네임")
     void checkNicknameIsDuplicated_fail_already_exist() throws Exception {
