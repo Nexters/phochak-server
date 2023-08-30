@@ -43,7 +43,6 @@ class UserControllerTest extends RestDocsApiTest {
     @BeforeEach
     void setUpMock(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = getMockMvcBuilder(restDocumentation, userController).build();
-        RestDocsApiTest.Util.setMockMvc(mockMvc);
     }
 
     @Test
@@ -63,13 +62,14 @@ class UserControllerTest extends RestDocsApiTest {
     @Test
     @DisplayName("[유저 API] - 닉네임 변경")
     void modifyNickname() throws Exception {
-        Scenario.createUser().request();
+        final String accessToken = Scenario.createUser().request()
+                .advance().createAccessToken().getAccessToken();
 
         NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto("새로운 여행자");
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .put("/v1/user/nickname")
-                                .header(AUTHORIZATION_HEADER, "access token")
+                                .header(AUTHORIZATION_HEADER, accessToken)
                                 .content(objectMapper.writeValueAsString(requestDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -110,12 +110,12 @@ class UserControllerTest extends RestDocsApiTest {
     void checkNicknameIsDuplicated_fail_already_exist() throws Exception {
         String duplicatedNickname = "중복여행자";
         Scenario.createUser().nickname(duplicatedNickname).request();
-        final ResultActions response = mockMvc.perform(
-                        RestDocumentationRequestBuilders
-                                .get("/v1/user/check/nickname")
-                                .param("nickname", duplicatedNickname))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.data.isDuplicated").value(true));
+        mockMvc.perform(
+                    RestDocumentationRequestBuilders
+                            .get("/v1/user/check/nickname")
+                            .param("nickname", duplicatedNickname))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.data.isDuplicated").value(true));
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {
