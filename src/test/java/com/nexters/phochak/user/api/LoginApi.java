@@ -1,9 +1,9 @@
 package com.nexters.phochak.user.api;
 
+import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.notification.domain.OperatingSystem;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
-import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -34,16 +34,16 @@ public class LoginApi {
         return this;
     }
 
-    public Scenario.ScenarioStep request(final MockMvc mockMvc) throws Exception {
+    public Scenario.NextScenarioStep request() throws Exception {
 
-        final ResultActions response = mockMvc.perform(
+        final ResultActions response = RestDocsApiTest.Util.mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/user/login/{provider}", provider)
                                 .param("token", token)
                                 .param("fcmDeviceToken", fcmDeviceToken)
                                 .param("operatingSystem", operatingSystem))
                 .andExpect(status().isOk());
-        return new Scenario.ScenarioStep(response);
+        return new Scenario.NextScenarioStep(response);
     }
 
 }

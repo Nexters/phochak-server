@@ -81,7 +81,7 @@ class UserServiceTest {
         given(userRepository.findById(any())).willReturn(Optional.of(user));
 
         // when & then
-        assertThatThrownBy(() -> userService.modifyNickname(userId, nickname))
+        assertThatThrownBy(() -> userService.modifyNickname(1L, nickname))
                 .isInstanceOf(PhochakException.class)
                 .hasMessage(ResCode.DUPLICATED_NICKNAME.getMessage());
     }

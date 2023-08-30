@@ -64,7 +64,7 @@ public class UserController {
     @PutMapping("nickname")
     public CommonResponse<Void> modifyNickname(@RequestBody @Valid NicknameModifyRequestDto request) {
         Long userId = UserContext.CONTEXT.get();
-        userUseCase.modifyNickname(userId, request.getNickname());
+        userUseCase.modifyNickname(userId, request.nickname());
         return new CommonResponse<>();
     }
 

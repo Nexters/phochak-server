@@ -26,7 +26,6 @@ import java.time.LocalDateTime;
 @Table(name = "USERS")
 public class UserEntity extends BaseTime {
     public static final int NICKNAME_MAX_SIZE = 10;
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")

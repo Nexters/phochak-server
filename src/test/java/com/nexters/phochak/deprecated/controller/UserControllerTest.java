@@ -137,7 +137,7 @@ class UserControllerTest extends RestDocs {
         Map<String, Object> body = new HashMap<>();
         body.put("nickname", nickname);
 
-        doNothing().when(userService).modifyNickname(userId, any());
+        doNothing().when(userService).modifyNickname(1L, any());
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders

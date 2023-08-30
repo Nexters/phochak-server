@@ -15,7 +15,6 @@ import com.nexters.phochak.user.application.port.in.UserCheckResponseDto;
 import com.nexters.phochak.user.application.port.in.UserInfoResponseDto;
 import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
-import com.nexters.phochak.user.application.port.out.FindUserPort;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
 import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
 import com.nexters.phochak.user.application.port.out.UpdateUserNicknamePort;
@@ -35,7 +34,7 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
 
-    private final FindUserPort findUserPort;
+//    private final FindUserPort findUserPort;
     private final CreateUserPort createUserPort;
     private final UpdateUserNicknamePort updateUserNicknamePort;
     private final UserRepository userRepository;
@@ -66,8 +65,8 @@ public class UserService implements UserUseCase {
         if (updateUserNicknamePort.checkDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
-        User user = findUserPort.load(userId);
-        updateUserNicknamePort.modifyNickname(user, nickname);
+//        User user = findUserPort.load(userId);
+//        updateUserNicknamePort.modifyNickname(user, nickname);
     }
 
     @Override

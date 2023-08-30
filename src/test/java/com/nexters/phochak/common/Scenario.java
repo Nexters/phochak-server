@@ -6,10 +6,10 @@ import org.springframework.test.web.servlet.ResultActions;
 public class Scenario {
 
     @lombok.Getter
-    public static class ScenarioStep {
+    public static class NextScenarioStep {
         public ResultActions response;
 
-        public ScenarioStep(final ResultActions response) {
+        public NextScenarioStep(final ResultActions response) {
             this.response = response;
         }
 
@@ -17,6 +17,9 @@ public class Scenario {
             return new Scenario();
         }
 
+    }
+    public static CreateUserQuery createUser() {
+        return new CreateUserQuery();
     }
     public static LoginApi login() {
         return new LoginApi();
