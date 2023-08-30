@@ -56,7 +56,7 @@ class UserControllerTest extends RestDocsApiTest {
         final ResultActions response = Scenario.login().request().getResponse();
         DocumentGenerator.login(response);
 
-        assertThat(userRepository.findByProviderAndProviderId(provider, providerId).isPresent()).isTrue();
+        assertThat(userRepository.findByProviderAndProviderId(provider, providerId)).isPresent();
     }
 
     @Test
@@ -64,31 +64,17 @@ class UserControllerTest extends RestDocsApiTest {
     void modifyNickname() throws Exception {
         final String accessToken = Scenario.createUser().request()
                 .advance().createAccessToken().getAccessToken();
+        NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto("새로운_여행자");
 
-        NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto("새로운 여행자");
-        mockMvc.perform(
+        final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .put("/v1/user/nickname")
                                 .header(AUTHORIZATION_HEADER, accessToken)
                                 .content(objectMapper.writeValueAsString(requestDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-//                .andDo(document("user/modify/nickname",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestFields(
-//                                fieldWithPath("nickname").description("(필수) 변경하고자 하는 닉네임")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
-//                        )
-//                ));
+        DocumentGenerator.modifyNickname(response);
+
     }
 
     @Test

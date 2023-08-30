@@ -3,10 +3,12 @@ package com.nexters.phochak.common;
 import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.ResultActions;
 
+import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
 import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
 import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
-import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
-import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.payload.PayloadDocumentation.*;
 import static org.springframework.restdocs.request.RequestDocumentation.*;
 
 public class DocumentGenerator {
@@ -44,6 +46,25 @@ public class DocumentGenerator {
                         fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
                         fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
                         fieldWithPath("data.isDuplicated").type(JsonFieldType.BOOLEAN).description("닉네임 중복여부")
+                )
+        ));
+    }
+
+    public static void modifyNickname(final ResultActions response) throws Exception {
+        response.andDo(document("user/modify/nickname",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("nickname").description("(필수) 변경하고자 하는 닉네임")
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
                 )
         ));
     }
