@@ -3,6 +3,7 @@ package com.nexters.phochak.ignore.presentation;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
+import com.nexters.phochak.common.TestUtil;
 import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
 import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
 import com.nexters.phochak.user.adapter.out.api.KakaoInformationFeignClient;
@@ -39,28 +40,21 @@ class IgnoreControllerTest extends RestDocsApiTest {
     @BeforeEach
     void setUpMock(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = getMockMvcBuilder(restDocumentation, ignoreController).build();
-        RestDocsApiTest.Util.setMockMvc(mockMvc);
+        TestUtil.setMockMvc(mockMvc);
     }
 
     @Test
     @DisplayName("유저 API - 유저 무시하기")
     void ignoreUser() throws Exception {
         //given
-        final long myId = 1L;
         final long ignoredUserId = 2L;
-        final String accessToken = Scenario.createUser().id(myId).request().advance().createAccessToken().getAccessToken();
         Scenario.createUser().id(ignoredUserId).providerId("providerId2").nickname("nickname2").request();
 
         //when
-        mockMvc.perform(
-                        RestDocumentationRequestBuilders
-                                .post("/v1/user/ignore/{ignoredUserId}", ignoredUserId)
-                                .header(AUTHORIZATION_HEADER, accessToken)
-                                .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk());
+        Scenario.ignoreUser().request();
 
         //then
-        final UserEntity userEntity = userRepository.getReferenceById(myId);
+        final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
         final UserEntity ignoredUserEntity = userRepository.getReferenceById(ignoredUserId);
         final IgnoredUsersRelation pk = new IgnoredUsersRelation(userEntity, ignoredUserEntity);
         assertThat(ignoredUserRepository.existsByIgnoredUsersRelation(pk)).isTrue();

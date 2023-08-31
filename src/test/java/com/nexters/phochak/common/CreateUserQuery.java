@@ -68,7 +68,7 @@ public class CreateUserQuery {
                 isBlocked,
                 leaveDate
         );
-        RestDocsApiTest.Util.userRepository.save(user);
+        TestUtil.userRepository.save(user);
         return new Scenario.NextScenarioStep(null);
     }
 

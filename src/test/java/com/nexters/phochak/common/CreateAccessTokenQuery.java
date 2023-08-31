@@ -20,7 +20,7 @@ public class CreateAccessTokenQuery {
     }
 
     public String getAccessToken() {
-        final JwtTokenUseCase.TokenVo tokenVo = RestDocsApiTest.Util.jwtTokenUseCase.generateToken(userId, expireLength);
+        final JwtTokenUseCase.TokenVo tokenVo = TestUtil.jwtTokenUseCase.generateToken(userId, expireLength);
         return JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenVo.getTokenString();
     }
 }
