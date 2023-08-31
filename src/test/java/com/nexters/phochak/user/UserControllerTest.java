@@ -18,6 +18,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
+import org.springframework.restdocs.payload.JsonFieldType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
@@ -25,6 +26,14 @@ import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
+import static org.springframework.restdocs.headers.HeaderDocumentation.headerWithName;
+import static org.springframework.restdocs.headers.HeaderDocumentation.requestHeaders;
+import static org.springframework.restdocs.mockmvc.MockMvcRestDocumentation.document;
+import static org.springframework.restdocs.operation.preprocess.Preprocessors.*;
+import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
+import static org.springframework.restdocs.payload.PayloadDocumentation.responseFields;
+import static org.springframework.restdocs.request.RequestDocumentation.parameterWithName;
+import static org.springframework.restdocs.request.RequestDocumentation.pathParameters;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -43,6 +52,7 @@ class UserControllerTest extends RestDocsApiTest {
     @BeforeEach
     void setUpMock(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = getMockMvcBuilder(restDocumentation, userController).build();
+        RestDocsApiTest.Util.setMockMvc(mockMvc);
     }
 
     @Test
@@ -125,6 +135,65 @@ class UserControllerTest extends RestDocsApiTest {
 
         //then
         response.andExpect(jsonPath("$.data.isDuplicated").value(true));
+    }
+
+    @Test
+    @DisplayName("유저 API - 다른 유저 페이지 정보 조회하기")
+    void getInfoOtherUserPage() throws Exception {
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/{userId}", 10)
+                                .header(AUTHORIZATION_HEADER, "access token"))
+                .andExpect(status().isOk())
+                .andDo(document("user",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        pathParameters(
+                                parameterWithName("userId").description("(선택) 조회하려는 유저의 id. 만약 본인의 유저 페이지를 조회 한다면 빈 값 사용")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크"),
+                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인"),
+                                fieldWithPath("data.isBlocked").type(JsonFieldType.BOOLEAN).description("해당 유저 차단 여부"),
+                                fieldWithPath("data.isIgnored").type(JsonFieldType.BOOLEAN).description("해당 유저 무시 여부")
+                        )
+                ));
+    }
+
+    @Test
+    @DisplayName("유저 API - 본인 유저 페이지 정보 조회하기")
+    void getInfoMyPage() throws Exception {
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/")
+                                .header(AUTHORIZATION_HEADER, "access token"))
+                .andExpect(status().isOk())
+                .andDo(document("user/me",
+                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                        preprocessResponse(prettyPrint()),
+                        requestHeaders(
+                                headerWithName(AUTHORIZATION_HEADER)
+                                        .description("(필수) JWT Access Token")
+                        ),
+                        responseFields(
+                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                                fieldWithPath("data.id").type(JsonFieldType.NUMBER).description("유저 식별값(id)"),
+                                fieldWithPath("data.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                                fieldWithPath("data.profileImgUrl").type(JsonFieldType.STRING).description("프로필 이미지 링크"),
+                                fieldWithPath("data.isMyPage").type(JsonFieldType.BOOLEAN).description("접속자가 해당 페이지의 주인인지 확인 (항상 true)"),
+                                fieldWithPath("data.isBlocked").type(JsonFieldType.BOOLEAN).description("해당 유저 차단 여부 (항상 false)"),
+                                fieldWithPath("data.isIgnored").type(JsonFieldType.BOOLEAN).description("해당 유저 무시 여부 (항상 false)")
+                        )
+                ));
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {
