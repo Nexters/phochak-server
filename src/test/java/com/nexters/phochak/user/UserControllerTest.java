@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
+import com.nexters.phochak.ignore.IgnoredUserResponseDto;
 import com.nexters.phochak.user.adapter.in.web.UserController;
 import com.nexters.phochak.user.adapter.out.api.KakaoInformationFeignClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
@@ -21,9 +22,13 @@ import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.doNothing;
 import static org.mockito.Mockito.when;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -193,5 +198,101 @@ class UserControllerTest extends RestDocsApiTest {
         );
     }
 
+    @Test
+    @DisplayName("유저 API - 유저 무시하기")
+    void ignoreUser() throws Exception {
+        //given
+        doNothing().when(userService).ignoreUser(any(), any());
+        //when, then
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .post("/v1/user/ignore/{ignoredUserId}", 10)
+                                .header(AUTHORIZATION_HEADER, "access token")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+//                .andDo(document("user/ignore/POST",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("ignoredUserId").description("(필수) 무시하기 하려는 유저의 id 설정")
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+//                        )
+//                ));
+    }
+
+    @Test
+    @DisplayName("유저 API - 유저 무시하기 취소")
+    void cancelIgnoreUser() throws Exception {
+        //given
+        doNothing().when(userService).cancelIgnoreUser(any(), any());
+        //when, then
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .delete("/v1/user/ignore/{ignoredUserId}", 10)
+                                .header(AUTHORIZATION_HEADER, "access token")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+//                .andDo(document("user/ignore/DELETE",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("ignoredUserId").description("(필수) 무시하기 했던 유저의 id 설정")
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+//                        )
+//                ));
+
+    }
+
+    @Test
+    @DisplayName("유저 API - 무시하기한 유저 목록 조회")
+    void getIgnoreUser() throws Exception {
+        //given
+        List<IgnoredUserResponseDto> response = new ArrayList<>();
+        response.add(IgnoredUserResponseDto.builder()
+                .id(10L)
+                .nickname("nickname10")
+                .profileImgUrl("profile_image_url10")
+                .build());
+        when(userService.getIgnoreUserList(any())).thenReturn(response);
+        //when, then
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/ignore", 10)
+                                .header(AUTHORIZATION_HEADER, "access token")
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+//                .andDo(document("user/ignore/GET",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("무시한 유저 id"),
+//                                fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("무시한 유저 닉네임"),
+//                                fieldWithPath("data[].profileImgUrl").type(JsonFieldType.STRING).description("무시한 유저 프로필 이미지 링크")
+//                        )
+//                ));
+
+    }
 
 }
