@@ -1,10 +1,10 @@
 package com.nexters.phochak.user.application.port.out;
 
-import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.user.adapter.out.persistence.CreateUserAdapter;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserMapper;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.user.domain.UserFixture;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

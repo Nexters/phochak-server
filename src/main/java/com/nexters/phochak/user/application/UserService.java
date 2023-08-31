@@ -1,44 +1,136 @@
 package com.nexters.phochak.user.application;
 
+import com.nexters.phochak.common.exception.PhochakException;
+import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.ignore.IgnoredUserResponseDto;
-import com.nexters.phochak.user.UserCheckResponseDto;
-import com.nexters.phochak.user.UserInfoResponseDto;
+import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
+import com.nexters.phochak.ignore.domain.IgnoredUsers;
+import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
+import com.nexters.phochak.post.application.PostService;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.port.in.LoginRequestDto;
+import com.nexters.phochak.user.application.port.in.OAuthUserInformation;
+import com.nexters.phochak.user.application.port.in.UserCheckResponseDto;
+import com.nexters.phochak.user.application.port.in.UserInfoResponseDto;
+import com.nexters.phochak.user.application.port.in.UserUseCase;
+import com.nexters.phochak.user.application.port.out.CreateUserPort;
+import com.nexters.phochak.user.application.port.out.FindUserPort;
+import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
+import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
+import com.nexters.phochak.user.application.port.out.UpdateUserNicknamePort;
+import com.nexters.phochak.user.domain.OAuthProviderEnum;
+import com.nexters.phochak.user.domain.User;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
+import java.util.Map;
 
-public interface UserService {
+@Slf4j
+@Service
+@RequiredArgsConstructor
+public class UserService implements UserUseCase {
 
-    /**
-     * 해당 id의 유저 정보를 조회한다.
-     * @param userId
-     */
-    void validateUser(Long userId);
+    private final FindUserPort findUserPort;
+    private final CreateUserPort createUserPort;
+    private final UpdateUserNicknamePort updateUserNicknamePort;
+    private final UserRepository userRepository;
+    private final PostService postService;
+    private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
+    private final IgnoredUserRepository ignoredUserRepository;
+    private final NotificationTokenRegisterPort notificationTokenRegisterPort;
 
-    /**
-     * 해당 닉네임이 중복되었는지 확인한다.
-     * @param nickname
-     * @return
-     */
-    UserCheckResponseDto checkNicknameIsDuplicated(String nickname);
+    @Override
+    public Long login(final String provider, final LoginRequestDto requestDto) {
+        OAuthRequestPort oAuthRequestPort = getProperProviderPort(provider);
+        OAuthUserInformation userInformation = oAuthRequestPort.requestUserInformation(requestDto.token());
+        User user = createUserPort.getOrCreateUser(userInformation);
+        if (requestDto.fcmDeviceToken() != null) {
+            notificationTokenRegisterPort.register(user, requestDto.fcmDeviceToken(), requestDto.operatingSystem());
+        }
+        return user.getId();
+    }
 
-    /**
-     * 원하는 닉네임으로 닉네임을 변경한다.
-     * @param nickname
-     */
-    void modifyNickname(String nickname);
+    @Override
+    public UserCheckResponseDto checkNicknameIsDuplicated(final String nickname) {
+        return new UserCheckResponseDto(updateUserNicknamePort.checkDuplicatedNickname(nickname));
+    }
 
-    /**
-     * 해당 유저의 정보를 조회한다.
-     * @param userId
-     * @return
-     */
-    UserInfoResponseDto getInfo(Long pageOwnerId, Long userId);
 
-    void withdraw(Long userId);
+    @Override
+    @Transactional
+    public void modifyNickname(final Long userId, final String nickname) {
+        if (updateUserNicknamePort.checkDuplicatedNickname(nickname)) {
+            throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
+        }
+        User user = findUserPort.load(userId);
+        updateUserNicknamePort.modifyNickname(user, nickname);
+    }
 
-    void ignoreUser(Long me, Long ignoredUserId);
+    @Override
+    @Transactional(readOnly = true)
+    public UserInfoResponseDto getInfo(Long pageOwnerId, Long userId) {
+        UserEntity pageOwner;
+        Boolean isIgnored = false;
+        if (pageOwnerId == null) {
+            pageOwner = userRepository.getBy(userId);
+        } else {
+            pageOwner = userRepository.getBy(pageOwnerId);
+            UserEntity userEntity = userRepository.getReferenceById(userId);
+            IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
+                    .user(userEntity)
+                    .ignoredUser(pageOwner)
+                    .build();
+            isIgnored = ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation);
+        }
+        return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId), isIgnored);
+    }
 
-    void cancelIgnoreUser(Long me, Long ignoredUserId);
+    @Override
+    public void withdraw(Long userId) {
+        UserEntity userEntity = userRepository.getBy(userId);
+        userEntity.withdrawInformation();
+        postService.deleteAllPostByUser(userEntity);
+    }
 
-    List<IgnoredUserResponseDto> getIgnoreUserList(Long me);
+    @Override
+    public void ignoreUser(Long me, Long ignoredUserId) {
+        UserEntity userEntity = userRepository.getReferenceById(me);
+        UserEntity pageOwner = userRepository.getBy(ignoredUserId);
+        try {
+            IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
+                    .user(userEntity)
+                    .ignoredUser(pageOwner)
+                    .build();
+            IgnoredUsers ignoredUsers = IgnoredUsers.builder()
+                    .ignoredUsersRelation(ignoredUsersRelation)
+                    .build();
+            ignoredUserRepository.save(ignoredUsers);
+        } catch (
+                DataIntegrityViolationException e) {
+            throw new PhochakException(ResCode.ALREADY_IGNORED_USER);
+        }
+    }
+
+    @Override
+    public void cancelIgnoreUser(Long me, Long ignoredUserId) {
+        ignoredUserRepository.deleteIgnore(me, ignoredUserId);
+    }
+
+    @Transactional(readOnly = true)
+    @Override
+    public List<IgnoredUserResponseDto> getIgnoreUserList(Long me) {
+        List<IgnoredUsers> ignoreUserListByUserId = ignoredUserRepository.getIgnoreUserListByUserId(me);
+        return IgnoredUserResponseDto.of(ignoreUserListByUserId);
+    }
+
+    private OAuthRequestPort getProperProviderPort(final String provider) {
+        OAuthProviderEnum providerEnum = OAuthProviderEnum.codeOf(provider);
+        return oAuthRequestPortMap.get(providerEnum);
+    }
+
 }

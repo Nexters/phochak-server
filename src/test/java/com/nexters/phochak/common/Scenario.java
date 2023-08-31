@@ -1,24 +1,34 @@
 package com.nexters.phochak.common;
 
-import com.nexters.phochak.auth.presentation.api.LoginApi;
+import com.nexters.phochak.user.api.LoginApi;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class Scenario {
 
-    public static class ScenarioStep {
+    public static class NextScenarioStep {
         public ResultActions response;
 
-        public ScenarioStep(final ResultActions response) {
+        public NextScenarioStep(final ResultActions response) {
             this.response = response;
         }
 
         public Scenario advance() {
             return new Scenario();
         }
+
         public ResultActions getResponse() {
             return response;
         }
+
     }
+    public static CreateUserQuery createUser() {
+        return new CreateUserQuery();
+    }
+
+    public static CreateAccessTokenQuery createAccessToken() {
+        return new CreateAccessTokenQuery();
+    }
+
     public static LoginApi login() {
         return new LoginApi();
     }

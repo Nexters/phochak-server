@@ -12,7 +12,7 @@ public class User {
     private final FcmDeviceTokenEntity fcmDeviceTokenEntity;
     private final OAuthProviderEnum provider;
     private final String providerId;
-    private final String nickname;
+    private String nickname;
     private final String profileImgUrl;
     private final Boolean isBlocked;
     private final LocalDateTime leaveDate;
@@ -52,5 +52,9 @@ public class User {
                 userEntity.getProfileImgUrl(),
                 userEntity.getIsBlocked(),
                 userEntity.getLeaveDate());
+    }
+
+    public void updateNickname(final String nickname) {
+        this.nickname = nickname;
     }
 }

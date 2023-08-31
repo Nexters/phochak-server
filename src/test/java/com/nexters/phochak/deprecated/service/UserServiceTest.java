@@ -1,13 +1,13 @@
 package com.nexters.phochak.deprecated.service;
 
-import com.nexters.phochak.auth.application.port.in.JwtTokenUseCase;
-import com.nexters.phochak.auth.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.user.UserCheckResponseDto;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
-import com.nexters.phochak.user.application.UserServiceImpl;
+import com.nexters.phochak.user.application.UserService;
+import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
+import com.nexters.phochak.user.application.port.in.KakaoUserInformation;
+import com.nexters.phochak.user.application.port.in.UserCheckResponseDto;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
-import static com.nexters.phochak.auth.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
+import static com.nexters.phochak.user.application.port.in.KakaoUserInformation.KakaoOAuthProperties;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 import static org.mockito.ArgumentMatchers.any;
@@ -31,7 +31,7 @@ class UserServiceTest {
     @Mock
     UserRepository userRepository;
     @InjectMocks
-    UserServiceImpl userService;
+    UserService userService;
 
     MockUserEntity user = new MockUserEntity();
     KakaoOAuthProperties kakaoOAuthProperties;
@@ -59,18 +59,6 @@ class UserServiceTest {
     }
 
     @Test
-    @DisplayName("존재하지 않는 회원이면 NOT_FOUND_USER 예외가 발생한다")
-    void validateUser() {
-        // given
-        given(userRepository.existsById(1L)).willReturn(false);
-
-        // when & then
-        assertThatThrownBy(() -> userService.validateUser(1L))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.NOT_FOUND_USER.getMessage());
-    }
-
-    @Test
     @DisplayName("닉네임 중복 체크 시 중복된 닉네임이 존재하면 true를 반환한다")
     void checkNickname_duplicated() {
         // given
@@ -93,7 +81,7 @@ class UserServiceTest {
         given(userRepository.findById(any())).willReturn(Optional.of(user));
 
         // when & then
-        assertThatThrownBy(() -> userService.modifyNickname(nickname))
+        assertThatThrownBy(() -> userService.modifyNickname(1L, nickname))
                 .isInstanceOf(PhochakException.class)
                 .hasMessage(ResCode.DUPLICATED_NICKNAME.getMessage());
     }

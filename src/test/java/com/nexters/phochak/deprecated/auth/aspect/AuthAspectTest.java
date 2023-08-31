@@ -1,10 +1,10 @@
 package com.nexters.phochak.deprecated.auth.aspect;
 
-import com.nexters.phochak.auth.application.JwtTokenService;
-import com.nexters.phochak.auth.interceptor.AuthAspect;
+import com.nexters.phochak.auth.AuthAspect;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.user.application.UserServiceImpl;
+import com.nexters.phochak.user.application.JwtTokenService;
+import com.nexters.phochak.user.application.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.aspectj.lang.ProceedingJoinPoint;
 import org.assertj.core.api.Assertions;
@@ -17,14 +17,15 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import static org.mockito.ArgumentMatchers.anyString;
-import static org.mockito.BDDMockito.*;
+import static org.mockito.BDDMockito.given;
+import static org.mockito.BDDMockito.then;
 import static org.mockito.Mockito.times;
 
 @Disabled
 @ExtendWith(MockitoExtension.class)
 class AuthAspectTest {
     @Mock
-    UserServiceImpl userService;
+    UserService userService;
     @Mock
     HttpServletRequest httpServletRequest;
     @Mock
@@ -85,26 +86,11 @@ class AuthAspectTest {
     }
 
     @Test
-    @DisplayName("토큰의 유저 정보 검증에 실패하면 NOT_FOUND_USER 예외가 발생한다")
-    void validateAccessToken_NotFoundUser() {
-        // given
-        given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
-        given(jwtTokenService.validateJwt("Valid Token")).willReturn(1L);
-        willThrow(new PhochakException(ResCode.NOT_FOUND_USER)).given(userService).validateUser(1L);
-
-        // when & then
-        Assertions.assertThatThrownBy(() -> aspect.validateAccessToken(joinPoint))
-                .isInstanceOf(PhochakException.class)
-                .hasMessage(ResCode.NOT_FOUND_USER.getMessage());
-    }
-
-    @Test
     @DisplayName("유효한 토큰으로 유저 정보 검증에 성공한다")
     void validateAccessToken_success() throws Throwable {
         // given
         given(httpServletRequest.getHeader(anyString())).willReturn("Bearer Valid Token");
         given(jwtTokenService.validateJwt("Valid Token")).willReturn(1L);
-        willDoNothing().given(userService).validateUser(1L);
 
         // when
         aspect.validateAccessToken(joinPoint);
