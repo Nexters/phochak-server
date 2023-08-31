@@ -74,9 +74,9 @@ class UserControllerTest extends RestDocsApiTest {
                                 .content(objectMapper.writeValueAsString(requestDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
-        DocumentGenerator.modifyNickname(response);
-
         assertThat(userRepository.findById(1L).get().getNickname()).isEqualTo(newNickname);
+
+        DocumentGenerator.modifyNickname(response);
     }
 
     @Test
