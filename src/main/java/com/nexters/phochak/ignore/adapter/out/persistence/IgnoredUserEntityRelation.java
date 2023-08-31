@@ -1,4 +1,4 @@
-package com.nexters.phochak.ignore.domain;
+package com.nexters.phochak.ignore.adapter.out.persistence;
 
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.ConstraintMode;
@@ -16,7 +16,7 @@ import java.io.Serializable;
 @Getter
 @Embeddable
 @NoArgsConstructor
-public class IgnoredUsersRelation implements Serializable {
+public class IgnoredUserEntityRelation implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="USER_ID", referencedColumnName = "USER_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private UserEntity user;
@@ -26,7 +26,7 @@ public class IgnoredUsersRelation implements Serializable {
     private UserEntity ignoredUser;
 
     @Builder
-    public IgnoredUsersRelation(UserEntity user, UserEntity ignoredUser) {
+    public IgnoredUserEntityRelation(UserEntity user, UserEntity ignoredUser) {
         this.user = user;
         this.ignoredUser = ignoredUser;
     }

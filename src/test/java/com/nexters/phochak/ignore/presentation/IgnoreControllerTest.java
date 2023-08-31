@@ -4,8 +4,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;
-import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
-import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
+import com.nexters.phochak.ignore.adapter.in.web.IgnoreUserController;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntityRelation;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.adapter.out.api.KakaoInformationFeignClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
@@ -29,7 +30,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class IgnoreControllerTest extends RestDocsApiTest {
 
     @Autowired
-    IgnoreController ignoreController;
+    IgnoreUserController ignoreController;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -47,7 +48,7 @@ class IgnoreControllerTest extends RestDocsApiTest {
     }
 
     @Test
-    @DisplayName("유저 API - 유저 무시하기")
+    @DisplayName("[유저 무시 API] - 유저 무시하기")
     void ignoreUser() throws Exception {
         //given
         final long ignoredUserId = 2L;
@@ -59,8 +60,8 @@ class IgnoreControllerTest extends RestDocsApiTest {
         //then
         final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
         final UserEntity ignoredUserEntity = userRepository.getReferenceById(ignoredUserId);
-        final IgnoredUsersRelation pk = new IgnoredUsersRelation(userEntity, ignoredUserEntity);
-        assertThat(ignoredUserRepository.existsByIgnoredUsersRelation(pk)).isTrue();
+        final IgnoredUserEntityRelation pk = new IgnoredUserEntityRelation(userEntity, ignoredUserEntity);
+        assertThat(ignoredUserRepository.existsByIgnoredUserRelation(pk)).isTrue();
 
 //                .andDo(document("user/ignore/POST",
 //                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
@@ -81,7 +82,7 @@ class IgnoreControllerTest extends RestDocsApiTest {
     }
 
     @Test
-    @DisplayName("유저 API - 유저 무시하기 취소")
+    @DisplayName("[유저 무시 API] - 유저 무시하기 취소")
     void cancelIgnoreUser() throws Exception {
         //given
         final long ignoredUserId = 2L;
@@ -115,7 +116,7 @@ class IgnoreControllerTest extends RestDocsApiTest {
     }
 
     @Test
-    @DisplayName("유저 API - 무시하기한 유저 목록 조회")
+    @DisplayName("[유저 무시 API] - 무시하기한 유저 목록 조회")
     void getIgnoreUser() throws Exception {
         //given
         Scenario.createUser().id(2L).request()

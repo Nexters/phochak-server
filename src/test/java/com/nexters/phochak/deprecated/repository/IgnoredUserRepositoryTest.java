@@ -1,8 +1,8 @@
 package com.nexters.phochak.deprecated.repository;
 
-import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
-import com.nexters.phochak.ignore.domain.IgnoredUsers;
-import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntity;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntityRelation;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -50,12 +50,12 @@ class IgnoredUserRepositoryTest {
         userRepository.save(userEntity1);
 
         // when
-        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(me, userEntity1);
-        IgnoredUsers ignoredUsers = new IgnoredUsers(ignoredUsersRelation);
+        IgnoredUserEntityRelation ignoredUsersRelation = new IgnoredUserEntityRelation(me, userEntity1);
+        IgnoredUserEntity ignoredUsers = new IgnoredUserEntity(ignoredUsersRelation);
         ignoredUserRepository.save(ignoredUsers);
 
         // then
-        assertTrue(ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation));
+        assertTrue(ignoredUserRepository.existsByIgnoredUserRelation(ignoredUsersRelation));
     }
 
     @Transactional
@@ -88,16 +88,16 @@ class IgnoredUserRepositoryTest {
         userRepository.save(userEntity3);
 
         // when
-        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(me, userEntity2);
-        IgnoredUsers ignoredUsers = new IgnoredUsers(ignoredUsersRelation);
+        IgnoredUserEntityRelation ignoredUsersRelation = new IgnoredUserEntityRelation(me, userEntity2);
+        IgnoredUserEntity ignoredUsers = new IgnoredUserEntity(ignoredUsersRelation);
         ignoredUserRepository.save(ignoredUsers);
-        IgnoredUsersRelation ignoredUsersRelation2 = new IgnoredUsersRelation(me, userEntity3);
-        IgnoredUsers ignoredUsers2 = new IgnoredUsers(ignoredUsersRelation2);
+        IgnoredUserEntityRelation ignoredUsersRelation2 = new IgnoredUserEntityRelation(me, userEntity3);
+        IgnoredUserEntity ignoredUsers2 = new IgnoredUserEntity(ignoredUsersRelation2);
         ignoredUserRepository.save(ignoredUsers2);
 
         // then
-        List<IgnoredUsers> list = ignoredUserRepository.getIgnoreUserListByUserId(me.getId());
-        for (IgnoredUsers users : list) {
+        List<IgnoredUserEntity> list = ignoredUserRepository.getIgnoreUserListByUserId(me.getId());
+        for (IgnoredUserEntity users : list) {
             System.out.println(users.getIgnoredUsersRelation().getIgnoredUser().getId());
         }
         assertEquals(2, list.size());

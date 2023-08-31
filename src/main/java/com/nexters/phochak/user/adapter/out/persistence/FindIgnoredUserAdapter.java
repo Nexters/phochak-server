@@ -1,7 +1,7 @@
 package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.ignore.domain.IgnoredUserRepository;
-import com.nexters.phochak.ignore.domain.IgnoredUsersRelation;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntityRelation;
+import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.application.port.out.FindIgnoredUserPort;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -22,7 +22,7 @@ public class FindIgnoredUserAdapter implements FindIgnoredUserPort {
         }
         final UserEntity userEntity = userMapper.toEntity(user);
         final UserEntity pageOwnerEntity = userMapper.toEntity(pageOwner);
-        IgnoredUsersRelation ignoredUsersRelation = new IgnoredUsersRelation(userEntity, pageOwnerEntity);
-        return ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation);
+        IgnoredUserEntityRelation ignoredUsersRelation = new IgnoredUserEntityRelation(userEntity, pageOwnerEntity);
+        return ignoredUserRepository.existsByIgnoredUserRelation(ignoredUsersRelation);
     }
 }

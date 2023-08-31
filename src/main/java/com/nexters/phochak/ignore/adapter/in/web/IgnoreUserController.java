@@ -1,10 +1,10 @@
-package com.nexters.phochak.ignore.presentation;
+package com.nexters.phochak.ignore.adapter.in.web;
 
 import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.ignore.IgnoredUserResponseDto;
+import com.nexters.phochak.ignore.application.port.in.IgnoredUserResponseDto;
+import com.nexters.phochak.ignore.application.port.out.IgnoredUserUseCase;
 import com.nexters.phochak.post.CommonResponse;
-import com.nexters.phochak.user.application.port.in.UserUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,22 +16,22 @@ import java.util.List;
 
 @RequiredArgsConstructor
 @RestController
-public class IgnoreController {
+public class IgnoreUserController {
 
-    private final UserUseCase userService;
+    private final IgnoredUserUseCase ignoredUserUseCase;
 
     @Auth
     @GetMapping("/v1/user/ignore")
     public CommonResponse<List<IgnoredUserResponseDto>> getIgnoreUser() {
         Long me = UserContext.CONTEXT.get();
-        return new CommonResponse<>(userService.getIgnoreUserList(me));
+        return new CommonResponse<>(ignoredUserUseCase.getIgnoreUserList(me));
     }
 
     @Auth
     @PostMapping("/v1/user/ignore/{ignoredUserId}")
     public CommonResponse<Void> ignoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
         Long me = UserContext.CONTEXT.get();
-        userService.ignoreUser(me, ignoredUserId);
+        ignoredUserUseCase.ignoreUser(me, ignoredUserId);
         return new CommonResponse<>();
     }
 
@@ -39,7 +39,7 @@ public class IgnoreController {
     @DeleteMapping("/v1/user/ignore/{ignoredUserId}")
     public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
         Long me = UserContext.CONTEXT.get();
-        userService.cancelIgnoreUser(me, ignoredUserId);
+        ignoredUserUseCase.cancelIgnoreUser(me, ignoredUserId);
         return new CommonResponse<>();
     }
 }
