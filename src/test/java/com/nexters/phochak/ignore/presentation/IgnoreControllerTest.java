@@ -18,9 +18,12 @@ import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
 
 import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.common.TestUtil.TestUser.accessToken;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 class IgnoreControllerTest extends RestDocsApiTest {
@@ -48,10 +51,10 @@ class IgnoreControllerTest extends RestDocsApiTest {
     void ignoreUser() throws Exception {
         //given
         final long ignoredUserId = 2L;
-        Scenario.createUser().id(ignoredUserId).providerId("providerId2").nickname("nickname2").request();
+        Scenario.createUser().id(ignoredUserId).request();
 
         //when
-        Scenario.ignoreUser().request();
+        Scenario.ignoreUser().request().getResponse();
 
         //then
         final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
@@ -81,11 +84,15 @@ class IgnoreControllerTest extends RestDocsApiTest {
     @DisplayName("유저 API - 유저 무시하기 취소")
     void cancelIgnoreUser() throws Exception {
         //given
+        final long ignoredUserId = 2L;
+        Scenario.createUser().id(ignoredUserId).request()
+                .advance().ignoreUser().request();
+
         //when
         mockMvc.perform(
                         RestDocumentationRequestBuilders
-                                .delete("/v1/user/ignore/{ignoredUserId}", 10)
-                                .header(AUTHORIZATION_HEADER, "access token")
+                                .delete("/v1/user/ignore/{ignoredUserId}", ignoredUserId)
+                                .header(AUTHORIZATION_HEADER, accessToken)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
 //                .andDo(document("user/ignore/DELETE",
@@ -111,13 +118,21 @@ class IgnoreControllerTest extends RestDocsApiTest {
     @DisplayName("유저 API - 무시하기한 유저 목록 조회")
     void getIgnoreUser() throws Exception {
         //given
+        Scenario.createUser().id(2L).request()
+                .advance().ignoreUser().ignoredUserId(2L).request()
+                .advance().createUser().id(3L).request()
+                .advance().ignoreUser().ignoredUserId(3L).request()
+                .advance().createUser().id(4L).request();
         //when
-        mockMvc.perform(
+        final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/user/ignore", 10)
-                                .header(AUTHORIZATION_HEADER, "access token")
+                                .header(AUTHORIZATION_HEADER, accessToken)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        //then
+        response.andExpect(jsonPath("$.data.length()").value(2));
 //                .andDo(document("user/ignore/GET",
 //                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
 //                        preprocessResponse(prettyPrint()),

@@ -133,11 +133,7 @@ class UserControllerTest extends RestDocsApiTest {
     void getOtherUserInfo() throws Exception {
         //given
         final long targetUserId = 2;
-        Scenario.createUser()
-                .id(targetUserId)
-                .nickname("nickname2")
-                .providerId("providerId2")
-                .request();
+        Scenario.createUser().id(targetUserId).request();
 
         //when
         final ResultActions response = mockMvc.perform(

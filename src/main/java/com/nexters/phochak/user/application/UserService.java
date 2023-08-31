@@ -109,6 +109,7 @@ public class UserService implements UserUseCase {
     }
 
     @Override
+    @Transactional
     public void cancelIgnoreUser(Long me, Long ignoredUserId) {
         ignoredUserRepository.deleteIgnore(me, ignoredUserId);
     }

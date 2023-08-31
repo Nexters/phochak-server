@@ -19,6 +19,8 @@ public class CreateUserQuery {
 
     public CreateUserQuery id(final long id) {
         this.id = id;
+        this.providerId = providerId + id;
+        this.nickname = nickname + id;
         return this;
     }
 
