@@ -48,25 +48,32 @@ class UserControllerTest extends RestDocsApiTest {
     @Test
     @DisplayName("[유저 API] 카카오 OAuth 회원가입")
     void sign_up() throws Exception {
+        //given
         final OAuthProviderEnum provider = OAuthProviderEnum.KAKAO;
         final String providerId = "newProviderId";
         final KakaoUserInformation kakaoRequestResponse = mockKakaoUserInformation(providerId);
         when(kakaoInformationFeignClient.call(any(), any())).thenReturn(kakaoRequestResponse);
 
+        //when
         final ResultActions response = Scenario.login().request().getResponse();
-        DocumentGenerator.login(response);
 
+        //then
         assertThat(userRepository.findByProviderAndProviderId(provider, providerId)).isPresent();
+
+        //docs
+        DocumentGenerator.login(response);
     }
 
     @Test
     @DisplayName("[유저 API] - 닉네임 변경")
     void modifyNickname() throws Exception {
+        //given
         final String accessToken = Scenario.createUser().request()
                 .advance().createAccessToken().getAccessToken();
         final String newNickname = "새로운_여행자";
         NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto(newNickname);
 
+        //when
         final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .put("/v1/user/nickname")
@@ -74,35 +81,50 @@ class UserControllerTest extends RestDocsApiTest {
                                 .content(objectMapper.writeValueAsString(requestDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        //then
         assertThat(userRepository.findById(1L).get().getNickname()).isEqualTo(newNickname);
 
+        //docs
         DocumentGenerator.modifyNickname(response);
     }
 
     @Test
     @DisplayName("[유저 API] 닉네임 중복확인")
     void checkNicknameIsDuplicated() throws Exception {
+        //given
         String nickname = "여행자#123";
+
+        //when
         final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/user/check/nickname")
                                 .param("nickname", nickname))
                 .andExpect(status().isOk());
-        DocumentGenerator.checkNickname(response);
+
+        //then
         response.andExpect(jsonPath("$.data.isDuplicated").value(false));
+
+        //docs
+        DocumentGenerator.checkNickname(response);
     }
 
     @Test
     @DisplayName("[유저 API] 닉네임 중복확인 - 실패: 이미 사용 중인 닉네임")
     void checkNicknameIsDuplicated_fail_already_exist() throws Exception {
+        //given
         String duplicatedNickname = "중복여행자";
         Scenario.createUser().nickname(duplicatedNickname).request();
-        mockMvc.perform(
-                    RestDocumentationRequestBuilders
-                            .get("/v1/user/check/nickname")
-                            .param("nickname", duplicatedNickname))
-            .andExpect(status().isOk())
-            .andExpect(jsonPath("$.data.isDuplicated").value(true));
+
+        //when
+        final ResultActions response = mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/check/nickname")
+                                .param("nickname", duplicatedNickname))
+                .andExpect(status().isOk());
+
+        //then
+        response.andExpect(jsonPath("$.data.isDuplicated").value(true));
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {
