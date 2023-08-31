@@ -15,6 +15,7 @@ import com.nexters.phochak.user.application.port.in.UserCheckResponseDto;
 import com.nexters.phochak.user.application.port.in.UserInfoResponseDto;
 import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
+import com.nexters.phochak.user.application.port.out.FindIgnoredUserPort;
 import com.nexters.phochak.user.application.port.out.FindUserPort;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
 import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
@@ -37,6 +38,7 @@ public class UserService implements UserUseCase {
 
     private final FindUserPort findUserPort;
     private final CreateUserPort createUserPort;
+    private final FindIgnoredUserPort findIgnoredUserPort;
     private final UpdateUserNicknamePort updateUserNicknamePort;
     private final UserRepository userRepository;
     private final PostService postService;
@@ -73,20 +75,10 @@ public class UserService implements UserUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public UserInfoResponseDto getInfo(Long pageOwnerId, Long userId) {
-        UserEntity pageOwner;
-        Boolean isIgnored = false;
-        if (pageOwnerId == null) {
-            pageOwner = userRepository.getBy(userId);
-        } else {
-            pageOwner = userRepository.getBy(pageOwnerId);
-            UserEntity userEntity = userRepository.getReferenceById(userId);
-            IgnoredUsersRelation ignoredUsersRelation = IgnoredUsersRelation.builder()
-                    .user(userEntity)
-                    .ignoredUser(pageOwner)
-                    .build();
-            isIgnored = ignoredUserRepository.existsByIgnoredUsersRelation(ignoredUsersRelation);
-        }
+    public UserInfoResponseDto getInfo(final Long userId, final Long pageOwnerId) {
+        final User user = findUserPort.load(userId);
+        final User pageOwner = findUserPort.load(pageOwnerId);
+        final boolean isIgnored = findIgnoredUserPort.checkIgnoredRelation(user, pageOwner);
         return UserInfoResponseDto.of(pageOwner, pageOwner.getId().equals(userId), isIgnored);
     }
 

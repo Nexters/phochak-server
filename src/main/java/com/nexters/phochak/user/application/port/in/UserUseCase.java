@@ -33,7 +33,7 @@ public interface UserUseCase {
      * @param userId
      * @return
      */
-    UserInfoResponseDto getInfo(Long pageOwnerId, Long userId);
+    UserInfoResponseDto getInfo(Long userId, Long pageOwnerId);
 
     void withdraw(Long userId);
 

@@ -167,15 +167,14 @@ class UserControllerTest extends RestDocs {
     @Test
     @DisplayName("유저 API - 다른 유저 페이지 정보 조회하기")
     void getInfoOtherUserPage() throws Exception {
-        UserInfoResponseDto response = UserInfoResponseDto.builder()
-                .id(1L)
-                .nickname("nickname")
-                .profileImgUrl("profile image url")
-                .isMyPage(false)
-                .isIgnored(true)
-                .isBlocked(false)
-                .build();
-
+        UserInfoResponseDto response = new UserInfoResponseDto(
+                1L,
+                "nickname",
+                "profile image url",
+                false,
+                true,
+                false
+        );
         given(userService.getInfo(any(),any())).willReturn(response);
 
         mockMvc.perform(
@@ -209,14 +208,14 @@ class UserControllerTest extends RestDocs {
     @Test
     @DisplayName("유저 API - 본인 유저 페이지 정보 조회하기")
     void getInfoMyPage() throws Exception {
-        UserInfoResponseDto response = UserInfoResponseDto.builder()
-                .id(1L)
-                .nickname("nickname")
-                .profileImgUrl("profile image url")
-                .isMyPage(true)
-                .isIgnored(false)
-                .isBlocked(false)
-                .build();
+        UserInfoResponseDto response = new UserInfoResponseDto(
+                1L,
+                "nickname",
+                "profile image url",
+                false,
+                true,
+                false
+        );
 
         given(userService.getInfo(any(),any())).willReturn(response);
 
