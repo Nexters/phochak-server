@@ -63,7 +63,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         assertThat(userRepository.findByProviderAndProviderId(provider, providerId)).isPresent();
 
-        //docs
+        //doc
         DocumentGenerator.login(response);
     }
 
@@ -86,7 +86,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         assertThat(userRepository.findById(1L).get().getNickname()).isEqualTo(newNickname);
 
-        //docs
+        //doc
         DocumentGenerator.modifyNickname(response);
     }
 
@@ -106,7 +106,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         response.andExpect(jsonPath("$.data.isDuplicated").value(false));
 
-        //docs
+        //doc
         DocumentGenerator.checkNickname(response);
     }
 
@@ -145,7 +145,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         response.andExpect(jsonPath("$.data.id").value(targetUserId));
 
-        //docs
+        //doc
         DocumentGenerator.getOtherUserInfo(response);
     }
 
@@ -163,7 +163,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         response.andExpect(jsonPath("$.data.id").value(TestUtil.TestUser.userId));
 
-        //docs
+        //doc
         DocumentGenerator.getMyUserInfo(response);
     }
 

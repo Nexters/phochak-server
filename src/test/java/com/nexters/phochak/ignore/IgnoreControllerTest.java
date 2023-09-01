@@ -1,10 +1,11 @@
-package com.nexters.phochak.ignore.adapter.in.web;
+package com.nexters.phochak.ignore;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;
+import com.nexters.phochak.ignore.adapter.in.web.IgnoreUserController;
 import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntityRelation;
 import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.adapter.out.api.KakaoInformationFeignClient;
