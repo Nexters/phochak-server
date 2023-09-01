@@ -1,6 +1,7 @@
 package com.nexters.phochak.ignore.presentation;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;
@@ -55,7 +56,7 @@ class IgnoreControllerTest extends RestDocsApiTest {
         Scenario.createUser().id(ignoredUserId).request();
 
         //when
-        Scenario.ignoreUser().request().getResponse();
+        final ResultActions response = Scenario.ignoreUser().request().getResponse();
 
         //then
         final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
@@ -63,22 +64,8 @@ class IgnoreControllerTest extends RestDocsApiTest {
         final IgnoredUserEntityRelation pk = new IgnoredUserEntityRelation(userEntity, ignoredUserEntity);
         assertThat(ignoredUserRepository.existsByIgnoredUserRelation(pk)).isTrue();
 
-//                .andDo(document("user/ignore/POST",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("ignoredUserId").description("(필수) 무시하기 하려는 유저의 id 설정")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
-//                        )
-//                ));
+        //doc
+        DocumentGenerator.ignoreUser(response);
     }
 
     @Test
@@ -90,7 +77,7 @@ class IgnoreControllerTest extends RestDocsApiTest {
                 .advance().ignoreUser().request();
 
         //when
-        mockMvc.perform(
+        final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .delete("/v1/user/ignore/{ignoredUserId}", ignoredUserId)
                                 .header(AUTHORIZATION_HEADER, accessToken)
@@ -102,23 +89,9 @@ class IgnoreControllerTest extends RestDocsApiTest {
         final UserEntity ignoredUserEntity = userRepository.getReferenceById(ignoredUserId);
         final IgnoredUserEntityRelation pk = new IgnoredUserEntityRelation(userEntity, ignoredUserEntity);
         assertThat(ignoredUserRepository.existsByIgnoredUserRelation(pk)).isFalse();
-//                .andDo(document("user/ignore/DELETE",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("ignoredUserId").description("(필수) 무시하기 했던 유저의 id 설정")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
-//                        )
-//                ));
 
+        //doc
+        DocumentGenerator.cancelIgnoreUser(response);
     }
 
     @Test
@@ -140,21 +113,8 @@ class IgnoreControllerTest extends RestDocsApiTest {
 
         //then
         response.andExpect(jsonPath("$.data.length()").value(2));
-//                .andDo(document("user/ignore/GET",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("무시한 유저 id"),
-//                                fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("무시한 유저 닉네임"),
-//                                fieldWithPath("data[].profileImgUrl").type(JsonFieldType.STRING).description("무시한 유저 프로필 이미지 링크")
-//                        )
-//                ));
 
+        //doc
+        DocumentGenerator.getIgnoredUser(response);
     }
 }

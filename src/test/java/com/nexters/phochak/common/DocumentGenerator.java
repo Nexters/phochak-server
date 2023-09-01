@@ -113,4 +113,60 @@ public class DocumentGenerator {
                 )
         ));
     }
+
+    public static void ignoreUser(final ResultActions response) throws Exception {
+        response.andDo(document("user/ignore/POST",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("ignoredUserId").description("(필수) 무시하기 하려는 유저의 id 설정")
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+                )
+        ));
+    }
+
+    public static void cancelIgnoreUser(final ResultActions response) throws Exception {
+        response.andDo(document("user/ignore/DELETE",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("ignoredUserId").description("(필수) 무시하기 했던 유저의 id 설정")
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NULL).description("응답")
+                )
+        ));
+    }
+
+    public static void getIgnoredUser(final ResultActions response) throws Exception {
+        response.andDo(document("user/ignore/GET",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("무시한 유저 id"),
+                        fieldWithPath("data[].nickname").type(JsonFieldType.STRING).description("무시한 유저 닉네임"),
+                        fieldWithPath("data[].profileImgUrl").type(JsonFieldType.STRING).description("무시한 유저 프로필 이미지 링크")
+                )
+        ));
+    }
 }
