@@ -10,11 +10,11 @@ import lombok.Getter;
 public class IgnoredUserEntity {
 
     @EmbeddedId
-    private IgnoredUserEntityRelation ignoredUsersRelation;
+    private IgnoredUserEntityRelation ignoredUserRelation;
 
     @Builder
-    public IgnoredUserEntity(IgnoredUserEntityRelation ignoredUsersRelation) {
-        this.ignoredUsersRelation = ignoredUsersRelation;
+    public IgnoredUserEntity(IgnoredUserEntityRelation ignoredUserRelation) {
+        this.ignoredUserRelation = ignoredUserRelation;
     }
 
     public IgnoredUserEntity() {

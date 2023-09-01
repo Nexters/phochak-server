@@ -11,15 +11,15 @@ public interface IgnoredUserRepository extends JpaRepository<IgnoredUserEntity, 
 
     @Modifying
     @Query("delete from ignored_user i " +
-            "where i.ignoredUsersRelation.user.id = :me " +
-            "and i.ignoredUsersRelation.ignoredUser.id = :ignoredUserId")
+            "where i.ignoredUserRelation.user.id = :me " +
+            "and i.ignoredUserRelation.ignoredUser.id = :ignoredUserId")
     void deleteIgnore(@Param("me")Long me, @Param("ignoredUserId")Long ignoredUserId);
 
     @Modifying
     @Query("select i from ignored_user i " +
-            "left join fetch UserEntity u on i.ignoredUsersRelation.ignoredUser.id = u.id " +
-            "where i.ignoredUsersRelation.user.id = :me")
+            "left join fetch UserEntity u on i.ignoredUserRelation.ignoredUser.id = u.id " +
+            "where i.ignoredUserRelation.user.id = :me")
     List<IgnoredUserEntity> getIgnoreUserListByUserId(@Param("me") Long me);
 
-    Boolean existsByIgnoredUserRelation(IgnoredUserEntityRelation ignoredUsersRelation);
+    boolean existsByIgnoredUserRelation(IgnoredUserEntityRelation ignoredUserRelation);
 }

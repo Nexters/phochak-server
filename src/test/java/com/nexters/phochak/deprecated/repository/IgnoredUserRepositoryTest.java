@@ -98,11 +98,11 @@ class IgnoredUserRepositoryTest {
         // then
         List<IgnoredUserEntity> list = ignoredUserRepository.getIgnoreUserListByUserId(me.getId());
         for (IgnoredUserEntity users : list) {
-            System.out.println(users.getIgnoredUsersRelation().getIgnoredUser().getId());
+            System.out.println(users.getIgnoredUserRelation().getIgnoredUser().getId());
         }
         assertEquals(2, list.size());
-        assertEquals(2L, list.get(0).getIgnoredUsersRelation().getIgnoredUser().getId());
-        assertEquals(3L, list.get(1).getIgnoredUsersRelation().getIgnoredUser().getId());
+        assertEquals(2L, list.get(0).getIgnoredUserRelation().getIgnoredUser().getId());
+        assertEquals(3L, list.get(1).getIgnoredUserRelation().getIgnoredUser().getId());
     }
 
 }

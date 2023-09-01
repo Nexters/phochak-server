@@ -1,16 +1,13 @@
 package com.nexters.phochak.ignore.application;
 
-import com.nexters.phochak.common.exception.PhochakException;
-import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntity;
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntityRelation;
 import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.ignore.application.port.in.IgnoredUserResponseDto;
 import com.nexters.phochak.ignore.application.port.out.IgnoredUserUseCase;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.ignore.application.port.out.LoadIgnoredUserPort;
+import com.nexters.phochak.ignore.application.port.out.SaveIgnoreUserPort;
+import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -19,25 +16,15 @@ import java.util.List;
 @Service
 @RequiredArgsConstructor
 public class IgnoredUserService implements IgnoredUserUseCase {
+    private final LoadIgnoredUserPort loadIgnoredUserPort;
     private final IgnoredUserRepository ignoredUserRepository;
-    private final UserRepository userRepository;
+    private final SaveIgnoreUserPort saveIgnoredUserPort;
+
     @Override
-    public void ignoreUser(Long me, Long ignoredUserId) {
-        UserEntity userEntity = userRepository.getReferenceById(me);
-        UserEntity pageOwner = userRepository.getBy(ignoredUserId);
-        try {
-            IgnoredUserEntityRelation ignoredUsersRelation = IgnoredUserEntityRelation.builder()
-                    .user(userEntity)
-                    .ignoredUser(pageOwner)
-                    .build();
-            IgnoredUserEntity ignoredUsers = IgnoredUserEntity.builder()
-                    .ignoredUsersRelation(ignoredUsersRelation)
-                    .build();
-            ignoredUserRepository.save(ignoredUsers);
-        } catch (
-                DataIntegrityViolationException e) {
-            throw new PhochakException(ResCode.ALREADY_IGNORED_USER);
-        }
+    public void ignoreUser(Long myId, Long ignoredUserId) {
+        User me = loadIgnoredUserPort.loadIgnoredUser(myId);
+        User pageOwner = loadIgnoredUserPort.loadIgnoredUser(ignoredUserId);
+        saveIgnoredUserPort.save(me, pageOwner);
     }
 
     @Override
