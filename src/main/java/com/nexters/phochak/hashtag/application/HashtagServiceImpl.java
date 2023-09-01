@@ -5,7 +5,7 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

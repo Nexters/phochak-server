@@ -1,10 +1,10 @@
-package com.nexters.phochak.post.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.post.PostFetchCommand;
-import com.nexters.phochak.post.PostFetchDto;
 import com.nexters.phochak.post.QPostFetchDto;
 import com.nexters.phochak.post.QPostFetchDto_PostShortsInformation;
 import com.nexters.phochak.post.QPostFetchDto_PostUserInformation;
+import com.nexters.phochak.post.application.port.in.PostFetchDto;
+import com.nexters.phochak.post.domain.QPost;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;

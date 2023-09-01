@@ -1,15 +1,15 @@
 package com.nexters.phochak.deprecated.controller;
 
 import com.nexters.phochak.common.docs.RestDocs;
-import com.nexters.phochak.post.CustomCursor;
-import com.nexters.phochak.post.PostFetchDto.PostShortsInformation;
-import com.nexters.phochak.post.PostFetchDto.PostUserInformation;
-import com.nexters.phochak.post.PostFilter;
-import com.nexters.phochak.post.PostPageResponseDto;
-import com.nexters.phochak.post.application.PostService;
+import com.nexters.phochak.post.adapter.in.web.PostController;
+import com.nexters.phochak.post.adapter.out.persistence.PostFilter;
+import com.nexters.phochak.post.adapter.out.persistence.PostSortOption;
+import com.nexters.phochak.post.application.port.in.CustomCursorDto;
+import com.nexters.phochak.post.application.port.in.PostFetchDto.PostShortsInformation;
+import com.nexters.phochak.post.application.port.in.PostFetchDto.PostUserInformation;
+import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
+import com.nexters.phochak.post.application.port.in.PostUseCase;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.post.domain.PostSortOption;
-import com.nexters.phochak.post.presentation.PostController;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -43,7 +43,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 class PostControllerTest extends RestDocs {
 
     @Mock
-    PostService postService;
+    PostUseCase postUseCase;
 
     @InjectMocks
     PostController postController;
@@ -130,7 +130,7 @@ class PostControllerTest extends RestDocs {
     @Test
     @DisplayName("포스트 목록 조회 API - 첫 요청")
     void getPostList_initial() throws Exception {
-        CustomCursor customCursor = CustomCursor.builder()
+        CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .sortOption(PostSortOption.LATEST)
                 .filter(PostFilter.NONE)
                 .pageSize(2)
@@ -138,13 +138,13 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post2, post1);
 
-        when(postService.getNextCursorPage(any())).thenReturn(result);
+        when(postUseCase.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("sortOption", customCursor.getSortOption().name())
-                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .param("sortOption", customCursorDto.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
                                 .header(AUTHORIZATION_HEADER, "access token"))
                 .andExpect(status().isOk())
                 .andDo(document("post/list/initial",
@@ -183,7 +183,7 @@ class PostControllerTest extends RestDocs {
     @Test
     @DisplayName("포스트 목록 조회 API - 이후 요청")
     void getPostList_after() throws Exception {
-        CustomCursor customCursor = CustomCursor.builder()
+        CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
                 .filter(PostFilter.NONE)
@@ -207,15 +207,15 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
 
-        when(postService.getNextCursorPage(any())).thenReturn(result);
+        when(postUseCase.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
-                                .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("sortOption", customCursor.getSortOption().name())
-                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .param("sortValue", String.valueOf(customCursorDto.getSortValue()))
+                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
+                                .param("sortOption", customCursorDto.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -257,7 +257,7 @@ class PostControllerTest extends RestDocs {
     @Test
     @DisplayName("포스트 목록 조회 API - 마지막 요청")
     void getPostList_last() throws Exception {
-        CustomCursor customCursor = CustomCursor.builder()
+        CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .pageSize(5)
                 .sortOption(PostSortOption.VIEW)
                 .filter(PostFilter.NONE)
@@ -281,15 +281,15 @@ class PostControllerTest extends RestDocs {
 
         List<PostPageResponseDto> result = List.of(post3, post2, post1);
 
-        when(postService.getNextCursorPage(any())).thenReturn(result);
+        when(postUseCase.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
-                                .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("sortOption", customCursor.getSortOption().name())
-                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .param("sortValue", String.valueOf(customCursorDto.getSortValue()))
+                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
+                                .param("sortOption", customCursorDto.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -331,7 +331,7 @@ class PostControllerTest extends RestDocs {
     @Test
     @DisplayName("포스트 목록 조회 API - 나 또는 다른 유저가 업로드한 영상")
     void getPostList_uploaded() throws Exception {
-        CustomCursor customCursor = CustomCursor.builder()
+        CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
                 .filter(PostFilter.UPLOADED)
@@ -363,17 +363,17 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3);
 
 
-        when(postService.getNextCursorPage(any())).thenReturn(result);
+        when(postUseCase.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
-                                .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("sortOption", customCursor.getSortOption().name())
-                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .param("filter", customCursor.getFilter().name())
-                                .param("targetUserId", String.valueOf(customCursor.getTargetUserId()))
+                                .param("sortValue", String.valueOf(customCursorDto.getSortValue()))
+                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
+                                .param("sortOption", customCursorDto.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
+                                .param("filter", customCursorDto.getFilter().name())
+                                .param("targetUserId", String.valueOf(customCursorDto.getTargetUserId()))
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -417,7 +417,7 @@ class PostControllerTest extends RestDocs {
     @Test
     @DisplayName("포스트 목록 조회 API - 내가 좋아요한 영상")
     void getPostList_liked() throws Exception {
-        CustomCursor customCursor = CustomCursor.builder()
+        CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .pageSize(3)
                 .sortOption(PostSortOption.LIKE)
                 .filter(PostFilter.LIKED)
@@ -448,16 +448,16 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3, post1);
 
 
-        when(postService.getNextCursorPage(any())).thenReturn(result);
+        when(postUseCase.getNextCursorPage(any())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list")
-                                .param("sortValue", String.valueOf(customCursor.getSortValue()))
-                                .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("sortOption", customCursor.getSortOption().name())
-                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
-                                .param("filter", customCursor.getFilter().name())
+                                .param("sortValue", String.valueOf(customCursorDto.getSortValue()))
+                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
+                                .param("sortOption", customCursorDto.getSortOption().name())
+                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
+                                .param("filter", customCursorDto.getFilter().name())
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -500,7 +500,7 @@ class PostControllerTest extends RestDocs {
     @Test
     @DisplayName("포스트 목록 조회 API - 해시태그 검색")
     void getPostList_searched() throws Exception {
-        CustomCursor customCursor = CustomCursor.builder()
+        CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .pageSize(3)
                 .lastId(20L)
                 .category(PostCategoryEnum.CAFE)
@@ -529,15 +529,15 @@ class PostControllerTest extends RestDocs {
         List<PostPageResponseDto> result = List.of(post3, post1);
 
 
-        when(postService.getNextCursorPage(any(), anyString())).thenReturn(result);
+        when(postUseCase.getNextCursorPage(any(), anyString())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/post/list/search")
-                                .param("lastId", String.valueOf(customCursor.getLastId()))
-                                .param("pageSize", String.valueOf(customCursor.getPageSize()))
+                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
+                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
                                 .param("hashtag", String.valueOf(hashtags.get(1)))
-                                .param("category", String.valueOf(customCursor.getCategory()))
+                                .param("category", String.valueOf(customCursorDto.getCategory()))
                                 .header(AUTHORIZATION_HEADER, "access token")
                 )
                 .andExpect(status().isOk())
@@ -583,7 +583,7 @@ class PostControllerTest extends RestDocs {
         int resultSize = 3;
         List<String> result = List.of("해시", "해시태", "해시태그123");
 
-        when(postService.getHashtagAutocomplete(anyString(), anyInt())).thenReturn(result);
+        when(postUseCase.getHashtagAutocomplete(anyString(), anyInt())).thenReturn(result);
 
         mockMvc.perform(
                         RestDocumentationRequestBuilders

@@ -2,9 +2,9 @@ package com.nexters.phochak.deprecated.service;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.post.application.PostServiceImpl;
-import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.post.domain.PostRepository;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
+import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
@@ -30,7 +30,8 @@ import static org.mockito.BDDMockito.given;
 @ExtendWith(MockitoExtension.class)
 class PostServiceTest {
 
-    @InjectMocks PostServiceImpl postService;
+    @InjectMocks
+    PostService postService;
 
     @Mock
     StorageBucketClient storageBucketClient;

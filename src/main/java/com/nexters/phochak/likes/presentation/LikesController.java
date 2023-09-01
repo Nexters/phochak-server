@@ -3,7 +3,7 @@ package com.nexters.phochak.likes.presentation;
 import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.likes.application.LikesService;
-import com.nexters.phochak.post.CommonResponse;
+import com.nexters.phochak.post.application.port.in.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -20,17 +20,17 @@ public class LikesController {
 
     @Auth
     @PostMapping
-    public CommonResponse<Void> addPhochak(@PathVariable Long postId) {
+    public CommonResponseDto<Void> addPhochak(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         likesService.addPhochak(userId, postId);
-        return new CommonResponse<>();
+        return new CommonResponseDto<>();
     }
 
     @Auth
     @DeleteMapping
-    public CommonResponse<Void> cancelPhochak(@PathVariable Long postId) {
+    public CommonResponseDto<Void> cancelPhochak(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         likesService.cancelPhochak(userId, postId);
-        return new CommonResponse<>();
+        return new CommonResponseDto<>();
     }
 }

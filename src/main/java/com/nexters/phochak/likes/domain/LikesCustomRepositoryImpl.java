@@ -1,12 +1,12 @@
 package com.nexters.phochak.likes.domain;
 
 import com.nexters.phochak.likes.LikesFetchDto;
-import com.nexters.phochak.post.PostFetchCommand;
-import com.nexters.phochak.post.PostFetchDto;
 import com.nexters.phochak.post.QPostFetchDto;
 import com.nexters.phochak.post.QPostFetchDto_PostShortsInformation;
 import com.nexters.phochak.post.QPostFetchDto_PostUserInformation;
-import com.nexters.phochak.post.domain.PostSortOption;
+import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
+import com.nexters.phochak.post.adapter.out.persistence.PostSortOption;
+import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.domain.QPost;
 import com.nexters.phochak.shorts.domain.QShorts;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;

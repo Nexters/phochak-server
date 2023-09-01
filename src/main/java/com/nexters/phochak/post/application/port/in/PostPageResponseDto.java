@@ -1,4 +1,4 @@
-package com.nexters.phochak.post;
+package com.nexters.phochak.post.application.port.in;
 
 import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
 import com.nexters.phochak.likes.LikesFetchDto;

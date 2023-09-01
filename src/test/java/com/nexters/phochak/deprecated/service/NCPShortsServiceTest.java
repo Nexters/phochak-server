@@ -2,7 +2,7 @@ package com.nexters.phochak.deprecated.service;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.application.NCPShortsService;

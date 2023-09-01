@@ -1,7 +1,7 @@
-package com.nexters.phochak.post;
+package com.nexters.phochak.post.adapter.out.persistence;
 
+import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.post.domain.PostSortOption;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -22,31 +22,31 @@ public class PostFetchCommand {
     private final String searchHashtag;
     private final PostCategoryEnum category;
 
-    public static PostFetchCommand of(CustomCursor customCursor, long userId) {
+    public static PostFetchCommand of(CustomCursorDto customCursorDto, long userId) {
         return PostFetchCommand.builder()
                 .userId(userId)
-                .lastId(customCursor.getLastId())
-                .pageSize(customCursor.getPageSize())
-                .sortOption(customCursor.getSortOption())
-                .sortValue(customCursor.getSortValue())
-                .filter(customCursor.getFilter())
-                .targetUserId(customCursor.getTargetUserId())
+                .lastId(customCursorDto.getLastId())
+                .pageSize(customCursorDto.getPageSize())
+                .sortOption(customCursorDto.getSortOption())
+                .sortValue(customCursorDto.getSortValue())
+                .filter(customCursorDto.getFilter())
+                .targetUserId(customCursorDto.getTargetUserId())
                 .searchHashtag(null)
                 .category(null)
                 .build();
     }
 
-    public static PostFetchCommand of(CustomCursor customCursor, long userId, String hashtag) {
+    public static PostFetchCommand of(CustomCursorDto customCursorDto, long userId, String hashtag) {
         return PostFetchCommand.builder()
                 .userId(userId)
-                .lastId(customCursor.getLastId())
-                .pageSize(customCursor.getPageSize())
-                .sortOption(customCursor.getSortOption())
-                .sortValue(customCursor.getSortValue())
+                .lastId(customCursorDto.getLastId())
+                .pageSize(customCursorDto.getPageSize())
+                .sortOption(customCursorDto.getSortOption())
+                .sortValue(customCursorDto.getSortValue())
                 .filter(PostFilter.SEARCH)
-                .targetUserId(customCursor.getTargetUserId())
+                .targetUserId(customCursorDto.getTargetUserId())
                 .searchHashtag(hashtag)
-                .category(customCursor.getCategory())
+                .category(customCursorDto.getCategory())
                 .build();
     }
 

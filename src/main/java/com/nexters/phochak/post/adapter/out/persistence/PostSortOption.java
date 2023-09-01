@@ -1,4 +1,4 @@
-package com.nexters.phochak.post.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;

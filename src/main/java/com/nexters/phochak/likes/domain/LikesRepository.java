@@ -1,6 +1,6 @@
 package com.nexters.phochak.likes.domain;
 
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 

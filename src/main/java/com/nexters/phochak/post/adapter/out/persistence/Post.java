@@ -1,8 +1,9 @@
-package com.nexters.phochak.post.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.likes.domain.Likes;
+import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;

@@ -1,4 +1,4 @@
-package com.nexters.phochak.post;
+package com.nexters.phochak.post.adapter.out.persistence;
 
 import lombok.Getter;
 

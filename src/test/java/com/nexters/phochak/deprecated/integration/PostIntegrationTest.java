@@ -1,10 +1,10 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.common.exception.PhochakException;
-import com.nexters.phochak.post.application.PostServiceImpl;
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
+import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.post.domain.PostRepository;
 import jakarta.persistence.EntityManager;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Disabled;
@@ -27,7 +27,7 @@ import static org.assertj.core.api.AssertionsForClassTypes.assertThatThrownBy;
 class PostIntegrationTest {
 
     @Autowired
-    PostServiceImpl postService;
+    PostService postService;
 
     @Autowired
     PostRepository postRepository;

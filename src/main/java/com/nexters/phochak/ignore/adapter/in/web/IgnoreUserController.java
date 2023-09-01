@@ -4,7 +4,7 @@ import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.ignore.application.port.in.IgnoredUserResponseDto;
 import com.nexters.phochak.ignore.application.port.out.IgnoredUserUseCase;
-import com.nexters.phochak.post.CommonResponse;
+import com.nexters.phochak.post.application.port.in.CommonResponseDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,24 +22,24 @@ public class IgnoreUserController {
 
     @Auth
     @GetMapping("/v1/user/ignore")
-    public CommonResponse<List<IgnoredUserResponseDto>> getIgnoreUser() {
+    public CommonResponseDto<List<IgnoredUserResponseDto>> getIgnoreUser() {
         Long me = UserContext.CONTEXT.get();
-        return new CommonResponse<>(ignoredUserUseCase.getIgnoreUserList(me));
+        return new CommonResponseDto<>(ignoredUserUseCase.getIgnoreUserList(me));
     }
 
     @Auth
     @PostMapping("/v1/user/ignore/{ignoredUserId}")
-    public CommonResponse<Void> ignoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
+    public CommonResponseDto<Void> ignoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
         Long me = UserContext.CONTEXT.get();
         ignoredUserUseCase.ignoreUser(me, ignoredUserId);
-        return new CommonResponse<>();
+        return new CommonResponseDto<>();
     }
 
     @Auth
     @DeleteMapping("/v1/user/ignore/{ignoredUserId}")
-    public CommonResponse<Void> cancelIgnoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
+    public CommonResponseDto<Void> cancelIgnoreUser(@PathVariable(value = "ignoredUserId") Long ignoredUserId) {
         Long me = UserContext.CONTEXT.get();
         ignoredUserUseCase.cancelIgnoreUser(me, ignoredUserId);
-        return new CommonResponse<>();
+        return new CommonResponseDto<>();
     }
 }

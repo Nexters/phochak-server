@@ -1,4 +1,4 @@
-package com.nexters.phochak.post;
+package com.nexters.phochak.post.application.port.in;
 
 import com.nexters.phochak.common.StatusResponse;
 import com.nexters.phochak.common.exception.ResCode;
@@ -9,20 +9,20 @@ import java.util.List;
 
 @Setter
 @Getter
-public class CommonPageResponse<T> {
+public class CommonPageResponseDto<T> {
     private StatusResponse status = new StatusResponse(ResCode.OK);
     private final List<T> data;
     private Boolean isLastPage;
 
-    public CommonPageResponse() {
+    public CommonPageResponseDto() {
         this.data = null;
     }
 
-    public CommonPageResponse(List<T> data) {
+    public CommonPageResponseDto(List<T> data) {
         this(data, false);
     }
 
-    public CommonPageResponse(List<T> data, Boolean isLastPage) {
+    public CommonPageResponseDto(List<T> data, Boolean isLastPage) {
         this.data = data;
         this.isLastPage = isLastPage;
     }

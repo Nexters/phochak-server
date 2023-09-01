@@ -2,7 +2,7 @@ package com.nexters.phochak.hashtag.application;
 
 import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
 
 import java.util.List;
 import java.util.Map;

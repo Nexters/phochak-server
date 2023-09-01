@@ -1,4 +1,4 @@
-package com.nexters.phochak.post;
+package com.nexters.phochak.post.application.port.in;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;

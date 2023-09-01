@@ -2,11 +2,11 @@ package com.nexters.phochak.report.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.post.application.ReportNotifyService;
-import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.post.domain.PostRepository;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.report.domain.ReportPostRepository;
+import com.nexters.phochak.report.presentation.ReportNotifyService;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;

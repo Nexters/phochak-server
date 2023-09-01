@@ -2,7 +2,7 @@ package com.nexters.phochak.report.presentation;
 
 import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.post.CommonResponse;
+import com.nexters.phochak.post.application.port.in.CommonResponseDto;
 import com.nexters.phochak.report.application.ReportPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -19,9 +19,9 @@ public class ReportController {
 
     @Auth
     @PostMapping("/post/{postId}")
-    public CommonResponse<Void> reportPost(@PathVariable Long postId) {
+    public CommonResponseDto<Void> reportPost(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
         reportPostService.processReport(userId, postId);
-        return new CommonResponse<>();
+        return new CommonResponseDto<>();
     }
 }

@@ -3,7 +3,7 @@ package com.nexters.phochak.deprecated.service;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.hashtag.application.HashtagServiceImpl;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.Post;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
