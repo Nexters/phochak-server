@@ -1,6 +1,6 @@
 package com.nexters.phochak.common;
 
-import com.nexters.phochak.ignore.presentation.IgnoreUserApi;
+import com.nexters.phochak.ignore.api.IgnoreUserApi;
 import com.nexters.phochak.user.api.LoginApi;
 import org.springframework.test.web.servlet.ResultActions;
 
