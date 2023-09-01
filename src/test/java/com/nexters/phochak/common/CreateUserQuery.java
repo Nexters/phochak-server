@@ -19,6 +19,8 @@ public class CreateUserQuery {
 
     public CreateUserQuery id(final long id) {
         this.id = id;
+        this.providerId = providerId + id;
+        this.nickname = nickname + id;
         return this;
     }
 
@@ -68,7 +70,7 @@ public class CreateUserQuery {
                 isBlocked,
                 leaveDate
         );
-        RestDocsApiTest.Util.userRepository.save(user);
+        TestUtil.userRepository.save(user);
         return new Scenario.NextScenarioStep(null);
     }
 

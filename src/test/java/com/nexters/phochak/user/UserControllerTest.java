@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
+import com.nexters.phochak.common.TestUtil;
 import com.nexters.phochak.user.adapter.in.web.UserController;
 import com.nexters.phochak.user.adapter.out.api.KakaoInformationFeignClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
@@ -35,14 +36,16 @@ class UserControllerTest extends RestDocsApiTest {
     UserController userController;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    ObjectMapper objectMapper;
     @MockBean
     KakaoInformationFeignClient kakaoInformationFeignClient;
-    @Autowired ObjectMapper objectMapper;
     MockMvc mockMvc;
 
     @BeforeEach
     void setUpMock(RestDocumentationContextProvider restDocumentation) {
         this.mockMvc = getMockMvcBuilder(restDocumentation, userController).build();
+        TestUtil.setMockMvc(mockMvc);
     }
 
     @Test
@@ -60,7 +63,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         assertThat(userRepository.findByProviderAndProviderId(provider, providerId)).isPresent();
 
-        //docs
+        //doc
         DocumentGenerator.login(response);
     }
 
@@ -68,8 +71,6 @@ class UserControllerTest extends RestDocsApiTest {
     @DisplayName("[유저 API] - 닉네임 변경")
     void modifyNickname() throws Exception {
         //given
-        final String accessToken = Scenario.createUser().request()
-                .advance().createAccessToken().getAccessToken();
         final String newNickname = "새로운_여행자";
         NicknameModifyRequestDto requestDto = new NicknameModifyRequestDto(newNickname);
 
@@ -77,7 +78,7 @@ class UserControllerTest extends RestDocsApiTest {
         final ResultActions response = mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .put("/v1/user/nickname")
-                                .header(AUTHORIZATION_HEADER, accessToken)
+                                .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken)
                                 .content(objectMapper.writeValueAsString(requestDto))
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -85,7 +86,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         assertThat(userRepository.findById(1L).get().getNickname()).isEqualTo(newNickname);
 
-        //docs
+        //doc
         DocumentGenerator.modifyNickname(response);
     }
 
@@ -105,7 +106,7 @@ class UserControllerTest extends RestDocsApiTest {
         //then
         response.andExpect(jsonPath("$.data.isDuplicated").value(false));
 
-        //docs
+        //doc
         DocumentGenerator.checkNickname(response);
     }
 
@@ -127,6 +128,45 @@ class UserControllerTest extends RestDocsApiTest {
         response.andExpect(jsonPath("$.data.isDuplicated").value(true));
     }
 
+    @Test
+    @DisplayName("[유저 API] - 다른 유저 페이지 정보 조회하기")
+    void getOtherUserInfo() throws Exception {
+        //given
+        final long targetUserId = 2;
+        Scenario.createUser().id(targetUserId).request();
+
+        //when
+        final ResultActions response = mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/{userId}", targetUserId)
+                                .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk());
+
+        //then
+        response.andExpect(jsonPath("$.data.id").value(targetUserId));
+
+        //doc
+        DocumentGenerator.getOtherUserInfo(response);
+    }
+
+    @Test
+    @DisplayName("[유저 API] - 본인 유저 페이지 정보 조회하기")
+    void getInfoMyPage() throws Exception {
+        //given
+        //when
+        final ResultActions response = mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/")
+                                .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk());
+
+        //then
+        response.andExpect(jsonPath("$.data.id").value(TestUtil.TestUser.userId));
+
+        //doc
+        DocumentGenerator.getMyUserInfo(response);
+    }
+
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {
         final String connectedAt = "connectedAt";
         final String nickname = "nickname";
@@ -142,6 +182,4 @@ class UserControllerTest extends RestDocsApiTest {
                 kakaoAccount
         );
     }
-
-
 }

@@ -6,10 +6,10 @@ import org.springframework.stereotype.Component;
 @Component
 public class UserMapper {
 
-    public User toDomain(UserEntity userEntity) {
+    public User toDomain(final UserEntity userEntity) {
         return User.toDomain(userEntity);
     }
-    public UserEntity toEntity(User user) {
+    public UserEntity toEntity(final User user) {
         return new UserEntity(
                 user.getId(),
                 user.getFcmDeviceTokenEntity(),

@@ -11,7 +11,6 @@ import org.springframework.boot.test.autoconfigure.restdocs.AutoConfigureRestDoc
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.web.servlet.MockMvc;
 
 @SpringBootTest
 @AutoConfigureMockMvc
@@ -26,43 +25,24 @@ public class RestDocsApiTest extends RestDocs {
     @Autowired
     JwtTokenUseCase jwtTokenUseCase;
 
-    protected String testToken;
-
     @BeforeEach
     void setUp() {
         databaseCleanup.afterPropertiesSet();
         databaseCleanup.execute();
-        Util.setUserRepository(userRepository);
-        Util.setJwtTokenUseCase(jwtTokenUseCase);
-        generateTestUser();
+        TestUtil.setAccessToken(generateTestUserAndToken());
+        TestUtil.setUserRepository(userRepository);
+        TestUtil.setJwtTokenUseCase(jwtTokenUseCase);
     }
 
-    private void generateTestUser() {
-        UserEntity userEntity = UserFixture.anUser().build();
+    private String generateTestUserAndToken() {
+        UserEntity userEntity = UserFixture.anUser().userId(1L).build();
         userRepository.save(userEntity);
-        generateTestToken(userEntity.getId());
-
+        return generateTestToken(userEntity.getId());
     }
 
-    private void generateTestToken(final Long userId) {
+    private String generateTestToken(final Long userId) {
         JwtTokenUseCase.TokenVo tokenDto = jwtTokenUseCase.generateToken(userId, 999999999L);
-        testToken = JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
+        return JwtTokenUseCase.TokenVo.TOKEN_TYPE + " " + tokenDto.getTokenString();
     }
 
-    public static class Util {
-        public static UserRepository userRepository;
-        public static JwtTokenUseCase jwtTokenUseCase;
-        public static MockMvc mockMvc;
-
-        public static void setUserRepository(final UserRepository userRepository) {
-            Util.userRepository = userRepository;
-        }
-        public static void setJwtTokenUseCase(final JwtTokenUseCase jwtTokenUseCase) {
-            Util.jwtTokenUseCase = jwtTokenUseCase;
-        }
-
-        public static void setMockMvc(final MockMvc mockMvc) {
-            Util.mockMvc = mockMvc;
-        }
-    }
 }

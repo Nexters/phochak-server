@@ -1,9 +1,14 @@
 package com.nexters.phochak.common;
 
+import com.nexters.phochak.ignore.api.IgnoreUserApi;
 import com.nexters.phochak.user.api.LoginApi;
 import org.springframework.test.web.servlet.ResultActions;
 
 public class Scenario {
+
+    public static IgnoreUserApi ignoreUser() {
+        return new IgnoreUserApi();
+    }
 
     public static class NextScenarioStep {
         public ResultActions response;

@@ -1,9 +1,5 @@
 package com.nexters.phochak.user.application.port.in;
 
-import com.nexters.phochak.ignore.IgnoredUserResponseDto;
-
-import java.util.List;
-
 public interface UserUseCase {
     /**
      * OAuth 로그인을 진행한다.
@@ -33,13 +29,7 @@ public interface UserUseCase {
      * @param userId
      * @return
      */
-    UserInfoResponseDto getInfo(Long pageOwnerId, Long userId);
+    UserInfoResponseDto getInfo(Long userId, Long pageOwnerId);
 
     void withdraw(Long userId);
-
-    void ignoreUser(Long me, Long ignoredUserId);
-
-    void cancelIgnoreUser(Long me, Long ignoredUserId);
-
-    List<IgnoredUserResponseDto> getIgnoreUserList(Long me);
 }

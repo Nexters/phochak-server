@@ -78,7 +78,10 @@ public class UserController {
     @GetMapping({"/{userId}", "/"})
     public CommonResponse<UserInfoResponseDto> getInfo(@PathVariable(value = "userId", required = false) Long pageOwnerId) {
         Long userId = UserContext.CONTEXT.get();
-        return new CommonResponse<>(userUseCase.getInfo(pageOwnerId, userId));
+        if (pageOwnerId == null) {
+            pageOwnerId = userId;
+        }
+        return new CommonResponse<>(userUseCase.getInfo(userId, pageOwnerId));
     }
 
 

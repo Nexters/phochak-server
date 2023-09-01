@@ -1,7 +1,7 @@
 package com.nexters.phochak.user.api;
 
-import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
+import com.nexters.phochak.common.TestUtil;
 import com.nexters.phochak.notification.domain.OperatingSystem;
 import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.ResultActions;
@@ -36,7 +36,7 @@ public class LoginApi {
 
     public Scenario.NextScenarioStep request() throws Exception {
 
-        final ResultActions response = RestDocsApiTest.Util.mockMvc.perform(
+        final ResultActions response = TestUtil.mockMvc.perform(
                         RestDocumentationRequestBuilders
                                 .get("/v1/user/login/{provider}", provider)
                                 .param("token", token)
