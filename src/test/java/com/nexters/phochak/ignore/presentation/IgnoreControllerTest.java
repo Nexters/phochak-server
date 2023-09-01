@@ -96,6 +96,12 @@ class IgnoreControllerTest extends RestDocsApiTest {
                                 .header(AUTHORIZATION_HEADER, accessToken)
                                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
+
+        //then
+        final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
+        final UserEntity ignoredUserEntity = userRepository.getReferenceById(ignoredUserId);
+        final IgnoredUserEntityRelation pk = new IgnoredUserEntityRelation(userEntity, ignoredUserEntity);
+        assertThat(ignoredUserRepository.existsByIgnoredUserRelation(pk)).isFalse();
 //                .andDo(document("user/ignore/DELETE",
 //                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
 //                        preprocessResponse(prettyPrint()),

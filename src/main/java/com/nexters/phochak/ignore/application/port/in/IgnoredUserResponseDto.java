@@ -1,13 +1,10 @@
 package com.nexters.phochak.ignore.application.port.in;
 
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntity;
+import com.nexters.phochak.ignore.domain.IgnoredUser;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
-
-import java.util.List;
-import java.util.stream.Collectors;
 
 @Getter
 @AllArgsConstructor
@@ -19,17 +16,11 @@ public class IgnoredUserResponseDto {
     private String nickname;
     private String profileImgUrl;
 
-    public static IgnoredUserResponseDto of(IgnoredUserEntity ignoredUser) {
+    public static IgnoredUserResponseDto of(IgnoredUser ignoredUser) {
         return new IgnoredUserResponseDto(
-                ignoredUser.getIgnoredUserRelation().getIgnoredUser().getId(),
-                ignoredUser.getIgnoredUserRelation().getIgnoredUser().getNickname(),
-                ignoredUser.getIgnoredUserRelation().getIgnoredUser().getProfileImgUrl()
+                ignoredUser.getIgnoredUser().getId(),
+                ignoredUser.getIgnoredUser().getNickname(),
+                ignoredUser.getIgnoredUser().getProfileImgUrl()
             );
-    }
-
-    public static List<IgnoredUserResponseDto> of(List<IgnoredUserEntity> ignoredUserList) {
-        return ignoredUserList.stream()
-                .map(IgnoredUserResponseDto::of)
-                .collect(Collectors.toList());
     }
 }

@@ -13,7 +13,7 @@ public class UserNetworkMonolithicClient implements UserNetworkClient {
     private final UserRepository userRepository;
     private final UserMapper userMapper;
 
-    public User getUser(final Long userId) {
+    public User loadUser(final Long userId) {
         final UserEntity userEntity = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
         return userMapper.toDomain(userEntity);
     }

@@ -1,5 +1,6 @@
 package com.nexters.phochak.ignore.adapter.out.persistence;
 
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,8 +19,8 @@ public interface IgnoredUserRepository extends JpaRepository<IgnoredUserEntity, 
     @Modifying
     @Query("select i from ignored_user i " +
             "left join fetch UserEntity u on i.ignoredUserRelation.ignoredUser.id = u.id " +
-            "where i.ignoredUserRelation.user.id = :me")
-    List<IgnoredUserEntity> getIgnoreUserListByUserId(@Param("me") Long me);
+            "where i.ignoredUserRelation.user = :me")
+    List<IgnoredUserEntity> getIgnoreUserListByUserId(@Param("me") UserEntity me);
 
     boolean existsByIgnoredUserRelation(IgnoredUserEntityRelation ignoredUserRelation);
 }
