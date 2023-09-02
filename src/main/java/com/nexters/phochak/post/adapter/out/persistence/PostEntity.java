@@ -67,10 +67,10 @@ public class PostEntity extends BaseTime {
     @Convert(converter = YesNoConverter.class)
     private boolean isBlind;
 
-    @OneToMany(mappedBy = "postEntity")
+    @OneToMany(mappedBy = "post")
     private List<Likes> likes;
 
-    @OneToMany(mappedBy = "postEntity")
+    @OneToMany(mappedBy = "post")
     private List<Hashtag> hashtags;
 
     public PostEntity() {
