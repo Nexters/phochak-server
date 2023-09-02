@@ -7,7 +7,7 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.likes.domain.LikesRepository;
 import com.nexters.phochak.likes.presentation.LikesController;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.domain.Shorts;
@@ -95,15 +95,15 @@ class LikesIntegrationTest extends RestDocs {
                 .build();
         shortsRepository.save(shorts);
 
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .userEntity(userEntity)
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
-        postRepository.save(post);
+        postRepository.save(postEntity);
 
         //when, then
-        mockMvc.perform(post("/v1/post/{postId}/likes/", post.getId()).header(AUTHORIZATION_HEADER, testToken))
+        mockMvc.perform(post("/v1/post/{postId}/likes/", postEntity.getId()).header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
                 .andDo(document("post/{postId}/likes/post",
@@ -136,21 +136,21 @@ class LikesIntegrationTest extends RestDocs {
                 .build();
         shortsRepository.save(shorts);
 
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .userEntity(userEntity)
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
-        postRepository.save(post);
+        postRepository.save(postEntity);
 
         Likes likes = Likes.builder()
                         .user(userEntity)
-                        .post(post)
+                        .post(postEntity)
                         .build();
         likesRepository.save(likes);
 
         //when, then
-        mockMvc.perform(delete("/v1/post/{postId}/likes", post.getId()).header(AUTHORIZATION_HEADER, testToken))
+        mockMvc.perform(delete("/v1/post/{postId}/likes", postEntity.getId()).header(AUTHORIZATION_HEADER, testToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()))
                 .andDo(document("post/{postId}/likes/delete",

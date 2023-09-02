@@ -5,7 +5,7 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,14 +22,14 @@ public class HashtagServiceImpl implements HashtagService {
     private final HashtagRepository hashtagRepository;
 
     @Override
-    public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, Post post) {
+    public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, PostEntity postEntity) {
         if (stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
         validateHashtag(stringHashtagList);
         List<Hashtag> hashtagList = stringHashtagList.stream().map(stringHashtag ->
                 Hashtag.builder()
-                        .post(post)
+                        .post(postEntity)
                         .tag(stringHashtag)
                         .build()
         ).collect(Collectors.toList());
@@ -42,9 +42,9 @@ public class HashtagServiceImpl implements HashtagService {
     }
 
     @Override
-    public void updateAll(Post post, List<String> stringHashtagList) {
-        hashtagRepository.deleteAllByPostId(post.getId());
-        saveHashtagsByString(stringHashtagList, post);
+    public void updateAll(PostEntity postEntity, List<String> stringHashtagList) {
+        hashtagRepository.deleteAllByPostId(postEntity.getId());
+        saveHashtagsByString(stringHashtagList, postEntity);
     }
 
     private static void validateHashtag(List<String> stringHashtagList) {

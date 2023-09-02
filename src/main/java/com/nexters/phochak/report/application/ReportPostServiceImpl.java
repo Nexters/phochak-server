@@ -2,7 +2,7 @@ package com.nexters.phochak.report.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.report.domain.ReportPostRepository;
@@ -26,10 +26,10 @@ public class ReportPostServiceImpl implements ReportPostService {
     @Transactional
     public void processReport(Long userId, Long postId) {
         UserEntity userEntity = userRepository.getReferenceById(userId);
-        Post post = postRepository.getReferenceById(postId);
+        PostEntity postEntity = postRepository.getReferenceById(postId);
         ReportPost reportPost = ReportPost.builder()
                 .reporter(userEntity)
-                .post(post)
+                .post(postEntity)
                 .build();
         try {
             reportPostRepository.save(reportPost);
@@ -38,7 +38,7 @@ public class ReportPostServiceImpl implements ReportPostService {
         }
 
         Long reportCount = reportPostRepository.countByPost_Id(postId);
-        post.blindPostIfRequired(reportCount);
+        postEntity.blindPostIfRequired(reportCount);
 
         // 슬랙알림 전송
         reportNotifyService.notifyReportedPost(postId, userId, reportCount);

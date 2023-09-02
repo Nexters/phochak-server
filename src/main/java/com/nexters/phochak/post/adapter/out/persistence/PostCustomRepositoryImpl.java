@@ -1,10 +1,9 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.post.QPostFetchDto;
-import com.nexters.phochak.post.QPostFetchDto_PostShortsInformation;
-import com.nexters.phochak.post.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
-import com.nexters.phochak.post.domain.QPost;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostShortsInformation;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
@@ -19,47 +18,47 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.nexters.phochak.ignore.domain.QIgnoredUsers.ignoredUsers;
+import static com.nexters.phochak.ignore.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
+import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.report.domain.QReportPost.reportPost;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
 @RequiredArgsConstructor
 public class PostCustomRepositoryImpl implements PostCustomRepository {
-    private static final QPost post = QPost.post;
 
     private final JPAQueryFactory queryFactory;
 
     @Override
     public List<PostFetchDto> findNextPageByCommmand(PostFetchCommand command) {
-        Map<Long, PostFetchDto> resultMap = queryFactory.from(post)
-                .join(post.user)
-                .join(post.shorts)
+        Map<Long, PostFetchDto> resultMap = queryFactory.from(postEntity)
+                .join(postEntity.user)
+                .join(postEntity.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(getFilterExpression(command)) // 내가 업로드한 게시글
-                .where(post.user.id.notIn(
+                .where(postEntity.user.id.notIn(
                         JPAExpressions
-                                .select(ignoredUsers.ignoredUsersRelation.ignoredUser.id)
-                                .from(ignoredUsers)
-                                .where(ignoredUsers.ignoredUsersRelation.user.id.eq(command.getUserId()))
+                                .select(ignoredUserEntity.ignoredUserRelation.ignoredUser.id)
+                                .from(ignoredUserEntity)
+                                .where(ignoredUserEntity.ignoredUserRelation.user.id.eq(command.getUserId()))
                 )) //본인이 ignore한 게시글 제거
-                .where(post.id.notIn(
+                .where(postEntity.id.notIn(
                         JPAExpressions
                                 .select(reportPost.post.id)
                                 .from(reportPost)
                                 .where(reportPost.reporter.id.eq(command.getUserId()))
                 )) // 본인이 신고한 게시글 제거
-                .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
+                .where(postEntity.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
-                .orderBy(post.id.desc())
-                .transform(groupBy(post.id)
-                        .as(new QPostFetchDto(post.id,
-                                new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
-                                new QPostFetchDto_PostShortsInformation(post.shorts.id, post.shorts.shortsStateEnum, post.shorts.shortsUrl, post.shorts.thumbnailUrl),
-                                post.view,
-                                post.postCategory,
-                                post.isBlind
+                .orderBy(postEntity.id.desc())
+                .transform(groupBy(postEntity.id)
+                        .as(new QPostFetchDto(postEntity.id,
+                                new QPostFetchDto_PostUserInformation(postEntity.user.id, postEntity.user.nickname, postEntity.user.profileImgUrl),
+                                new QPostFetchDto_PostShortsInformation(postEntity.shorts.id, postEntity.shorts.shortsStateEnum, postEntity.shorts.shortsUrl, postEntity.shorts.thumbnailUrl),
+                                postEntity.view,
+                                postEntity.postCategory,
+                                postEntity.isBlind
                         )));
 
         return resultMap.keySet().stream()
@@ -70,21 +69,21 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private static BooleanExpression getFilterExpression(PostFetchCommand command) {
         if (command.hasUploadedFilter()) {
             if(command.getTargetUserId() == null) {
-                return post.user.id.eq(command.getUserId());
+                return postEntity.user.id.eq(command.getUserId());
             } else {
-                return post.user.id.eq(command.getTargetUserId());
+                return postEntity.user.id.eq(command.getTargetUserId());
             }
         }
         return null;
     }
 
     private BooleanExpression filterByCursor(PostFetchCommand command) {
-        BooleanExpression defaultFilter = post.id.lt(command.getLastId());
+        BooleanExpression defaultFilter = postEntity.id.lt(command.getLastId());
         switch (command.getSortOption()) {
             case VIEW:
-                return post.view.loe(command.getSortValue()).and(defaultFilter);
+                return postEntity.view.loe(command.getSortValue()).and(defaultFilter);
             case LIKE:
-                return post.likes.size().loe(command.getSortValue()).and(defaultFilter);
+                return postEntity.likes.size().loe(command.getSortValue()).and(defaultFilter);
             default:
                 return defaultFilter;
         }
@@ -92,9 +91,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {
         if (postSortOption == PostSortOption.LIKE) {
-            return post.likes.size().desc();
+            return postEntity.likes.size().desc();
         } else if (postSortOption == PostSortOption.VIEW) {
-            return post.view.desc();
+            return postEntity.view.desc();
         }
         return new OrderSpecifier(Order.ASC, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }

@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.common.exception.PhochakException;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
@@ -35,11 +35,11 @@ class PostIntegrationTest {
     @Autowired
     EntityManager entityManager;
 
-    Post post;
+    PostEntity postEntity;
 
     @BeforeEach
     void setUp() {
-        post = Post.builder()
+        postEntity = PostEntity.builder()
                 .postCategory(PostCategoryEnum.CAFE)
                 .build();
     }
@@ -48,18 +48,18 @@ class PostIntegrationTest {
     @DisplayName("조회수 UPDATE 서비스를 실행하면, 조회수가 1 올라간다")
     void updateView() {
         // given
-        post = postRepository.save(post);
+        postEntity = postRepository.save(postEntity);
 
         // when
-        int i = postService.updateView(post.getId());
+        int i = postService.updateView(postEntity.getId());
         assertThat(i).isEqualTo(1);
         entityManager.clear();
 
         // then
-        Optional<Post> updatedPostOptional = postRepository.findById(post.getId());
+        Optional<PostEntity> updatedPostOptional = postRepository.findById(postEntity.getId());
         assertThat(updatedPostOptional).isPresent();
-        Post updatedPost = updatedPostOptional.get();
-        assertThat(updatedPost.getView()).isEqualTo(1);
+        PostEntity updatedPostEntity = updatedPostOptional.get();
+        assertThat(updatedPostEntity.getView()).isEqualTo(1);
     }
 
     @Test

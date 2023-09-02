@@ -8,7 +8,7 @@ import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
 import com.nexters.phochak.likes.LikesFetchDto;
 import com.nexters.phochak.likes.application.LikesService;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
@@ -61,36 +61,36 @@ public class PostService implements PostUseCase {
     @Override
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         UserEntity userEntity = userRepository.getReferenceById(userId);
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .userEntity(userEntity)
                 .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
                 .build();
-        postRepository.save(post);
-        hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), post);
-        shortsService.connectShorts(postCreateRequestDto.getUploadKey(), post);
+        postRepository.save(postEntity);
+        hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), postEntity);
+        shortsService.connectShorts(postCreateRequestDto.getUploadKey(), postEntity);
     }
 
     @Override
     public void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto) {
         UserEntity userEntity = userRepository.getReferenceById(userId);
-        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!post.getUser().equals(userEntity)) {
+        PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        if (!postEntity.getUser().equals(userEntity)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
-        hashtagService.updateAll(post, postUpdateRequestDto.getHashtags());
+        postEntity.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
+        hashtagService.updateAll(postEntity, postUpdateRequestDto.getHashtags());
     }
 
     @Override
     public void delete(Long userId, Long postId) {
         UserEntity userEntity = userRepository.getReferenceById(userId);
-        Post post = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!post.getUser().equals(userEntity)) {
+        PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        if (!postEntity.getUser().equals(userEntity)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        String objectKey = post.getShorts().getUploadKey();
-        hashtagRepository.deleteAllByPostId(post.getId());
-        postRepository.delete(post);
+        String objectKey = postEntity.getShorts().getUploadKey();
+        hashtagRepository.deleteAllByPostId(postEntity.getId());
+        postRepository.delete(postEntity);
         storageBucketClient.removeShortsObject(List.of(objectKey));
     }
 
@@ -153,9 +153,9 @@ public class PostService implements PostUseCase {
 
     @Override
     public void deleteAllPostByUser(UserEntity userEntity) {
-        List<Post> postList = postRepository.findAllPostByUserFetchJoin(userEntity);
-        List<Long> postIdList = postList.stream().map(Post::getId).collect(Collectors.toList());
-        List<String> shortsKeyList = postList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
+        List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
+        List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).collect(Collectors.toList());
+        List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
         postRepository.deleteAllByUser(userEntity);
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);

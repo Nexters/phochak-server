@@ -1,7 +1,7 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.common.exception.PhochakException;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.report.application.ReportPostService;
@@ -46,7 +46,7 @@ class ReportPostServiceIntegrationTest {
 
 
     UserEntity userEntity;
-    Post post;
+    PostEntity postEntity;
 
     @BeforeEach
     void setUp() {
@@ -58,10 +58,10 @@ class ReportPostServiceIntegrationTest {
                 .profileImgUrl("testImage")
                 .build();
         Shorts shorts = new Shorts(1L, "upload key", "shorts", "thumbnail");
-        post = new Post(userEntity, shorts, PostCategoryEnum.CAFE);
+        postEntity = new PostEntity(userEntity, shorts, PostCategoryEnum.CAFE);
 
         userRepository.save(userEntity);
-        postRepository.save(post);
+        postRepository.save(postEntity);
     }
 
     @Test
@@ -69,13 +69,13 @@ class ReportPostServiceIntegrationTest {
     void processReport() {
         // given
         Long userId = userEntity.getId();
-        Long postId = post.getId();
+        Long postId = postEntity.getId();
 
         // when
         reportPostService.processReport(userId, postId);
 
         // then
-        assertThat(reportPostRepository.countByPost_Id(post.getId())).isEqualTo(1);
+        assertThat(reportPostRepository.countByPost_Id(postEntity.getId())).isEqualTo(1);
     }
 
     @Test
@@ -83,11 +83,11 @@ class ReportPostServiceIntegrationTest {
     void processReport_fail() {
         // given
         Long userId = userEntity.getId();
-        Long postId = post.getId();
+        Long postId = postEntity.getId();
         reportPostService.processReport(userId, postId);
 
         // when & then
-        assertThat(reportPostRepository.countByPost_Id(post.getId())).isEqualTo(1);
+        assertThat(reportPostRepository.countByPost_Id(postEntity.getId())).isEqualTo(1);
         assertThatThrownBy(() -> reportPostService.processReport(userId, postId))
                 .isInstanceOf(PhochakException.class);
     }
@@ -97,7 +97,7 @@ class ReportPostServiceIntegrationTest {
     void processReport_overCriteria() throws InterruptedException {
         // given
         Long userId = userEntity.getId();
-        Long postId = post.getId();
+        Long postId = postEntity.getId();
         for (int i = 0; i < 19; i++) {
             UserEntity reporter = userRepository.save(UserEntity.builder()
                     .nickname("nickname" + i)
@@ -105,7 +105,7 @@ class ReportPostServiceIntegrationTest {
                     .provider(OAuthProviderEnum.KAKAO)
                     .build());
             reportPostRepository.save(ReportPost.builder()
-                    .post(post)
+                    .post(postEntity)
                     .reporter(reporter)
                     .build());
         }
@@ -114,7 +114,7 @@ class ReportPostServiceIntegrationTest {
         reportPostService.processReport(userId, postId);
 
         // then
-        Optional<Post> post = postRepository.findById(postId);
+        Optional<PostEntity> post = postRepository.findById(postId);
         assertThat(post).isPresent();
         assertThat(post.get().isBlind()).isTrue();
     }

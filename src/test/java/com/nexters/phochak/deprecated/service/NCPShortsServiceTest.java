@@ -2,7 +2,7 @@ package com.nexters.phochak.deprecated.service;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.application.NCPShortsService;
@@ -55,7 +55,7 @@ class NCPShortsServiceTest {
     void connectShorts_encodingDone() {
         //given
         String uploadKey = "uploadKey";
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .userEntity(new UserEntity())
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
@@ -66,10 +66,10 @@ class NCPShortsServiceTest {
         given(shortsRepository.findByUploadKey(uploadKey)).willReturn(Optional.of(shorts));
 
         //when
-        ncpShortsService.connectShorts(uploadKey, post);
+        ncpShortsService.connectShorts(uploadKey, postEntity);
 
         //then
-        assertThat(post.getShorts()).isEqualTo(shorts);
+        assertThat(postEntity.getShorts()).isEqualTo(shorts);
         assertThat(shorts.getShortsStateEnum()).isEqualTo(ShortsStateEnum.OK);
     }
 
@@ -78,14 +78,14 @@ class NCPShortsServiceTest {
     void connectShorts_encodingInProgress() {
         //given
         String uploadKey = "uploadKey";
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .userEntity(new UserEntity())
                 .postCategory(PostCategoryEnum.TOUR)
                 .build();
         given(shortsRepository.findByUploadKey(uploadKey)).willReturn(Optional.empty());
 
         //when
-        mock.connectShorts(uploadKey, post);
+        mock.connectShorts(uploadKey, postEntity);
 
         //then
         verify(shortsRepository, times(1)).save(any());

@@ -3,7 +3,7 @@ package com.nexters.phochak.deprecated.service;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.hashtag.application.HashtagServiceImpl;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -33,10 +33,10 @@ class HashtagServiceTest {
     void createHashtag() {
         //given
         List<String> stringHashList = List.of("해시태그1", "해시_태그2", "해시태그3");
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         //when
-        hashtagService.saveHashtagsByString(stringHashList, post);
+        hashtagService.saveHashtagsByString(stringHashList, postEntity);
 
         //then
         verify(hashtagRepository, times(1)).saveAll(ArgumentMatchers.any());
@@ -47,10 +47,10 @@ class HashtagServiceTest {
     void createHashtagWithEmptyList() {
         //given
         List<String> stringHashList = Collections.emptyList();
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         //when
-        hashtagService.saveHashtagsByString(stringHashList, post);
+        hashtagService.saveHashtagsByString(stringHashList, postEntity);
 
         //then
         verify(hashtagRepository, never()).saveAll(ArgumentMatchers.any());
@@ -61,10 +61,10 @@ class HashtagServiceTest {
     void createHashtagWithSpace_invalidInput() {
         //given
         List<String> stringHashList = List.of("해시태 그1", " 해시태그2", "해시태그 3");
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, postEntity))
                 .isInstanceOf(PhochakException.class);
     }
 
@@ -73,10 +73,10 @@ class HashtagServiceTest {
     void createHashtagWithOverThen20Char_invalidInput() {
         //given
         List<String> stringHashList = List.of("123456789012345678901");
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, postEntity))
                 .isInstanceOf(PhochakException.class);
     }
 
@@ -85,10 +85,10 @@ class HashtagServiceTest {
     void createHashtagWithExclamationMark_invalidInput() {
         //given
         List<String> stringHashList = List.of("tet@test");
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, post))
+        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, postEntity))
                 .isInstanceOf(PhochakException.class);
     }
 

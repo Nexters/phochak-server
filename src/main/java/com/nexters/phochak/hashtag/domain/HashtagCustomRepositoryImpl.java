@@ -1,12 +1,11 @@
 package com.nexters.phochak.hashtag.domain;
 
-import com.nexters.phochak.post.QPostFetchDto;
-import com.nexters.phochak.post.QPostFetchDto_PostShortsInformation;
-import com.nexters.phochak.post.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostShortsInformation;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.post.domain.QPost;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import com.querydsl.core.types.dsl.BooleanExpression;
 import com.querydsl.jpa.JPAExpressions;
@@ -17,7 +16,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.nexters.phochak.ignore.domain.QIgnoredUsers.ignoredUsers;
+import static com.nexters.phochak.hashtag.domain.QHashtag.hashtag;
+import static com.nexters.phochak.ignore.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
+import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.report.domain.QReportPost.reportPost;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
@@ -26,8 +27,6 @@ import static com.querydsl.core.group.GroupBy.list;
 public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
 
     private final JPAQueryFactory queryFactory;
-    private static final QHashtag hashtag = QHashtag.hashtag;
-    private static final QPost post = QPost.post;
 
     @Override
     public Map<Long, HashtagFetchDto> findHashTagsOfPost(List<Long> postIds) {
@@ -39,34 +38,34 @@ public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
 
     @Override
     public List<PostFetchDto> findSearchedPageByCommmand(PostFetchCommand command) {
-        Map<Long, PostFetchDto> resultMap = queryFactory.from(post)
-                .join(post.user)
-                .join(post.shorts)
+        Map<Long, PostFetchDto> resultMap = queryFactory.from(postEntity)
+                .join(postEntity.user)
+                .join(postEntity.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
                 .where(filterByCategory(command.getCategory()))
                 .where(searchByHashtag(command.getSearchHashtag()))
-                .where(post.user.id.notIn(
+                .where(postEntity.user.id.notIn(
                         JPAExpressions
-                                .select(ignoredUsers.ignoredUsersRelation.ignoredUser.id)
-                                .from(ignoredUsers)
-                                .where(ignoredUsers.ignoredUsersRelation.user.id.eq(command.getUserId()))
+                                .select(ignoredUserEntity.ignoredUserRelation.ignoredUser.id)
+                                .from(ignoredUserEntity)
+                                .where(ignoredUserEntity.ignoredUserRelation.user.id.eq(command.getUserId()))
                 )) //본인이 ignore한 게시글 제거
-                .where(post.id.notIn(
+                .where(postEntity.id.notIn(
                         JPAExpressions
                                 .select(reportPost.post.id)
                                 .from(reportPost)
                                 .where(reportPost.reporter.id.eq(command.getUserId()))
                 )) // 본인이 신고한 게시글 제거
-                .where(post.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
+                .where(postEntity.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
-                .orderBy(post.id.desc())
-                .transform(groupBy(post.id)
-                        .as(new QPostFetchDto(post.id,
-                                new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
-                                new QPostFetchDto_PostShortsInformation(post.shorts.id, post.shorts.shortsStateEnum, post.shorts.shortsUrl, post.shorts.thumbnailUrl),
-                                post.view,
-                                post.postCategory,
-                                post.isBlind
+                .orderBy(postEntity.id.desc())
+                .transform(groupBy(postEntity.id)
+                        .as(new QPostFetchDto(postEntity.id,
+                                new QPostFetchDto_PostUserInformation(postEntity.user.id, postEntity.user.nickname, postEntity.user.profileImgUrl),
+                                new QPostFetchDto_PostShortsInformation(postEntity.shorts.id, postEntity.shorts.shortsStateEnum, postEntity.shorts.shortsUrl, postEntity.shorts.thumbnailUrl),
+                                postEntity.view,
+                                postEntity.postCategory,
+                                postEntity.isBlind
                         )));
 
         return resultMap.keySet().stream()
@@ -78,23 +77,23 @@ public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
         if(searchHashtag == null) {
             return null;
         }
-        return post.hashtags.any().tag.eq(searchHashtag);
+        return postEntity.hashtags.any().tag.eq(searchHashtag);
     }
 
     private BooleanExpression filterByCategory(PostCategoryEnum category) {
         if(category == null) {
             return null;
         }
-        return post.postCategory.eq(category);
+        return postEntity.postCategory.eq(category);
     }
 
     private BooleanExpression filterByCursor(PostFetchCommand command) {
-        BooleanExpression defaultFilter = post.id.lt(command.getLastId());
+        BooleanExpression defaultFilter = postEntity.id.lt(command.getLastId());
         switch (command.getSortOption()) {
             case VIEW:
-                return post.view.loe(command.getSortValue()).and(defaultFilter);
+                return postEntity.view.loe(command.getSortValue()).and(defaultFilter);
             case LIKE:
-                return post.likes.size().loe(command.getSortValue()).and(defaultFilter);
+                return postEntity.likes.size().loe(command.getSortValue()).and(defaultFilter);
             default:
                 return defaultFilter;
         }

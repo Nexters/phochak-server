@@ -4,7 +4,7 @@ import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.likes.application.LikeServiceImpl;
 import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.likes.domain.LikesRepository;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
@@ -42,11 +42,11 @@ class LikesServiceTest {
     void addPhochak() {
         //given
         UserEntity userEntity = new UserEntity();
-        Post post = new Post();
-        Likes likes = new Likes(userEntity, post);
+        PostEntity postEntity = new PostEntity();
+        Likes likes = new Likes(userEntity, postEntity);
 
         given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
-        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(postEntity));
         given(likesRepository.save(refEq(likes))).willReturn(likes);
 
         //then
@@ -61,11 +61,11 @@ class LikesServiceTest {
     void addPhochak_alreadyPhochaked() {
         //given
         UserEntity userEntity = new UserEntity();
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
-        given(postRepository.findById(anyLong())).willReturn(Optional.of(post));
-        given(likesRepository.save(refEq(new Likes(userEntity, post)))).willThrow(DataIntegrityViolationException.class);
+        given(postRepository.findById(anyLong())).willReturn(Optional.of(postEntity));
+        given(likesRepository.save(refEq(new Likes(userEntity, postEntity)))).willThrow(DataIntegrityViolationException.class);
 
         //when, then
         assertThatThrownBy(() -> likeService.addPhochak(0L, 0L))
@@ -77,12 +77,12 @@ class LikesServiceTest {
     void cancelPhochak() {
         //given
         UserEntity userEntity = new UserEntity();
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
         Likes likes = new Likes();
 
         given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
-        given(postRepository.getReferenceById(anyLong())).willReturn(post);
-        given(likesRepository.findByUserAndPost(userEntity, post)).willReturn(Optional.of(likes));
+        given(postRepository.getReferenceById(anyLong())).willReturn(postEntity);
+        given(likesRepository.findByUserAndPost(userEntity, postEntity)).willReturn(Optional.of(likes));
 
         //then
         likeService.cancelPhochak(0L, 0L);
@@ -96,11 +96,11 @@ class LikesServiceTest {
     void cancelPhochak_notPhochaked() {
         //given
         UserEntity userEntity = new UserEntity();
-        Post post = new Post();
+        PostEntity postEntity = new PostEntity();
 
         given(userRepository.getReferenceById(anyLong())).willReturn(userEntity);
-        given(postRepository.getReferenceById(anyLong())).willReturn(post);
-        given(likesRepository.findByUserAndPost(userEntity, post)).willReturn(Optional.empty());
+        given(postRepository.getReferenceById(anyLong())).willReturn(postEntity);
+        given(likesRepository.findByUserAndPost(userEntity, postEntity)).willReturn(Optional.empty());
 
         //when, then
         assertThatExceptionOfType(PhochakException.class).isThrownBy(() -> likeService.cancelPhochak(0L, 0L));

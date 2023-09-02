@@ -2,7 +2,7 @@ package com.nexters.phochak.deprecated.service;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.PostService;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
@@ -59,11 +59,11 @@ class PostServiceTest {
         //given
         UserEntity userEntity = new UserEntity();
         UserEntity owner = new UserEntity();
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                         .userEntity(owner)
                         .build();
         given(userRepository.getReferenceById(any())).willReturn(userEntity);
-        given(postRepository.findPostFetchJoin(any())).willReturn(Optional.of(post));
+        given(postRepository.findPostFetchJoin(any())).willReturn(Optional.of(postEntity));
 
         //when, then
         assertThatThrownBy(() -> postService.delete(0L, 0L))

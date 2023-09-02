@@ -36,7 +36,7 @@ import java.util.List;
 @Table(indexes =
         {@Index(name = "idx01_post", columnList = "view, post_id"),
         @Index(name = "idx02_post", columnList = "user_id")})
-public class Post extends BaseTime {
+public class PostEntity extends BaseTime {
     private static final Long BLOCK_CRITERIA = 5L;
 
     @Id
@@ -55,29 +55,29 @@ public class Post extends BaseTime {
     @OneToMany(mappedBy = "post")
     private List<ReportPost> reportPost;
 
-    @Column(nullable = false)
+    @Column(name = "VIEW", nullable = false)
     @ColumnDefault("0")
     private Long view;
 
-    @Column(nullable = false)
+    @Column(name = "POST_CATEGORY", nullable = false)
     @Enumerated(EnumType.STRING)
     private PostCategoryEnum postCategory;
 
-    @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
+    @Column(name = "IS_BLIND", nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
     @Convert(converter = YesNoConverter.class)
     private boolean isBlind;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "postEntity")
     private List<Likes> likes;
 
-    @OneToMany(mappedBy = "post")
+    @OneToMany(mappedBy = "postEntity")
     private List<Hashtag> hashtags;
 
-    public Post() {
+    public PostEntity() {
     }
 
     @Builder
-    public Post(UserEntity userEntity, Shorts shorts, PostCategoryEnum postCategory) {
+    public PostEntity(UserEntity userEntity, Shorts shorts, PostCategoryEnum postCategory) {
         this.user = userEntity;
         this.shorts = shorts;
         this.postCategory = postCategory;

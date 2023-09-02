@@ -5,7 +5,7 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.likes.LikesFetchDto;
 import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.likes.domain.LikesRepository;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
@@ -31,11 +31,11 @@ public class LikeServiceImpl implements LikesService {
     public void addPhochak(Long userId, Long postId) {
         try {
             UserEntity userEntity = userRepository.getReferenceById(userId);
-            Post post = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+            PostEntity postEntity = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
 
             Likes likes = Likes.builder()
                     .user(userEntity)
-                    .post(post)
+                    .post(postEntity)
                     .build();
             likesRepository.save(likes);
         } catch (
@@ -47,9 +47,9 @@ public class LikeServiceImpl implements LikesService {
     @Override
     public void cancelPhochak(Long userId, Long postId) {
         UserEntity userEntity = userRepository.getReferenceById(userId);
-        Post post = postRepository.getReferenceById(postId);
+        PostEntity postEntity = postRepository.getReferenceById(postId);
 
-        Likes likes = likesRepository.findByUserAndPost(userEntity, post)
+        Likes likes = likesRepository.findByUserAndPost(userEntity, postEntity)
                 .orElseThrow(() -> new PhochakException(ResCode.NOT_PHOCHAKED));
 
         likesRepository.delete(likes);

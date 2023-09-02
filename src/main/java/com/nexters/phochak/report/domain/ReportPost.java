@@ -1,7 +1,7 @@
 package com.nexters.phochak.report.domain;
 
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -34,13 +34,13 @@ public class ReportPost extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "POST_ID", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Post post;
+    private PostEntity post;
 
     public ReportPost() {
     }
 
     @Builder
-    public ReportPost(Long id, UserEntity reporter, Post post) {
+    public ReportPost(Long id, UserEntity reporter, PostEntity post) {
         this.id = id;
         this.reporter = reporter;
         this.post = post;

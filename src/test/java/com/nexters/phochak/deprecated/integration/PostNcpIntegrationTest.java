@@ -6,7 +6,7 @@ import com.nexters.phochak.common.exception.CustomExceptionHandler;
 import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.hashtag.domain.HashtagRepository;
 import com.nexters.phochak.post.adapter.in.web.PostController;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.report.domain.ReportPostRepository;
@@ -184,15 +184,15 @@ class PostNcpIntegrationTest extends RestDocs {
                 .build();
         shortsRepository.save(shorts);
 
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .userEntity(userEntity)
                 .build();
-        postRepository.save(post);
-        Long postId = post.getId();
+        postRepository.save(postEntity);
+        Long postId = postEntity.getId();
 
-        List<Hashtag> hashtags = List.of(new Hashtag(post, "hashtag1"), new Hashtag(post, "hashtag2"), new Hashtag(post, "hashtag3"));
+        List<Hashtag> hashtags = List.of(new Hashtag(postEntity, "hashtag1"), new Hashtag(postEntity, "hashtag2"), new Hashtag(postEntity, "hashtag3"));
         hashtagRepository.saveAll(hashtags);
 
         em.flush();
@@ -244,15 +244,15 @@ class PostNcpIntegrationTest extends RestDocs {
                 .build();
         shortsRepository.save(shorts);
 
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                         .shorts(shorts)
                         .postCategory(PostCategoryEnum.TOUR)
                         .userEntity(userEntity)
                         .build();
-        postRepository.save(post);
-        Long postId = post.getId();
+        postRepository.save(postEntity);
+        Long postId = postEntity.getId();
 
-        List<Hashtag> hashtags = List.of(new Hashtag(post, "hashtag1"), new Hashtag(post, "hashtag2"), new Hashtag(post, "hashtag3"));
+        List<Hashtag> hashtags = List.of(new Hashtag(postEntity, "hashtag1"), new Hashtag(postEntity, "hashtag2"), new Hashtag(postEntity, "hashtag3"));
         hashtagRepository.saveAll(hashtags);
 
         em.flush();
@@ -380,13 +380,13 @@ class PostNcpIntegrationTest extends RestDocs {
                 .build();
         shortsRepository.save(shorts);
 
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .userEntity(userEntity)
                 .build();
-        postRepository.save(post);
-        Long postId = post.getId();
+        postRepository.save(postEntity);
+        Long postId = postEntity.getId();
 
         // when, then
         mockMvc.perform(post("/v1/post/{postId}/report", postId)

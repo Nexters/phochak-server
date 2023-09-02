@@ -1,14 +1,12 @@
 package com.nexters.phochak.likes.domain;
 
 import com.nexters.phochak.likes.LikesFetchDto;
-import com.nexters.phochak.post.QPostFetchDto;
-import com.nexters.phochak.post.QPostFetchDto_PostShortsInformation;
-import com.nexters.phochak.post.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostSortOption;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
-import com.nexters.phochak.post.domain.QPost;
-import com.nexters.phochak.shorts.domain.QShorts;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostShortsInformation;
+import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
@@ -23,16 +21,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import static com.nexters.phochak.likes.domain.QLikes.likes;
+import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.report.domain.QReportPost.reportPost;
+import static com.nexters.phochak.shorts.domain.QShorts.shorts;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 public class LikesCustomRepositoryImpl implements LikesCustomRepository {
-    private static final QLikes likes = QLikes.likes;
-    private static final QPost post = QPost.post;
-    private static final QShorts shorts = QShorts.shorts;
-
     private final JPAQueryFactory queryFactory;
 
     @Override
@@ -61,14 +58,14 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
 
     @Override
     public List<PostFetchDto> findLikedPosts(PostFetchCommand command) {
-        Map<Long, PostFetchDto> result = queryFactory.select(likes, post)
+        Map<Long, PostFetchDto> result = queryFactory.select(likes, postEntity)
                 .from(likes)
-                .join(post).on(likes.post.eq(post))
+                .join(postEntity).on(likes.post.eq(postEntity))
                 .join(likes.user).on(likes.user.id.eq(command.getUserId()))
                 .join(shorts).on(likes.post.shorts.eq(shorts))
                 .where(filterByCursor(command))
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
-                .where(post.id.notIn(
+                .where(postEntity.id.notIn(
                         JPAExpressions
                                 .select(reportPost.post.id)
                                 .from(reportPost)
@@ -76,11 +73,11 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 )) // 본인이 신고한 게시글 제거
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
-                .orderBy(post.id.desc())
-                .groupBy(post.id)
-                .transform(groupBy(post.id).as(
-                        new QPostFetchDto(post.id,
-                                new QPostFetchDto_PostUserInformation(post.user.id, post.user.nickname, post.user.profileImgUrl),
+                .orderBy(postEntity.id.desc())
+                .groupBy(postEntity.id)
+                .transform(groupBy(postEntity.id).as(
+                        new QPostFetchDto(postEntity.id,
+                                new QPostFetchDto_PostUserInformation(postEntity.user.id, postEntity.user.nickname, postEntity.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
                                 likes.post.view, likes.post.postCategory, likes.post.isBlind)
                 ));

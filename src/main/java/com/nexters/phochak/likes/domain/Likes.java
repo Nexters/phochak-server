@@ -1,7 +1,7 @@
 package com.nexters.phochak.likes.domain;
 
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -38,13 +38,13 @@ public class Likes extends BaseTime {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="POST_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Post post;
+    private PostEntity post;
 
     public Likes() {
     }
 
     @Builder
-    public Likes(UserEntity user, Post post) {
+    public Likes(UserEntity user, PostEntity post) {
         this.user = user;
         this.post = post;
     }

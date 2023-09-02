@@ -1,6 +1,6 @@
 package com.nexters.phochak.hashtag.domain;
 
-import com.nexters.phochak.post.adapter.out.persistence.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;
@@ -32,8 +32,9 @@ public class Hashtag {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="POST_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Post post;
+    private PostEntity post;
 
+    @Column(name="TAG")
     @Size(min = 1, max = HASHTAG_MAX_SIZE)
     private String tag;
 
@@ -41,7 +42,7 @@ public class Hashtag {
     }
 
     @Builder
-    public Hashtag(Post post, String tag) {
+    public Hashtag(PostEntity post, String tag) {
         this.post = post;
         this.tag = tag;
     }
