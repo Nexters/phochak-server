@@ -3,8 +3,6 @@ package com.nexters.phochak.post.application;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.likes.LikesFetchDto;
-import com.nexters.phochak.likes.application.LikesService;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
@@ -12,6 +10,8 @@ import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.HashtagUseCase;
+import com.nexters.phochak.post.application.port.in.LikesFetchDto;
+import com.nexters.phochak.post.application.port.in.LikesUseCase;
 import com.nexters.phochak.post.application.port.in.PostCreateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
@@ -44,7 +44,7 @@ public class PostService implements PostUseCase {
     private final HashtagUseCase hashtagUseCase;
     private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
-    private final LikesService likesService;
+    private final LikesUseCase likesUseCase;
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
 
@@ -119,7 +119,7 @@ public class PostService implements PostUseCase {
             case SEARCH:
                 return getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
             case LIKED:
-                return getNextCursorPage(command.getUserId(), likesService.findLikedPostsByCommand(command));
+                return getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
             case UPLOADED:
             case NONE:
             default:
@@ -134,7 +134,7 @@ public class PostService implements PostUseCase {
     private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
         List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).collect(Collectors.toList());
         Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagUseCase.findHashtagsOfPosts(postIds);
-        Map<Long, LikesFetchDto> likesFetchDtos = likesService.checkIsLikedPost(postIds, userId);
+        Map<Long, LikesFetchDto> likesFetchDtos = likesUseCase.checkIsLikedPost(postIds, userId);
 
         return postFetchDtos.stream()
                 .map(p -> PostPageResponseDto.of(p, hashtagFetchDtos.get(p.getId()), likesFetchDtos.get(p.getId())))

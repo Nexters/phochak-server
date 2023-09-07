@@ -1,13 +1,13 @@
-package com.nexters.phochak.likes.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.likes.LikesFetchDto;
-import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
-import com.nexters.phochak.post.adapter.out.persistence.PostSortOption;
+import com.nexters.phochak.likes.domain.QQuerydslFetchDto;
+import com.nexters.phochak.post.application.port.in.LikesFetchDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostShortsInformation;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostUserInformation;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
+import com.querydsl.core.group.GroupBy;
 import com.querydsl.core.types.NullExpression;
 import com.querydsl.core.types.Order;
 import com.querydsl.core.types.OrderSpecifier;
@@ -26,7 +26,6 @@ import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postE
 import static com.nexters.phochak.report.domain.QReportPost.reportPost;
 import static com.nexters.phochak.shorts.domain.QShorts.shorts;
 import static com.querydsl.core.group.GroupBy.groupBy;
-import static com.querydsl.core.group.GroupBy.list;
 
 @RequiredArgsConstructor
 public class LikesCustomRepositoryImpl implements LikesCustomRepository {
@@ -40,7 +39,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .join(likes.post)
                 .where(likes.post.id.in(postIds))
                 .transform(groupBy(likes.post.id)
-                        .as(list(new QQuerydslFetchDto(likes.user.id.eq(userId)))));
+                        .as(GroupBy.list(new QQuerydslFetchDto(likes.user.id.eq(userId)))));
 
         map.keySet().forEach(k -> {
                     int size = map.get(k).size();

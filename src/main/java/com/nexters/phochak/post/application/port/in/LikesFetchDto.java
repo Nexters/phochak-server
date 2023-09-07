@@ -1,4 +1,4 @@
-package com.nexters.phochak.likes;
+package com.nexters.phochak.post.application.port.in;
 
 import lombok.Getter;
 import lombok.ToString;

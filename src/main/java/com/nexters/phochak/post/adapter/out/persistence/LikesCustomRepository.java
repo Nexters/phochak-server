@@ -1,7 +1,6 @@
-package com.nexters.phochak.likes.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.likes.LikesFetchDto;
-import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
+import com.nexters.phochak.post.application.port.in.LikesFetchDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 
 import java.util.List;

@@ -1,7 +1,6 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.likes.domain.Likes;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.report.domain.ReportPost;

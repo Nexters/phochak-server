@@ -5,6 +5,7 @@ import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.post.application.port.in.CommonPageResponseDto;
 import com.nexters.phochak.post.application.port.in.CommonResponseDto;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
+import com.nexters.phochak.post.application.port.in.LikesUseCase;
 import com.nexters.phochak.post.application.port.in.PostCreateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
@@ -33,6 +34,7 @@ import java.util.List;
 public class PostController {
 
     private final PostUseCase postUseCase;
+    private final LikesUseCase likesUseCase;
     private final ReportPostService reportPostService;
 
     @Auth
@@ -104,6 +106,22 @@ public class PostController {
     @PostMapping("/{postId}/view")
     public CommonResponseDto<Void> updateView(@PathVariable Long postId) {
         postUseCase.updateView(postId);
+        return new CommonResponseDto<>();
+    }
+
+    @Auth
+    @PostMapping("/{postId}/likes")
+    public CommonResponseDto<Void> addPhochak(@PathVariable Long postId) {
+        Long userId = UserContext.getContext();
+        likesUseCase.addPhochak(userId, postId);
+        return new CommonResponseDto<>();
+    }
+
+    @Auth
+    @DeleteMapping("/{postId}/likes")
+    public CommonResponseDto<Void> cancelPhochak(@PathVariable Long postId) {
+        Long userId = UserContext.getContext();
+        likesUseCase.cancelPhochak(userId, postId);
         return new CommonResponseDto<>();
     }
 
