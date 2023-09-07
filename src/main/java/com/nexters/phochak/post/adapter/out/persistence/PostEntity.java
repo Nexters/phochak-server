@@ -3,6 +3,7 @@ package com.nexters.phochak.post.adapter.out.persistence;
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.hashtag.domain.Hashtag;
 import com.nexters.phochak.likes.domain.Likes;
+import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.report.domain.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
@@ -83,6 +84,33 @@ public class PostEntity extends BaseTime {
         this.postCategory = postCategory;
         this.isBlind = false;
         this.view = 0L;
+    }
+
+
+    private PostEntity(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind, final List<Likes> likes, final List<Hashtag> hashtags) {
+        this.id = id;
+        this.user = user;
+        this.shorts = shorts;
+        this.reportPost = reportPost;
+        this.view = view;
+        this.postCategory = postCategory;
+        this.isBlind = isBlind;
+        this.likes = likes;
+        this.hashtags = hashtags;
+    }
+
+    public static PostEntity toDomain(final Post post) {
+        return new PostEntity(
+                post.getId(),
+                post.getUser(),
+                post.getShorts(),
+                post.getReportPost(),
+                post.getView(),
+                post.getPostCategory(),
+                post.isBlind(),
+                post.getLikes(),
+                post.getHashtags()
+        );
     }
 
     public void setShorts(Shorts shorts) {
