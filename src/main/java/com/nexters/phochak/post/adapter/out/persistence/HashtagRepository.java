@@ -1,4 +1,4 @@
-package com.nexters.phochak.hashtag.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;

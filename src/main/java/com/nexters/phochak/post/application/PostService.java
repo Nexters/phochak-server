@@ -3,15 +3,15 @@ package com.nexters.phochak.post.application;
 import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.hashtag.application.HashtagService;
-import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
-import com.nexters.phochak.hashtag.domain.HashtagRepository;
 import com.nexters.phochak.likes.LikesFetchDto;
 import com.nexters.phochak.likes.application.LikesService;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
+import com.nexters.phochak.post.application.port.in.HashtagUseCase;
 import com.nexters.phochak.post.application.port.in.PostCreateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
@@ -41,7 +41,7 @@ import java.util.stream.Collectors;
 public class PostService implements PostUseCase {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final HashtagService hashtagService;
+    private final HashtagUseCase hashtagUseCase;
     private final StorageBucketClient storageBucketClient;
     private final ShortsService shortsService;
     private final LikesService likesService;
@@ -66,7 +66,7 @@ public class PostService implements PostUseCase {
                 .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
                 .build();
         postRepository.save(postEntity);
-        hashtagService.saveHashtagsByString(postCreateRequestDto.getHashtags(), postEntity);
+        hashtagUseCase.saveHashtagsByString(postCreateRequestDto.getHashtags(), postEntity);
         shortsService.connectShorts(postCreateRequestDto.getUploadKey(), postEntity);
     }
 
@@ -78,7 +78,7 @@ public class PostService implements PostUseCase {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
         postEntity.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
-        hashtagService.updateAll(postEntity, postUpdateRequestDto.getHashtags());
+        hashtagUseCase.updateAll(postEntity, postUpdateRequestDto.getHashtags());
     }
 
     @Override
@@ -133,7 +133,7 @@ public class PostService implements PostUseCase {
 
     private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
         List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).collect(Collectors.toList());
-        Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagService.findHashtagsOfPosts(postIds);
+        Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagUseCase.findHashtagsOfPosts(postIds);
         Map<Long, LikesFetchDto> likesFetchDtos = likesService.checkIsLikedPost(postIds, userId);
 
         return postFetchDtos.stream()

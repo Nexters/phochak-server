@@ -1,11 +1,12 @@
-package com.nexters.phochak.hashtag.application;
+package com.nexters.phochak.post.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.hashtag.domain.Hashtag;
-import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
-import com.nexters.phochak.hashtag.domain.HashtagRepository;
+import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
+import com.nexters.phochak.post.application.port.in.HashtagUseCase;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -17,7 +18,7 @@ import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
-public class HashtagServiceImpl implements HashtagService {
+public class HashtagService implements HashtagUseCase {
 
     private final HashtagRepository hashtagRepository;
 

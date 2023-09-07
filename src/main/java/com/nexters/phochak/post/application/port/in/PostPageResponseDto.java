@@ -1,7 +1,7 @@
 package com.nexters.phochak.post.application.port.in;
 
-import com.nexters.phochak.hashtag.domain.HashtagFetchDto;
 import com.nexters.phochak.likes.LikesFetchDto;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import lombok.AllArgsConstructor;
 import lombok.Builder;

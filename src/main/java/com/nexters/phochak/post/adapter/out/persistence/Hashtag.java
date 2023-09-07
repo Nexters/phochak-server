@@ -1,6 +1,5 @@
-package com.nexters.phochak.hashtag.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Entity;

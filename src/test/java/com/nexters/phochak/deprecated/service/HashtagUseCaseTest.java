@@ -1,9 +1,9 @@
 package com.nexters.phochak.deprecated.service;
 
 import com.nexters.phochak.common.exception.PhochakException;
-import com.nexters.phochak.hashtag.application.HashtagServiceImpl;
-import com.nexters.phochak.hashtag.domain.HashtagRepository;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
+import com.nexters.phochak.post.application.HashtagService;
 import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -21,10 +21,10 @@ import static org.mockito.Mockito.*;
 
 @Disabled
 @ExtendWith(MockitoExtension.class)
-class HashtagServiceTest {
+class HashtagUseCaseTest {
 
     @InjectMocks
-    HashtagServiceImpl hashtagService;
+    HashtagService hashtagService;
 
     @Mock HashtagRepository hashtagRepository;
 

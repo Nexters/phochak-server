@@ -1,4 +1,4 @@
-package com.nexters.phochak.hashtag.domain;
+package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.querydsl.core.annotations.QueryProjection;
 import lombok.Builder;
