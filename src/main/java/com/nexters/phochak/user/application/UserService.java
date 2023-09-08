@@ -2,8 +2,8 @@ package com.nexters.phochak.user.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.port.in.LoginRequestDto;

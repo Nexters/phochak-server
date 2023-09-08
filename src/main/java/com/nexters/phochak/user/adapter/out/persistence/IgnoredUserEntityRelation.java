@@ -1,6 +1,5 @@
-package com.nexters.phochak.ignore.adapter.out.persistence;
+package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.ConstraintMode;
 import jakarta.persistence.Embeddable;
 import jakarta.persistence.FetchType;

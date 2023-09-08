@@ -1,6 +1,6 @@
-package com.nexters.phochak.ignore.application.port.out;
+package com.nexters.phochak.user.application.port.out;
 
-import com.nexters.phochak.ignore.application.port.in.IgnoredUserResponseDto;
+import com.nexters.phochak.user.application.port.in.IgnoredUserResponseDto;
 
 import java.util.List;
 

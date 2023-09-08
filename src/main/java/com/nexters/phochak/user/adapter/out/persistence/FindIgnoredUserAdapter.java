@@ -1,7 +1,5 @@
 package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntityRelation;
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.application.port.out.FindIgnoredUserPort;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;

@@ -1,7 +1,6 @@
-package com.nexters.phochak.ignore.domain;
+package com.nexters.phochak.user.domain;
 
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserEntity;
-import com.nexters.phochak.user.domain.User;
+import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserEntity;
 import lombok.Getter;
 
 @Getter

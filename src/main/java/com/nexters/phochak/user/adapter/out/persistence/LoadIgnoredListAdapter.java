@@ -1,9 +1,7 @@
-package com.nexters.phochak.ignore.adapter.out.persistence;
+package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.ignore.application.port.in.LoadIgnoredListPort;
-import com.nexters.phochak.ignore.domain.IgnoredUser;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import com.nexters.phochak.user.adapter.out.persistence.UserMapper;
+import com.nexters.phochak.user.application.port.in.LoadIgnoredListPort;
+import com.nexters.phochak.user.domain.IgnoredUser;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;

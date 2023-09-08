@@ -1,6 +1,5 @@
-package com.nexters.phochak.ignore.adapter.out.persistence;
+package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

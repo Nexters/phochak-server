@@ -1,4 +1,4 @@
-package com.nexters.phochak.ignore.adapter.out.web;
+package com.nexters.phochak.user.adapter.out.web;
 
 import com.nexters.phochak.user.domain.User;
 

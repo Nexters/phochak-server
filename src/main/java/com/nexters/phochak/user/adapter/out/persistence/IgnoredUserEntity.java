@@ -1,4 +1,4 @@
-package com.nexters.phochak.ignore.adapter.out.persistence;
+package com.nexters.phochak.user.adapter.out.persistence;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;

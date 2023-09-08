@@ -1,13 +1,13 @@
-package com.nexters.phochak.ignore.application;
+package com.nexters.phochak.user.application;
 
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
-import com.nexters.phochak.ignore.application.port.in.IgnoredUserResponseDto;
-import com.nexters.phochak.ignore.application.port.in.LoadIgnoredListPort;
-import com.nexters.phochak.ignore.application.port.out.CancelIgnorePort;
-import com.nexters.phochak.ignore.application.port.out.IgnoredUserUseCase;
-import com.nexters.phochak.ignore.application.port.out.LoadUserForIgnorePort;
-import com.nexters.phochak.ignore.application.port.out.SaveIgnoreUserPort;
-import com.nexters.phochak.ignore.domain.IgnoredUser;
+import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserRepository;
+import com.nexters.phochak.user.application.port.in.IgnoredUserResponseDto;
+import com.nexters.phochak.user.application.port.in.LoadIgnoredListPort;
+import com.nexters.phochak.user.application.port.out.CancelIgnorePort;
+import com.nexters.phochak.user.application.port.out.IgnoredUserUseCase;
+import com.nexters.phochak.user.application.port.out.LoadUserForIgnorePort;
+import com.nexters.phochak.user.application.port.out.SaveIgnoreUserPort;
+import com.nexters.phochak.user.domain.IgnoredUser;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
