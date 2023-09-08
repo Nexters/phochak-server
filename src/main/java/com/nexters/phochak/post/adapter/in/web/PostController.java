@@ -2,6 +2,7 @@ package com.nexters.phochak.post.adapter.in.web;
 
 import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
+import com.nexters.phochak.post.application.port.ReportPostUseCase;
 import com.nexters.phochak.post.application.port.in.CommonPageResponseDto;
 import com.nexters.phochak.post.application.port.in.CommonResponseDto;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
@@ -10,7 +11,6 @@ import com.nexters.phochak.post.application.port.in.PostCreateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
-import com.nexters.phochak.report.application.ReportPostService;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -35,7 +35,7 @@ public class PostController {
 
     private final PostUseCase postUseCase;
     private final LikesUseCase likesUseCase;
-    private final ReportPostService reportPostService;
+    private final ReportPostUseCase reportPostUseCase;
 
     @Auth
     @GetMapping("/upload-key")
@@ -98,7 +98,7 @@ public class PostController {
     @PostMapping("/{postId}/report")
     public CommonResponseDto<Void> reportPost(@PathVariable Long postId) {
         Long userId = UserContext.getContext();
-        reportPostService.processReport(userId, postId);
+        reportPostUseCase.processReport(userId, postId);
         return new CommonResponseDto<>();
     }
 

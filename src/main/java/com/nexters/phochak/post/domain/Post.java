@@ -2,7 +2,7 @@ package com.nexters.phochak.post.domain;
 
 import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
 import com.nexters.phochak.post.adapter.out.persistence.Likes;
-import com.nexters.phochak.report.domain.ReportPost;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.Getter;

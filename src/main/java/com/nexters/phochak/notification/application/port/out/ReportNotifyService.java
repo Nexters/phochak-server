@@ -1,4 +1,4 @@
-package com.nexters.phochak.report.presentation;
+package com.nexters.phochak.notification.application.port.out;
 
 import org.springframework.scheduling.annotation.Async;
 

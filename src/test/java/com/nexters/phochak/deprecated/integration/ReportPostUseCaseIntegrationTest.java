@@ -1,13 +1,13 @@
 package com.nexters.phochak.deprecated.integration;
 
 import com.nexters.phochak.common.exception.PhochakException;
+import com.nexters.phochak.post.adapter.out.api.ReportNotificationFeignClient;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPostRepository;
+import com.nexters.phochak.post.application.port.ReportPostUseCase;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.report.application.ReportPostService;
-import com.nexters.phochak.report.domain.ReportPost;
-import com.nexters.phochak.report.domain.ReportPostRepository;
-import com.nexters.phochak.report.presentation.ReportNotificationFeignClient;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
@@ -31,10 +31,10 @@ import static org.assertj.core.api.Assertions.assertThatThrownBy;
 @Transactional
 @ActiveProfiles("test")
 @SpringBootTest
-class ReportPostServiceIntegrationTest {
+class ReportPostUseCaseIntegrationTest {
 
     @Autowired
-    ReportPostService reportPostService;
+    ReportPostUseCase reportPostUseCase;
     @Autowired
     UserRepository userRepository;
     @Autowired
@@ -72,7 +72,7 @@ class ReportPostServiceIntegrationTest {
         Long postId = postEntity.getId();
 
         // when
-        reportPostService.processReport(userId, postId);
+        reportPostUseCase.processReport(userId, postId);
 
         // then
         assertThat(reportPostRepository.countByPost_Id(postEntity.getId())).isEqualTo(1);
@@ -84,11 +84,11 @@ class ReportPostServiceIntegrationTest {
         // given
         Long userId = userEntity.getId();
         Long postId = postEntity.getId();
-        reportPostService.processReport(userId, postId);
+        reportPostUseCase.processReport(userId, postId);
 
         // when & then
         assertThat(reportPostRepository.countByPost_Id(postEntity.getId())).isEqualTo(1);
-        assertThatThrownBy(() -> reportPostService.processReport(userId, postId))
+        assertThatThrownBy(() -> reportPostUseCase.processReport(userId, postId))
                 .isInstanceOf(PhochakException.class);
     }
 
@@ -111,7 +111,7 @@ class ReportPostServiceIntegrationTest {
         }
 
         // when
-        reportPostService.processReport(userId, postId);
+        reportPostUseCase.processReport(userId, postId);
 
         // then
         Optional<PostEntity> post = postRepository.findById(postId);

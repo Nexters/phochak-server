@@ -1,9 +1,9 @@
-package com.nexters.phochak.report.application;
+package com.nexters.phochak.notification.application;
 
 import com.nexters.phochak.common.config.property.SlackReportProperties;
-import com.nexters.phochak.report.SlackMessageFormDto;
-import com.nexters.phochak.report.presentation.ReportNotificationFeignClient;
-import com.nexters.phochak.report.presentation.ReportNotifyService;
+import com.nexters.phochak.notification.application.port.out.ReportNotifyService;
+import com.nexters.phochak.notification.application.port.out.SlackMessageFormDto;
+import com.nexters.phochak.post.adapter.out.api.ReportNotificationFeignClient;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -15,7 +15,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 @RequiredArgsConstructor
 @Service
-public class PostBlockServiceImpl implements ReportNotifyService {
+public class ReportPostNotifyService implements ReportNotifyService {
     private final ReportNotificationFeignClient slackPostReportFeignClient;
     private final SlackReportProperties slackReportProperties;
 

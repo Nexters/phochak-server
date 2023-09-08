@@ -1,6 +1,6 @@
-package com.nexters.phochak.report.presentation;
+package com.nexters.phochak.post.adapter.out.api;
 
-import com.nexters.phochak.report.SlackMessageFormDto;
+import com.nexters.phochak.notification.application.port.out.SlackMessageFormDto;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.PostMapping;
 

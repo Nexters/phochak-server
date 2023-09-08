@@ -1,12 +1,13 @@
-package com.nexters.phochak.report.application;
+package com.nexters.phochak.post.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
+import com.nexters.phochak.notification.application.port.out.ReportNotifyService;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
-import com.nexters.phochak.report.domain.ReportPost;
-import com.nexters.phochak.report.domain.ReportPostRepository;
-import com.nexters.phochak.report.presentation.ReportNotifyService;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPostRepository;
+import com.nexters.phochak.post.application.port.ReportPostUseCase;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 @Service
 @RequiredArgsConstructor
-public class ReportPostServiceImpl implements ReportPostService {
+public class ReportPostService implements ReportPostUseCase {
     private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final ReportNotifyService reportNotifyService;
