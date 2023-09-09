@@ -36,7 +36,7 @@ class HashtagUseCaseTest {
         PostEntity postEntity = new PostEntity();
 
         //when
-        hashtagService.saveHashtagsByString(stringHashList, postEntity);
+        hashtagService.saveHashtags(stringHashList, postEntity);
 
         //then
         verify(hashtagRepository, times(1)).saveAll(ArgumentMatchers.any());
@@ -50,7 +50,7 @@ class HashtagUseCaseTest {
         PostEntity postEntity = new PostEntity();
 
         //when
-        hashtagService.saveHashtagsByString(stringHashList, postEntity);
+        hashtagService.saveHashtags(stringHashList, postEntity);
 
         //then
         verify(hashtagRepository, never()).saveAll(ArgumentMatchers.any());
@@ -64,7 +64,7 @@ class HashtagUseCaseTest {
         PostEntity postEntity = new PostEntity();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, postEntity))
+        assertThatThrownBy(() -> hashtagService.saveHashtags(stringHashList, postEntity))
                 .isInstanceOf(PhochakException.class);
     }
 
@@ -76,7 +76,7 @@ class HashtagUseCaseTest {
         PostEntity postEntity = new PostEntity();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, postEntity))
+        assertThatThrownBy(() -> hashtagService.saveHashtags(stringHashList, postEntity))
                 .isInstanceOf(PhochakException.class);
     }
 
@@ -88,7 +88,7 @@ class HashtagUseCaseTest {
         PostEntity postEntity = new PostEntity();
 
         //when, then
-        assertThatThrownBy(() -> hashtagService.saveHashtagsByString(stringHashList, postEntity))
+        assertThatThrownBy(() -> hashtagService.saveHashtags(stringHashList, postEntity))
                 .isInstanceOf(PhochakException.class);
     }
 

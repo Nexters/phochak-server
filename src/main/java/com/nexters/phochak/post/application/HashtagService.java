@@ -23,7 +23,7 @@ public class HashtagService implements HashtagUseCase {
     private final HashtagRepository hashtagRepository;
 
     @Override
-    public List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, PostEntity postEntity) {
+    public List<Hashtag> saveHashtags(List<String> stringHashtagList, PostEntity postEntity) {
         if (stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
@@ -45,7 +45,7 @@ public class HashtagService implements HashtagUseCase {
     @Override
     public void updateAll(PostEntity postEntity, List<String> stringHashtagList) {
         hashtagRepository.deleteAllByPostId(postEntity.getId());
-        saveHashtagsByString(stringHashtagList, postEntity);
+        saveHashtags(stringHashtagList, postEntity);
     }
 
     private static void validateHashtag(List<String> stringHashtagList) {

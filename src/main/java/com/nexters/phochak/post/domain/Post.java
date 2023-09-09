@@ -4,7 +4,7 @@ import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
 import com.nexters.phochak.post.adapter.out.persistence.Likes;
 import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import com.nexters.phochak.user.domain.User;
 import lombok.Getter;
 
 import java.util.List;
@@ -12,7 +12,7 @@ import java.util.List;
 @Getter
 public class Post {
     private Long id;
-    private UserEntity user;
+    private User user;
     private Shorts shorts;
     private List<ReportPost> reportPost;
     private Long view;
@@ -21,7 +21,7 @@ public class Post {
     private List<Likes> likes;
     private List<Hashtag> hashtags;
 
-    public Post(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind, final List<Likes> likes, final List<Hashtag> hashtags) {
+    public Post(final Long id, final User user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind, final List<Likes> likes, final List<Hashtag> hashtags) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
@@ -31,5 +31,10 @@ public class Post {
         this.isBlind = isBlind;
         this.likes = likes;
         this.hashtags = hashtags;
+    }
+
+    public Post(final User user, final PostCategoryEnum postCategory) {
+        this.user = user;
+        this.postCategory = postCategory;
     }
 }

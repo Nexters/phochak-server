@@ -5,7 +5,7 @@ import com.nexters.phochak.notification.application.port.out.NotificationUsecase
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
-import com.nexters.phochak.shorts.application.NCPShortsService;
+import com.nexters.phochak.shorts.application.NCPShortsUseCase;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
@@ -28,10 +28,11 @@ import static org.mockito.Mockito.*;
 
 @Disabled
 @ExtendWith(MockitoExtension.class)
-class NCPShortsServiceTest {
+class NCPShortsUseCaseTest {
 
-    @InjectMocks NCPShortsService ncpShortsService;
-    NCPShortsService mock;
+    @InjectMocks
+    NCPShortsUseCase ncpShortsService;
+    NCPShortsUseCase mock;
 
     @Mock
     ShortsRepository shortsRepository;
@@ -47,7 +48,7 @@ class NCPShortsServiceTest {
         NCPStorageProperties.NCPShortsProperties shorts = new NCPStorageProperties.NCPShortsProperties("", "", "", "");
         NCPStorageProperties.NCPThumbnailProperties thumbnail = new NCPStorageProperties.NCPThumbnailProperties("", "", "", "");
         ncpStorageProperties = new NCPStorageProperties(s3, shorts, thumbnail);
-        mock = new NCPShortsService(shortsRepository, ncpStorageProperties, notificationUsecase);
+        mock = new NCPShortsUseCase(shortsRepository, ncpStorageProperties, notificationUsecase);
     }
 
     @Test

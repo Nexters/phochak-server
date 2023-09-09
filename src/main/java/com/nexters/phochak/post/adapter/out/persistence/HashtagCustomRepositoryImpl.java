@@ -1,6 +1,5 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.hashtag.domain.QHashtagFetchDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostShortsInformation;
@@ -16,10 +15,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.nexters.phochak.hashtag.domain.QHashtag.hashtag;
-import static com.nexters.phochak.ignore.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
+import static com.nexters.phochak.post.adapter.out.persistence.QHashtag.hashtag;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
-import static com.nexters.phochak.report.domain.QReportPost.reportPost;
+import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
+import static com.nexters.phochak.user.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
 import static com.querydsl.core.group.GroupBy.groupBy;
 import static com.querydsl.core.group.GroupBy.list;
 

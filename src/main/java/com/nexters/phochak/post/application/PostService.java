@@ -17,13 +17,17 @@ import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.post.application.port.out.LoadUserPort;
+import com.nexters.phochak.post.application.port.out.SavePostPort;
+import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
-import com.nexters.phochak.shorts.application.ShortsService;
+import com.nexters.phochak.shorts.application.ShortsUseCase;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
@@ -39,12 +43,15 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PostService implements PostUseCase {
+    private final HashtagUseCase hashtagUseCase;
+    private final LikesUseCase likesUseCase;
+    private final ShortsUseCase shortsUseCase;
+    private final StorageBucketClient storageBucketClient;
+    private final LoadUserPort loadUserPort;
+    private final SavePostPort savePostPort;
+
     private final UserRepository userRepository;
     private final PostRepository postRepository;
-    private final HashtagUseCase hashtagUseCase;
-    private final StorageBucketClient storageBucketClient;
-    private final ShortsService shortsService;
-    private final LikesUseCase likesUseCase;
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
 
@@ -60,14 +67,11 @@ public class PostService implements PostUseCase {
 
     @Override
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
-        UserEntity userEntity = userRepository.getReferenceById(userId);
-        PostEntity postEntity = PostEntity.builder()
-                .userEntity(userEntity)
-                .postCategory(PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()))
-                .build();
-        postRepository.save(postEntity);
-        hashtagUseCase.saveHashtagsByString(postCreateRequestDto.getHashtags(), postEntity);
-        shortsService.connectShorts(postCreateRequestDto.getUploadKey(), postEntity);
+        User user = loadUserPort.load(userId);
+        Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()));
+        savePostPort.save(user, post);
+        hashtagUseCase.saveHashtags(post, postCreateRequestDto.getHashtags());
+        shortsUseCase.connectShorts(post, postCreateRequestDto.getUploadKey());
     }
 
     @Override
@@ -115,20 +119,12 @@ public class PostService implements PostUseCase {
     }
 
     private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
-        switch(command.getFilter()) {
-            case SEARCH:
-                return getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
-            case LIKED:
-                return getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
-            case UPLOADED:
-            case NONE:
-            default:
-                return getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
-        }
-    }
-
-    private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
-        return createPostPageResponseDto(userId, postFetchDtos);
+        return switch (command.getFilter()) {
+            case SEARCH ->
+                    getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
+            case LIKED -> getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
+            default -> getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
+        };
     }
 
     private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
@@ -140,6 +136,11 @@ public class PostService implements PostUseCase {
                 .map(p -> PostPageResponseDto.of(p, hashtagFetchDtos.get(p.getId()), likesFetchDtos.get(p.getId())))
                 .collect(Collectors.toList());
     }
+
+    private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
+        return createPostPageResponseDto(userId, postFetchDtos);
+    }
+
 
     @Override
     public int updateView(Long postId) {

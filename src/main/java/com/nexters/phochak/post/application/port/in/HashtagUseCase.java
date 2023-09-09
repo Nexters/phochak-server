@@ -8,7 +8,7 @@ import java.util.List;
 import java.util.Map;
 
 public interface HashtagUseCase {
-    List<Hashtag> saveHashtagsByString(List<String> stringHashtagList, PostEntity postEntity);
+    List<Hashtag> saveHashtags(List<String> stringHashtagList, PostEntity postEntity);
 
     Map<Long, HashtagFetchDto> findHashtagsOfPosts(List<Long> postIds);
 
