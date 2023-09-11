@@ -18,9 +18,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static com.nexters.phochak.ignore.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
-import static com.nexters.phochak.report.domain.QReportPost.reportPost;
+import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
+import static com.nexters.phochak.user.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 @Slf4j
