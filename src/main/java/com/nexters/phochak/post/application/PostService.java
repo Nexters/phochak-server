@@ -17,6 +17,7 @@ import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
 import com.nexters.phochak.post.domain.Post;
@@ -39,7 +40,6 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.stream.Collectors;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
 public class PostService implements PostUseCase {
@@ -47,6 +47,7 @@ public class PostService implements PostUseCase {
     private final LikesUseCase likesUseCase;
     private final ShortsUseCase shortsUseCase;
     private final StorageBucketClient storageBucketClient;
+    private final LoadPostPort loadPostPort;
     private final LoadUserPort loadUserPort;
     private final SavePostPort savePostPort;
 
@@ -66,26 +67,30 @@ public class PostService implements PostUseCase {
     }
 
     @Override
+    @Transactional
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = loadUserPort.load(userId);
         Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()));
-        savePostPort.save(user, post);
+        savePostPort.save(post);
         hashtagUseCase.saveHashtags(post, postCreateRequestDto.getHashtags());
         shortsUseCase.connectShorts(post, postCreateRequestDto.getUploadKey());
     }
 
     @Override
+    @Transactional
     public void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        UserEntity userEntity = userRepository.getReferenceById(userId);
-        PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!postEntity.getUser().equals(userEntity)) {
+        User user = loadUserPort.load(userId);
+        Post post = loadPostPort.load(postId);
+        if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        postEntity.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
-        hashtagUseCase.updateAll(postEntity, postUpdateRequestDto.getHashtags());
+        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
+        hashtagUseCase.updateAll(post, postUpdateRequestDto.getHashtags());
+        savePostPort.save(post);
     }
 
     @Override
+    @Transactional
     public void delete(Long userId, Long postId) {
         UserEntity userEntity = userRepository.getReferenceById(userId);
         PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
@@ -118,30 +123,6 @@ public class PostService implements PostUseCase {
         return createPostPageResponseDto(command);
     }
 
-    private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
-        return switch (command.getFilter()) {
-            case SEARCH ->
-                    getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
-            case LIKED -> getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
-            default -> getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
-        };
-    }
-
-    private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
-        List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).collect(Collectors.toList());
-        Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagUseCase.findHashtagsOfPosts(postIds);
-        Map<Long, LikesFetchDto> likesFetchDtos = likesUseCase.checkIsLikedPost(postIds, userId);
-
-        return postFetchDtos.stream()
-                .map(p -> PostPageResponseDto.of(p, hashtagFetchDtos.get(p.getId()), likesFetchDtos.get(p.getId())))
-                .collect(Collectors.toList());
-    }
-
-    private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
-        return createPostPageResponseDto(userId, postFetchDtos);
-    }
-
-
     @Override
     public int updateView(Long postId) {
         int countOfUpdatedRow = postRepository.updateView(postId);
@@ -167,6 +148,29 @@ public class PostService implements PostUseCase {
     public List<String> getHashtagAutocomplete(String hashtag, int resultSize) {
         Pageable pageable = PageRequest.of(0, resultSize);
         return hashtagRepository.findByHashtagStartsWith(hashtag, pageable);
+    }
+
+    private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
+        return switch (command.getFilter()) {
+            case SEARCH ->
+                    getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
+            case LIKED -> getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
+            default -> getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
+        };
+    }
+
+    private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
+        List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).collect(Collectors.toList());
+        Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagUseCase.findHashtagsOfPosts(postIds);
+        Map<Long, LikesFetchDto> likesFetchDtos = likesUseCase.checkIsLikedPost(postIds, userId);
+
+        return postFetchDtos.stream()
+                .map(p -> PostPageResponseDto.of(p, hashtagFetchDtos.get(p.getId()), likesFetchDtos.get(p.getId())))
+                .collect(Collectors.toList());
+    }
+
+    private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
+        return createPostPageResponseDto(userId, postFetchDtos);
     }
 
     private String generateObjectUploadKey() {

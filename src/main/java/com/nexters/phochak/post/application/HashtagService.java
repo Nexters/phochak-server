@@ -5,8 +5,9 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
-import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
+import com.nexters.phochak.post.adapter.out.persistence.PostMapper;
 import com.nexters.phochak.post.application.port.in.HashtagUseCase;
+import com.nexters.phochak.post.domain.Post;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -14,26 +15,26 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.regex.Pattern;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
 public class HashtagService implements HashtagUseCase {
 
     private final HashtagRepository hashtagRepository;
+    private final PostMapper postMapper;
 
     @Override
-    public List<Hashtag> saveHashtags(List<String> stringHashtagList, PostEntity postEntity) {
+    public List<Hashtag> saveHashtags(Post post, List<String> stringHashtagList) {
         if (stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
         validateHashtag(stringHashtagList);
         List<Hashtag> hashtagList = stringHashtagList.stream().map(stringHashtag ->
                 Hashtag.builder()
-                        .post(postEntity)
+                        .post(postMapper.toEntity(post))
                         .tag(stringHashtag)
                         .build()
-        ).collect(Collectors.toList());
+        ).toList();
         return hashtagRepository.saveAll(hashtagList);
     }
 
@@ -43,9 +44,9 @@ public class HashtagService implements HashtagUseCase {
     }
 
     @Override
-    public void updateAll(PostEntity postEntity, List<String> stringHashtagList) {
-        hashtagRepository.deleteAllByPostId(postEntity.getId());
-        saveHashtags(stringHashtagList, postEntity);
+    public void updateAll(Post post, List<String> stringHashtagList) {
+        hashtagRepository.deleteAllByPostId(post.getId());
+        saveHashtags(post, stringHashtagList);
     }
 
     private static void validateHashtag(List<String> stringHashtagList) {

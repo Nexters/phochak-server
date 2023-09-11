@@ -7,6 +7,9 @@ import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;
 import com.nexters.phochak.user.adapter.in.web.UserController;
 import com.nexters.phochak.user.adapter.out.api.KakaoInformationFeignClient;
+import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserEntityRelation;
+import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserRepository;
+import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.port.in.KakaoUserInformation;
 import com.nexters.phochak.user.application.port.in.NicknameModifyRequestDto;
@@ -23,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 
 import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
+import static com.nexters.phochak.common.TestUtil.TestUser.accessToken;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.when;
@@ -36,6 +40,8 @@ class UserControllerTest extends RestDocsApiTest {
     UserController userController;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    IgnoredUserRepository ignoredUserRepository;
     @Autowired
     ObjectMapper objectMapper;
     @MockBean
@@ -165,6 +171,76 @@ class UserControllerTest extends RestDocsApiTest {
 
         //doc
         DocumentGenerator.getMyUserInfo(response);
+    }
+
+    @Test
+    @DisplayName("[유저 무시 API] - 유저 무시하기")
+    void ignoreUser() throws Exception {
+        //given
+        final long ignoredUserId = 2L;
+        Scenario.createUser().id(ignoredUserId).request();
+
+        //when
+        final ResultActions response = Scenario.ignoreUser().request().getResponse();
+
+        //then
+        final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
+        final UserEntity ignoredUserEntity = userRepository.getReferenceById(ignoredUserId);
+        final IgnoredUserEntityRelation pk = new IgnoredUserEntityRelation(userEntity, ignoredUserEntity);
+        assertThat(ignoredUserRepository.existsByIgnoredUserRelation(pk)).isTrue();
+
+        //doc
+        DocumentGenerator.ignoreUser(response);
+    }
+
+    @Test
+    @DisplayName("[유저 무시 API] - 유저 무시하기 취소")
+    void cancelIgnoreUser() throws Exception {
+        //given
+        final long ignoredUserId = 2L;
+        Scenario.createUser().id(ignoredUserId).request()
+                .advance().ignoreUser().request();
+
+        //when
+        final ResultActions response = mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .delete("/v1/user/ignore/{ignoredUserId}", ignoredUserId)
+                                .header(AUTHORIZATION_HEADER, accessToken)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        //then
+        final UserEntity userEntity = userRepository.getReferenceById(TestUtil.TestUser.userId);
+        final UserEntity ignoredUserEntity = userRepository.getReferenceById(ignoredUserId);
+        final IgnoredUserEntityRelation pk = new IgnoredUserEntityRelation(userEntity, ignoredUserEntity);
+        assertThat(ignoredUserRepository.existsByIgnoredUserRelation(pk)).isFalse();
+
+        //doc
+        DocumentGenerator.cancelIgnoreUser(response);
+    }
+
+    @Test
+    @DisplayName("[유저 무시 API] - 무시하기한 유저 목록 조회")
+    void getIgnoreUser() throws Exception {
+        //given
+        Scenario.createUser().id(2L).request()
+                .advance().ignoreUser().ignoredUserId(2L).request()
+                .advance().createUser().id(3L).request()
+                .advance().ignoreUser().ignoredUserId(3L).request()
+                .advance().createUser().id(4L).request();
+        //when
+        final ResultActions response = mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/user/ignore", 10)
+                                .header(AUTHORIZATION_HEADER, accessToken)
+                                .contentType(MediaType.APPLICATION_JSON))
+                .andExpect(status().isOk());
+
+        //then
+        response.andExpect(jsonPath("$.data.length()").value(2));
+
+        //doc
+        DocumentGenerator.getIgnoredUser(response);
     }
 
     private static KakaoUserInformation mockKakaoUserInformation(final String providerId) {

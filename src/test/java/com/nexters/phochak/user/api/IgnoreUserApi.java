@@ -1,4 +1,4 @@
-package com.nexters.phochak.ignore.api;
+package com.nexters.phochak.user.api;
 
 import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;

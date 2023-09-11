@@ -2,7 +2,7 @@ package com.nexters.phochak.shorts.application;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
-import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
+import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
@@ -24,14 +24,14 @@ public class NCPShortsUseCase implements ShortsUseCase {
     private final NotificationUsecase notificationUsecase;
 
     @Override
-    public void connectShorts(String uploadKey, PostEntity postEntity) {
+    public void connectShorts(Post post, String uploadKey) {
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
         if (optionalShorts.isPresent()) {
             // case: 인코딩이 먼저 끝나있는 경우
             Shorts shorts = optionalShorts.get();
             shorts.updateShortsState(ShortsStateEnum.OK);
-            postEntity.setShorts(shorts);
+            post.setShorts(shorts);
         } else {
             // case: 인코딩이 끝나지 않은 경우
             String shortsFileName = generateShortsFileName(uploadKey);
@@ -42,7 +42,7 @@ public class NCPShortsUseCase implements ShortsUseCase {
                     .thumbnailUrl(thumbnailFileName)
                     .build();
             shortsRepository.save(shorts);
-            postEntity.setShorts(shorts);
+            post.setShorts(shorts);
         }
     }
 
