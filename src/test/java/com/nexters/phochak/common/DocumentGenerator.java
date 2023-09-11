@@ -169,4 +169,25 @@ public class DocumentGenerator {
                 )
         ));
     }
+
+    public static void createPost(final ResultActions response) throws Exception {
+        response.andDo(document("post/POST",
+                preprocessRequest(prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                requestFields(
+                        fieldWithPath("category").description("카테고리 ex) TOUR / RESTAURANT / CAFE"),
+                        fieldWithPath("uploadKey").description("발급 받았던 업로드 키"),
+                        fieldWithPath("hashtags").description("해시태그 배열 ex) [\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                )
+        ));
+    }
 }

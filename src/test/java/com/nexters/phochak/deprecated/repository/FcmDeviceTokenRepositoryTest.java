@@ -3,9 +3,9 @@ package com.nexters.phochak.deprecated.repository;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.domain.OperatingSystem;
-import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
+import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.post.domain.PostRepository;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
@@ -59,13 +59,13 @@ class FcmDeviceTokenRepositoryTest {
                 .build();
         shortsRepository.save(shorts);
 
-        Post post = Post.builder()
+        PostEntity postEntity = PostEntity.builder()
                 .shorts(shorts)
                 .postCategory(PostCategoryEnum.TOUR)
                 .userEntity(userEntity)
                 .build();
-        postRepository.save(post);
-        Long postId = post.getId();
+        postRepository.save(postEntity);
+        Long postId = postEntity.getId();
 
         FcmDeviceTokenEntity fcmDeviceTokenEntity = FcmDeviceTokenEntity.builder()
                 .token("deviceToken")

@@ -2,11 +2,13 @@ package com.nexters.phochak.user.domain;
 
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
+import lombok.EqualsAndHashCode;
 import lombok.Getter;
 
 import java.time.LocalDateTime;
 
 @Getter
+@EqualsAndHashCode(of = "id")
 public class User {
     private Long id;
     private final FcmDeviceTokenEntity fcmDeviceTokenEntity;
@@ -57,4 +59,5 @@ public class User {
     public void updateNickname(final String nickname) {
         this.nickname = nickname;
     }
+
 }

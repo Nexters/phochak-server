@@ -2,8 +2,8 @@ package com.nexters.phochak.user.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.ignore.adapter.out.persistence.IgnoredUserRepository;
-import com.nexters.phochak.post.application.PostService;
+import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.port.in.LoginRequestDto;
@@ -36,7 +36,7 @@ public class UserService implements UserUseCase {
     private final FindIgnoredUserPort findIgnoredUserPort;
     private final UpdateUserNicknamePort updateUserNicknamePort;
     private final UserRepository userRepository;
-    private final PostService postService;
+    private final PostUseCase postUseCase;
     private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
     private final IgnoredUserRepository ignoredUserRepository;
     private final NotificationTokenRegisterPort notificationTokenRegisterPort;
@@ -81,7 +81,7 @@ public class UserService implements UserUseCase {
     public void withdraw(Long userId) {
         UserEntity userEntity = userRepository.getBy(userId);
         userEntity.withdrawInformation();
-        postService.deleteAllPostByUser(userEntity);
+        postUseCase.deleteAllPostByUser(userEntity);
     }
 
     private OAuthRequestPort getProperProviderPort(final String provider) {

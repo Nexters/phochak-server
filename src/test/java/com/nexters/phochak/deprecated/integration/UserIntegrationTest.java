@@ -1,6 +1,6 @@
 package com.nexters.phochak.deprecated.integration;
 
-import com.nexters.phochak.post.application.PostService;
+import com.nexters.phochak.post.application.port.in.PostUseCase;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.port.in.UserUseCase;
@@ -38,7 +38,7 @@ class UserIntegrationTest {
     @Autowired
     UserRepository userRepository;
     @MockBean
-    PostService postService;
+    PostUseCase postUseCase;
 
     UserEntity userEntity;
 

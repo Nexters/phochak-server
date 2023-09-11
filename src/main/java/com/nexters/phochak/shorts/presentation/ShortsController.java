@@ -1,7 +1,7 @@
 package com.nexters.phochak.shorts.presentation;
 
 import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
-import com.nexters.phochak.shorts.application.ShortsService;
+import com.nexters.phochak.shorts.application.ShortsUseCase;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -12,10 +12,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class ShortsController {
-    private final ShortsService shortsService;
+    private final ShortsUseCase shortsUseCase;
     @PostMapping("/v1/post/encoding-callback")
     public void encodingCallback(@RequestBody EncodingCallbackRequestDto encodingCallbackRequestDto) {
         //TODO: url 수정 필요 post -> shorts
-        shortsService.processPost(encodingCallbackRequestDto);
+        shortsUseCase.processPost(encodingCallbackRequestDto);
     }
 }

@@ -1,100 +1,56 @@
 package com.nexters.phochak.post.domain;
 
-import com.nexters.phochak.common.domain.BaseTime;
-import com.nexters.phochak.hashtag.domain.Hashtag;
-import com.nexters.phochak.likes.domain.Likes;
-import com.nexters.phochak.report.domain.ReportPost;
+import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
+import com.nexters.phochak.post.adapter.out.persistence.Likes;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
 import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import jakarta.persistence.Column;
-import jakarta.persistence.ConstraintMode;
-import jakarta.persistence.Convert;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.FetchType;
-import jakarta.persistence.ForeignKey;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Index;
-import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
-import jakarta.persistence.Table;
-import lombok.Builder;
+import com.nexters.phochak.user.domain.User;
 import lombok.Getter;
-import org.hibernate.annotations.ColumnDefault;
-import org.hibernate.type.YesNoConverter;
+import org.springframework.util.Assert;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Getter
-@Entity
-@Table(indexes =
-        {@Index(name = "idx01_post", columnList = "view, post_id"),
-        @Index(name = "idx02_post", columnList = "user_id")})
-public class Post extends BaseTime {
-    private static final Long BLOCK_CRITERIA = 5L;
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "POST_ID")
+public class Post {
     private Long id;
-
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "USER_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private UserEntity user;
-
-    @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
-    @JoinColumn(name = "SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Shorts shorts;
-
-    @OneToMany(mappedBy = "post")
-    private List<ReportPost> reportPost;
-
-    @Column(nullable = false)
-    @ColumnDefault("0")
-    private Long view;
-
-    @Column(nullable = false)
-    @Enumerated(EnumType.STRING)
     private PostCategoryEnum postCategory;
+    private Long view = 0L;
+    private boolean isBlind = false;
+    private User user;
+    private Shorts shorts;
+    private List<ReportPost> reportPost = new ArrayList<>();
+    private List<Likes> likes = new ArrayList<>();
+    private List<Hashtag> hashtags = new ArrayList<>();
 
-    @Column(nullable = false, columnDefinition = "CHAR(1) DEFAULT 'N'")
-    @Convert(converter = YesNoConverter.class)
-    private boolean isBlind;
-
-    @OneToMany(mappedBy = "post")
-    private List<Likes> likes;
-
-    @OneToMany(mappedBy = "post")
-    private List<Hashtag> hashtags;
-
-    public Post() {
-    }
-
-    @Builder
-    public Post(UserEntity userEntity, Shorts shorts, PostCategoryEnum postCategory) {
-        this.user = userEntity;
+    public Post(final Long id, final User user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind, final List<Likes> likes, final List<Hashtag> hashtags) {
+        this.id = id;
+        this.user = user;
         this.shorts = shorts;
+        this.reportPost = reportPost;
+        this.view = view;
         this.postCategory = postCategory;
-        this.isBlind = false;
-        this.view = 0L;
+        this.isBlind = isBlind;
+        this.likes = likes;
+        this.hashtags = hashtags;
     }
 
-    public void setShorts(Shorts shorts) {
+    public Post(final User user, final PostCategoryEnum postCategory) {
+        Assert.notNull(user, "user must not be null");
+        Assert.notNull(postCategory, "postCategory must not be null");
+        this.user = user;
+        this.postCategory = postCategory;
+    }
+
+    public void assignId(final Long id) {
+        this.id = id;
+    }
+
+    public void setShorts(final Shorts shorts) {
         this.shorts = shorts;
     }
 
-    public void blindPostIfRequired(Long reportCount) {
-        if (reportCount >= BLOCK_CRITERIA) {
-            this.isBlind = true;
-        }
-    }
-
-    public void updateContent(PostCategoryEnum postCategory) {
-        this.postCategory = postCategory;
+    public void updateContent(final PostCategoryEnum postCategoryEnum) {
+        this.postCategory = postCategoryEnum;
     }
 }
