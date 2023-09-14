@@ -70,10 +70,10 @@ public class PostService implements PostUseCase {
     @Transactional
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = loadUserPort.load(userId);
-        Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()));
+        Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.category()));
         savePostPort.save(post);
-        hashtagUseCase.saveHashtags(post, postCreateRequestDto.getHashtags());
-        shortsUseCase.connectShorts(post, postCreateRequestDto.getUploadKey());
+        hashtagUseCase.saveHashtags(post, postCreateRequestDto.hashtags());
+        shortsUseCase.connectShorts(post, postCreateRequestDto.uploadKey());
     }
 
     @Override
@@ -84,8 +84,8 @@ public class PostService implements PostUseCase {
         if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
-        hashtagUseCase.updateAll(post, postUpdateRequestDto.getHashtags());
+        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.category()));
+        hashtagUseCase.updateAll(post, postUpdateRequestDto.hashtags());
         savePostPort.save(post);
     }
 
