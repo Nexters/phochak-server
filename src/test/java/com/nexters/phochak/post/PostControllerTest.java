@@ -48,7 +48,7 @@ class PostControllerTest extends RestDocsApiTest {
 
     @Test
     @DisplayName("포스트 API - 게시글 생성 성공")
-    void createPost_success() throws Exception {
+    void createPost() throws Exception {
         //given
         final ResultActions response = Scenario.createPost().request().getResponse();
 
@@ -59,7 +59,7 @@ class PostControllerTest extends RestDocsApiTest {
 
     @Test
     @DisplayName("포스트 API - 게시글 수정 성공")
-    void updatePost_success() throws Exception {
+    void updatePost() throws Exception {
         //given
         Scenario.createPost().hashtagList(List.of("태그1")).postCategoryEnum(PostCategoryEnum.CAFE).request();
         final long postId = 1;
@@ -68,8 +68,8 @@ class PostControllerTest extends RestDocsApiTest {
                 PostCategoryEnum.RESTAURANT.name()
         );
 
-        // when, then
-        mockMvc.perform(put("/v1/post/{postId}", postId)
+        //when, then
+        final ResultActions response = mockMvc.perform(put("/v1/post/{postId}", postId)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
                         .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
@@ -81,26 +81,9 @@ class PostControllerTest extends RestDocsApiTest {
                 () -> assertThat(hashtagRepository.existsByTag("수정1")).isTrue(),
                 () -> assertThat(hashtagRepository.existsByTag("수정2")).isTrue()
         );
-//                .andDo(document("post/PUT",
-//                        preprocessRequest(prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("postId").description("(필수) 수정할 포스트의 id")
-//                        ),
-//                        requestFields(
-//                                fieldWithPath("category").description("카테고리 ex) TOUR / RESTAURANT / CAFE"),
-//                                fieldWithPath("hashtags").description("해시태그 배열 ex) [\"해시태그1\", \"해시태그2\", \"해시태그3\"))]")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
-//                        )
-//                ));
+
+        //doc
+        DocumentGenerator.updatePost(response);
     }
 
 }
