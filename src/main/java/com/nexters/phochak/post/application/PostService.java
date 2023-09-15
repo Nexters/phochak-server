@@ -71,9 +71,9 @@ public class PostService implements PostUseCase {
     public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
         User user = loadUserPort.load(userId);
         Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.category()));
+        shortsUseCase.connectShorts(post, postCreateRequestDto.uploadKey());
         savePostPort.save(post);
         hashtagUseCase.saveHashtags(post, postCreateRequestDto.hashtags());
-        shortsUseCase.connectShorts(post, postCreateRequestDto.uploadKey());
     }
 
     @Override

@@ -10,6 +10,7 @@ import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
+import com.nexters.phochak.shorts.domain.ShortsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,6 +26,7 @@ import java.util.List;
 import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
 import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -38,6 +40,8 @@ class PostControllerTest extends RestDocsApiTest {
     PostRepository postRepository;
     @Autowired
     HashtagRepository hashtagRepository;
+    @Autowired
+    ShortsRepository shortsRepository;
     MockMvc mockMvc;
 
     @BeforeEach
@@ -52,7 +56,10 @@ class PostControllerTest extends RestDocsApiTest {
         //given
         final ResultActions response = Scenario.createPost().request().getResponse();
 
-        assertThat(hashtagRepository.count()).isEqualTo(3L);
+        Assertions.assertAll(
+                () -> assertThat(postRepository.count()).isEqualTo(1L),
+                () -> assertThat(shortsRepository.count()).isEqualTo(1L),
+                () -> assertThat(hashtagRepository.count()).isEqualTo(3L));
 
         DocumentGenerator.createPost(response);
     }
@@ -68,7 +75,7 @@ class PostControllerTest extends RestDocsApiTest {
                 PostCategoryEnum.RESTAURANT.name()
         );
 
-        //when, then
+        //when
         final ResultActions response = mockMvc.perform(put("/v1/post/{postId}", postId)
                         .content(objectMapper.writeValueAsString(request))
                         .contentType(MediaType.APPLICATION_JSON)
@@ -76,14 +83,50 @@ class PostControllerTest extends RestDocsApiTest {
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
 
+        //then
         Assertions.assertAll(
                 () -> assertThat(hashtagRepository.existsByTag("태그1")).isFalse(),
                 () -> assertThat(hashtagRepository.existsByTag("수정1")).isTrue(),
-                () -> assertThat(hashtagRepository.existsByTag("수정2")).isTrue()
-        );
+                () -> assertThat(hashtagRepository.existsByTag("수정2")).isTrue());
 
         //doc
         DocumentGenerator.updatePost(response);
+    }
+
+    @Test
+    @DisplayName("포스트 API - 게시글 삭제 성공")
+    void deletePost_success() throws Exception {
+        //given
+        Scenario.createPost().hashtagList(List.of("태그1")).postCategoryEnum(PostCategoryEnum.CAFE).request();
+        final long postId = 1;
+
+        // when
+        mockMvc.perform(delete("/v1/post/{postId}", postId)
+                        .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
+//                .andDo(document("post/DELETE",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("postId").description("(필수) 삭제할 포스트의 id")
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+//                        )
+//                ));
+
+        //then
+        Assertions.assertAll(
+                () -> assertThat(postRepository.count()).isZero(),
+                () -> assertThat(shortsRepository.count()).isZero(),
+                () -> assertThat(hashtagRepository.count()).isZero());
     }
 
 }
