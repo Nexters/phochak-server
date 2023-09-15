@@ -17,6 +17,9 @@ import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.post.application.port.out.DeleteHashtagPort;
+import com.nexters.phochak.post.application.port.out.DeleteMediaPort;
+import com.nexters.phochak.post.application.port.out.DeletePostPort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
@@ -27,7 +30,6 @@ import com.nexters.phochak.shorts.application.ShortsUseCase;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
@@ -50,16 +52,18 @@ public class PostService implements PostUseCase {
     private final LoadPostPort loadPostPort;
     private final LoadUserPort loadUserPort;
     private final SavePostPort savePostPort;
+    private final DeletePostPort deletePostPort;
+    private final DeleteMediaPort deleteMediaPort;
 
-    private final UserRepository userRepository;
     private final PostRepository postRepository;
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
+    private final DeleteHashtagPort deleteHashtagsPort;
 
     @Override
-    public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
-        String uploadKey = generateObjectUploadKey();
-        String objectName = uploadKey + "." + fileExtension.toLowerCase();
+    public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
+        final String uploadKey = generateObjectUploadKey();
+        final String objectName = uploadKey + "." + fileExtension.toLowerCase();
         return PostUploadKeyResponseDto.builder()
                 .uploadKey(uploadKey)
                 .uploadUrl(storageBucketClient.generatePresignedUrl(objectName).toString())
@@ -68,9 +72,9 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional
-    public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
-        User user = loadUserPort.load(userId);
-        Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.category()));
+    public void create(final Long userId, final PostCreateRequestDto postCreateRequestDto) {
+        final User user = loadUserPort.load(userId);
+        final Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.category()));
         shortsUseCase.connectShorts(post, postCreateRequestDto.uploadKey());
         savePostPort.save(post);
         hashtagUseCase.saveHashtags(post, postCreateRequestDto.hashtags());
@@ -78,9 +82,9 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional
-    public void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        User user = loadUserPort.load(userId);
-        Post post = loadPostPort.load(postId);
+    public void update(final Long userId, final Long postId, final PostUpdateRequestDto postUpdateRequestDto) {
+        final User user = loadUserPort.load(userId);
+        final Post post = loadPostPort.load(postId);
         if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
@@ -91,16 +95,15 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional
-    public void delete(Long userId, Long postId) {
-        UserEntity userEntity = userRepository.getReferenceById(userId);
-        PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!postEntity.getUser().equals(userEntity)) {
+    public void delete(final Long userId, final Long postId) {
+        final User user = loadUserPort.load(userId);
+        final Post post = loadPostPort.load(postId);
+        if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        String objectKey = postEntity.getShorts().getUploadKey();
-        hashtagRepository.deleteAllByPostId(postEntity.getId());
-        postRepository.delete(postEntity);
-        storageBucketClient.removeShortsObject(List.of(objectKey));
+        deleteHashtagsPort.deleteAllByPost(post);
+        deletePostPort.delete(post);
+        deleteMediaPort.deleteShortsMedia(post);
     }
 
     @Override
