@@ -100,33 +100,20 @@ class PostControllerTest extends RestDocsApiTest {
         Scenario.createPost().hashtagList(List.of("태그1")).postCategoryEnum(PostCategoryEnum.CAFE).request();
         final long postId = 1;
 
-        // when
-        mockMvc.perform(delete("/v1/post/{postId}", postId)
+        //when
+        final ResultActions response = mockMvc.perform(delete("/v1/post/{postId}", postId)
                         .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
-//                .andDo(document("post/DELETE",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("postId").description("(필수) 삭제할 포스트의 id")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
-//                        )
-//                ));
 
         //then
         Assertions.assertAll(
                 () -> assertThat(postRepository.count()).isZero(),
                 () -> assertThat(shortsRepository.count()).isZero(),
                 () -> assertThat(hashtagRepository.count()).isZero());
+
+        //doc
+        DocumentGenerator.deletePost(response);
     }
 
 }
