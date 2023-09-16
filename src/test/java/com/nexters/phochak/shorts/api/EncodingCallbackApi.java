@@ -47,6 +47,11 @@ public class EncodingCallbackApi {
         return this;
     }
 
+    public EncodingCallbackApi filePathByUploadKey(final String key) {
+        this.filePath = "/folder/" + key + "_encoded.mp4";
+        return this;
+    }
+
     public EncodingCallbackApi outputType(final String outputType) {
         this.outputType = outputType;
         return this;

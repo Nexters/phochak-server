@@ -16,7 +16,6 @@ import lombok.extern.slf4j.Slf4j;
 
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
@@ -63,7 +62,7 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
 
         return resultMap.keySet().stream()
                 .map(resultMap::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     private static BooleanExpression getFilterExpression(PostFetchCommand command) {
