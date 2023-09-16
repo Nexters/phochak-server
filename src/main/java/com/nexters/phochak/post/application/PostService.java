@@ -20,6 +20,7 @@ import com.nexters.phochak.post.application.port.out.DeleteHashtagPort;
 import com.nexters.phochak.post.application.port.out.DeleteMediaPort;
 import com.nexters.phochak.post.application.port.out.DeletePostPort;
 import com.nexters.phochak.post.application.port.out.GeneratePresignedUrlPort;
+import com.nexters.phochak.post.application.port.out.GetFeedPagePort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
@@ -61,6 +62,7 @@ public class PostService implements PostUseCase {
     private final ShortsRepository shortsRepository;
     private final LikesRepository likesRepository;
     private final DeleteHashtagPort deleteHashtagsPort;
+    private final GetFeedPagePort getFeedPagePort;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
@@ -107,12 +109,13 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(final Long userId, final CustomCursorDto customCursorDto) {
-        return switch (customCursorDto.getFilter()) {
-            case SEARCH -> getNextCursorPage(userId, hashtagRepository.searchPagingByHashtag(userId, customCursorDto));
-            case LIKED -> getNextCursorPage(userId, likesRepository.pagingPostsByLikes(userId, customCursorDto));
-            default -> getNextCursorPage(userId, postRepository.pagingPost(userId, customCursorDto));
+    public List<PostPageResponseDto> getPostPage(final Long userId, final CustomCursorDto customCursorDto) {
+        final List<PostFetchDto> result = switch (customCursorDto.getFilter()) {
+            case SEARCH -> hashtagRepository.searchPagingByHashtag(userId, customCursorDto);
+            case LIKED -> likesRepository.pagingPostsByLikes(userId, customCursorDto);
+            default -> postRepository.pagingPost(userId, customCursorDto);
         };
+        return getNextCursorPage(userId, result);
     }
 
     @Override

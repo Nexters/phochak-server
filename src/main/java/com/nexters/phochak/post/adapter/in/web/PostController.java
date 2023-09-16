@@ -56,7 +56,7 @@ public class PostController {
     @GetMapping("/list")
     public CommonPageResponseDto<PostPageResponseDto> getPostList(@Valid CustomCursorDto customCursorDto) {
         final Long userId = UserContext.getContext();
-        final List<PostPageResponseDto> nextCursorPage = postUseCase.getNextCursorPage(userId, customCursorDto);
+        final List<PostPageResponseDto> nextCursorPage = postUseCase.getPostPage(userId, customCursorDto);
         if (nextCursorPage.size() < customCursorDto.getPageSize()) {
             return new CommonPageResponseDto<>(nextCursorPage, true);
         }
@@ -70,7 +70,7 @@ public class PostController {
             @RequestParam(required = false) String hashtag) {
         final Long userId = UserContext.getContext();
         customCursorDto.setHashtag(hashtag);
-        final List<PostPageResponseDto> nextCursorPage = postUseCase.getNextCursorPage(userId, customCursorDto);
+        final List<PostPageResponseDto> nextCursorPage = postUseCase.getPostPage(userId, customCursorDto);
         if (nextCursorPage.size() < customCursorDto.getPageSize()) {
             return new CommonPageResponseDto<>(nextCursorPage, true);
         }

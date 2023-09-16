@@ -11,16 +11,12 @@ public interface PostUseCase {
 
     PostUploadKeyResponseDto generateUploadKey(String fileExtension);
 
-    /**
-     * 커서로부터 Page size만큼의 page를 가져온다.
-     * @param customCursorDto
-     * @return
-     */
-    List<PostPageResponseDto> getNextCursorPage(Long userId, CustomCursorDto customCursorDto);
 
     void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto);
 
     void delete(Long userId, Long postId);
+
+    List<PostPageResponseDto> getPostPage(Long userId, CustomCursorDto customCursorDto);
 
     /**
      * 특정 게시글의 조회수를 올린다.
