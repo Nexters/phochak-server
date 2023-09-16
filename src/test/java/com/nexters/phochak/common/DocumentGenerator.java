@@ -239,7 +239,78 @@ public class DocumentGenerator {
                 preprocessResponse(prettyPrint()),
                 queryParameters(
                         parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-                        parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
+                        parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                        parameterWithName("lastId").description("(선택) 초기 요청에서는 필요하지 않음").optional()
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
+                        fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
+                        fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                        fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
+                        fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                        fieldWithPath("data[].shorts.state").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태(OK, FAIL, IN_PROGRESS)"),
+                        fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
+                        fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                        fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
+                        fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
+                        fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                        fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                        fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                        fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
+                )
+        ));
+    }
+
+    public static void getPostList_after(final ResultActions response) throws Exception {
+        response.andDo(document("post/list/initial",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                        parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                        parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id")
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
+                        fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
+                        fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
+                        fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
+                        fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
+                        fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
+                        fieldWithPath("data[].shorts.state").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태(OK, FAIL, IN_PROGRESS)"),
+                        fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
+                        fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
+                        fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
+                        fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
+                        fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
+                        fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
+                        fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
+                        fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
+                )
+        ));
+    }
+
+    public static void getPostList_last(final ResultActions response) throws Exception {
+        response.andDo(document("post/list/initial",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                queryParameters(
+                        parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
+                        parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
+                        parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id")
                 ),
                 requestHeaders(
                         headerWithName(AUTHORIZATION_HEADER)

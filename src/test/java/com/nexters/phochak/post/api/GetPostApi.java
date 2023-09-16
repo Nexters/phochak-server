@@ -16,6 +16,7 @@ public class GetPostApi {
     private PostSortOption postSortOption = PostSortOption.LATEST;
     private PostFilter postFilter = PostFilter.NONE;
     private int pageSize = 2;
+    private Long lastId = null;
 
     public GetPostApi postSortOption(final PostSortOption postSortOption) {
         this.postSortOption = postSortOption;
@@ -32,11 +33,17 @@ public class GetPostApi {
         return this;
     }
 
+    public GetPostApi lastId(final long lastId) {
+        this.lastId = lastId;
+        return this;
+    }
+
     public Scenario.NextScenarioStep request() throws Exception {
         CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .sortOption(postSortOption)
                 .filter(postFilter)
                 .pageSize(pageSize)
+                .lastId(lastId)
                 .build();
 
         final ResultActions response = TestUtil.mockMvc.perform(
@@ -44,6 +51,7 @@ public class GetPostApi {
                                 .get("/v1/post/list")
                                 .param("sortOption", customCursorDto.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
+                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
                                 .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk());
 
