@@ -1,5 +1,6 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
+import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto_PostShortsInformation;
@@ -29,23 +30,23 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
     private final JPAQueryFactory queryFactory;
 
     @Override
-    public List<PostFetchDto> findNextPageByCommmand(PostFetchCommand command) {
+    public List<PostFetchDto> pagingPost(final Long userId, final CustomCursorDto command) {
         Map<Long, PostFetchDto> resultMap = queryFactory.from(postEntity)
                 .join(postEntity.user)
                 .join(postEntity.shorts)
                 .where(filterByCursor(command)) // 커서 기반 페이징
-                .where(getFilterExpression(command)) // 내가 업로드한 게시글
+                .where(getFilterExpression(userId, command)) // 내가 업로드한 게시글
                 .where(postEntity.user.id.notIn(
                         JPAExpressions
                                 .select(ignoredUserEntity.ignoredUserRelation.ignoredUser.id)
                                 .from(ignoredUserEntity)
-                                .where(ignoredUserEntity.ignoredUserRelation.user.id.eq(command.getUserId()))
+                                .where(ignoredUserEntity.ignoredUserRelation.user.id.eq(userId))
                 )) //본인이 ignore한 게시글 제거
                 .where(postEntity.id.notIn(
                         JPAExpressions
                                 .select(reportPost.post.id)
                                 .from(reportPost)
-                                .where(reportPost.reporter.id.eq(command.getUserId()))
+                                .where(reportPost.reporter.id.eq(userId))
                 )) // 본인이 신고한 게시글 제거
                 .where(postEntity.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())
@@ -65,10 +66,10 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 .toList();
     }
 
-    private static BooleanExpression getFilterExpression(PostFetchCommand command) {
+    private static BooleanExpression getFilterExpression(Long userId, CustomCursorDto command) {
         if (command.hasUploadedFilter()) {
             if(command.getTargetUserId() == null) {
-                return postEntity.user.id.eq(command.getUserId());
+                return postEntity.user.id.eq(userId);
             } else {
                 return postEntity.user.id.eq(command.getTargetUserId());
             }
@@ -76,16 +77,13 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
         return null;
     }
 
-    private BooleanExpression filterByCursor(PostFetchCommand command) {
+    private BooleanExpression filterByCursor(CustomCursorDto command) {
         BooleanExpression defaultFilter = postEntity.id.lt(command.getLastId());
-        switch (command.getSortOption()) {
-            case VIEW:
-                return postEntity.view.loe(command.getSortValue()).and(defaultFilter);
-            case LIKE:
-                return postEntity.likes.size().loe(command.getSortValue()).and(defaultFilter);
-            default:
-                return defaultFilter;
-        }
+        return switch (command.getSortOption()) {
+            case VIEW -> postEntity.view.loe(command.getSortValue()).and(defaultFilter);
+            case LIKE -> postEntity.likes.size().loe(command.getSortValue()).and(defaultFilter);
+            default -> defaultFilter;
+        };
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {

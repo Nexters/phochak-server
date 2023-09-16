@@ -1,5 +1,6 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
+import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.LikesFetchDto;
 import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.QPostFetchDto;
@@ -18,7 +19,6 @@ import lombok.RequiredArgsConstructor;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import static com.nexters.phochak.post.adapter.out.persistence.QLikes.likes;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
@@ -55,11 +55,11 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
     }
 
     @Override
-    public List<PostFetchDto> findLikedPosts(PostFetchCommand command) {
+    public List<PostFetchDto> pagingPostsByLikes(final Long userId, final CustomCursorDto command) {
         Map<Long, PostFetchDto> result = queryFactory.select(likes, postEntity)
                 .from(likes)
                 .join(postEntity).on(likes.post.eq(postEntity))
-                .join(likes.user).on(likes.user.id.eq(command.getUserId()))
+                .join(likes.user).on(likes.user.id.eq(userId))
                 .join(shorts).on(likes.post.shorts.eq(shorts))
                 .where(filterByCursor(command))
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
@@ -67,7 +67,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                         JPAExpressions
                                 .select(reportPost.post.id)
                                 .from(reportPost)
-                                .where(reportPost.reporter.id.eq(command.getUserId()))
+                                .where(reportPost.reporter.id.eq(userId))
                 )) // 본인이 신고한 게시글 제거
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건
@@ -82,19 +82,16 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
 
         return result.keySet().stream()
                 .map(result::get)
-                .collect(Collectors.toList());
+                .toList();
     }
 
-    private BooleanExpression filterByCursor(PostFetchCommand command) {
+    private BooleanExpression filterByCursor(CustomCursorDto command) {
         BooleanExpression defaultFilter = likes.post.id.lt(command.getLastId());
-        switch (command.getSortOption()) {
-            case VIEW:
-                return likes.post.view.loe(command.getSortValue()).and(defaultFilter);
-            case LIKE:
-                return likes.count().loe(command.getSortValue()).and(defaultFilter);
-            default:
-                return defaultFilter;
-        }
+        return switch (command.getSortOption()) {
+            case VIEW -> likes.post.view.loe(command.getSortValue()).and(defaultFilter);
+            case LIKE -> likes.count().loe(command.getSortValue()).and(defaultFilter);
+            default -> defaultFilter;
+        };
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {

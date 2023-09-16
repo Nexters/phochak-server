@@ -1,12 +1,11 @@
 package com.nexters.phochak.post.application;
 
-import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
+import com.nexters.phochak.post.adapter.out.persistence.LikesRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
-import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.HashtagUseCase;
@@ -60,6 +59,7 @@ public class PostService implements PostUseCase {
     private final PostRepository postRepository;
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
+    private final LikesRepository likesRepository;
     private final DeleteHashtagPort deleteHashtagsPort;
 
     @Override
@@ -107,18 +107,12 @@ public class PostService implements PostUseCase {
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(final CustomCursorDto customCursorDto) {
-        final Long userId = UserContext.CONTEXT.get();
-        final PostFetchCommand command = PostFetchCommand.of(customCursorDto, userId);
-        return createPostPageResponseDto(command);
-    }
-
-    @Override
-    @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(final CustomCursorDto customCursorDto, final String hashtag) {
-        final Long userId = UserContext.CONTEXT.get();
-        final PostFetchCommand command = PostFetchCommand.of(customCursorDto, userId, hashtag);
-        return createPostPageResponseDto(command);
+    public List<PostPageResponseDto> getNextCursorPage(final Long userId, final CustomCursorDto customCursorDto) {
+        return switch (customCursorDto.getFilter()) {
+            case SEARCH -> getNextCursorPage(userId, hashtagRepository.searchPagingByHashtag(userId, customCursorDto));
+            case LIKED -> getNextCursorPage(userId, likesRepository.pagingPostsByLikes(userId, customCursorDto));
+            default -> getNextCursorPage(userId, postRepository.pagingPost(userId, customCursorDto));
+        };
     }
 
     @Override
@@ -145,14 +139,6 @@ public class PostService implements PostUseCase {
     public List<String> getHashtagAutocomplete(final String hashtag, final int resultSize) {
         final Pageable pageable = PageRequest.of(0, resultSize);
         return hashtagRepository.findByHashtagStartsWith(hashtag, pageable);
-    }
-
-    private List<PostPageResponseDto> createPostPageResponseDto(final PostFetchCommand command) {
-        return switch (command.getFilter()) {
-            case SEARCH -> getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
-            case LIKED -> getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
-            default -> getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
-        };
     }
 
     private List<PostPageResponseDto> createPostPageResponseDto(final Long userId, final List<PostFetchDto> postFetchDtos) {

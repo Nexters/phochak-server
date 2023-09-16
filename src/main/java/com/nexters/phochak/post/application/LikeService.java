@@ -5,11 +5,9 @@ import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.Likes;
 import com.nexters.phochak.post.adapter.out.persistence.LikesRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
-import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.LikesFetchDto;
 import com.nexters.phochak.post.application.port.in.LikesUseCase;
-import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -62,9 +60,4 @@ public class LikeService implements LikesUseCase {
         return likesRepository.checkIsLikedPost(postIds, userId);
     }
 
-    @Transactional(readOnly = true)
-    @Override
-    public List<PostFetchDto> findLikedPostsByCommand(PostFetchCommand command) {
-        return likesRepository.findLikedPosts(command);
-    }
 }

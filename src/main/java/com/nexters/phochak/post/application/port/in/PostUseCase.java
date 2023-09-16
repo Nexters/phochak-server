@@ -2,7 +2,6 @@ package com.nexters.phochak.post.application.port.in;
 
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -17,14 +16,11 @@ public interface PostUseCase {
      * @param customCursorDto
      * @return
      */
-    List<PostPageResponseDto> getNextCursorPage(CustomCursorDto customCursorDto);
+    List<PostPageResponseDto> getNextCursorPage(Long userId, CustomCursorDto customCursorDto);
 
     void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto);
 
     void delete(Long userId, Long postId);
-
-    @Transactional(readOnly = true)
-    List<PostPageResponseDto> getNextCursorPage(CustomCursorDto customCursorDto, String hashtag);
 
     /**
      * 특정 게시글의 조회수를 올린다.
