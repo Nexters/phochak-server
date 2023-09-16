@@ -42,7 +42,6 @@ import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -134,8 +133,8 @@ public class PostService implements PostUseCase {
     @Override
     public void deleteAllPostByUser(final UserEntity userEntity) {
         final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
-        final List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).collect(Collectors.toList());
-        final List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
+        final List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).toList();
+        final List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).toList();
         postRepository.deleteAllByUser(userEntity);
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);
