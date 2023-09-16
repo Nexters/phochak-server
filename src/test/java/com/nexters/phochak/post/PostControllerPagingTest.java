@@ -1,6 +1,7 @@
 package com.nexters.phochak.post;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.nexters.phochak.common.DocumentGenerator;
 import com.nexters.phochak.common.RestDocsApiTest;
 import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;
@@ -15,6 +16,8 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.restdocs.RestDocumentationContextProvider;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 class PostControllerPagingTest extends RestDocsApiTest {
     @Autowired
@@ -38,7 +41,8 @@ class PostControllerPagingTest extends RestDocsApiTest {
     @Test
     @DisplayName("포스트 목록 조회 API - 첫 요청")
     void getPostList_initial() throws Exception {
-        Scenario.createPost().uploadKey("test1").request().advance()
+        //given, when
+        final ResultActions response = Scenario.createPost().uploadKey("test1").request().advance()
                 .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test1").request().advance()
                 .createPost().uploadKey("test2").request().advance()
                 .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test2").request().advance()
@@ -48,42 +52,16 @@ class PostControllerPagingTest extends RestDocsApiTest {
                 .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test4").request().advance()
                 .createPost().uploadKey("test5").request().advance()
                 .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test5").request().advance()
-                .getPostList().pageSize(2).request().advance();
+                .getPostList().pageSize(2).request().getResponse();
 
-//                .andDo(document("post/list/initial",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestFields(
-//                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-//                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional()
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
-//                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
-//                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
-//                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-//                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
-//                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
-//                                fieldWithPath("data[].shorts.state").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태(OK, FAIL, IN_PROGRESS)"),
-//                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
-//                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
-//                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
-//                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
-//                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
-//                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-//                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
-//                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
-//                        )
-//                ));
+        //then
+        response.andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(2));
+
+        //doc
+        DocumentGenerator.getPostList_initial(response);
     }
 
-//    @Test
+    //    @Test
 //    @DisplayName("포스트 목록 조회 API - 이후 요청")
 //    void getPostList_after() throws Exception {
 //        CustomCursorDto customCursorDto = CustomCursorDto.builder()
