@@ -1,5 +1,7 @@
 package com.nexters.phochak.common;
 
+import com.nexters.phochak.post.api.AddPhochakApi;
+import com.nexters.phochak.post.api.CancelPhochakApi;
 import com.nexters.phochak.post.api.CreatePostApi;
 import com.nexters.phochak.post.api.GetPostApi;
 import com.nexters.phochak.shorts.api.EncodingCallbackApi;
@@ -23,6 +25,14 @@ public class Scenario {
 
     public GetPostApi getPostList() {
         return new GetPostApi();
+    }
+
+    public AddPhochakApi addPhochak() {
+        return new AddPhochakApi();
+    }
+
+    public CancelPhochakApi cancelPhochak() {
+        return new CancelPhochakApi();
     }
 
     public static class NextScenarioStep {

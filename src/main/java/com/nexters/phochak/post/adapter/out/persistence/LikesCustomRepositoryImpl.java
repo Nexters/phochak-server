@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.nexters.phochak.post.adapter.out.persistence.QLikes.likes;
+import static com.nexters.phochak.post.adapter.out.persistence.QLikesEntity.likesEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
 import static com.nexters.phochak.shorts.domain.QShorts.shorts;
@@ -34,11 +34,11 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
     public Map<Long, LikesFetchDto> checkIsLikedPost(List<Long> postIds, Long userId) {
         Map<Long, LikesFetchDto> result = new HashMap<>();
 
-        Map<Long, List<QuerydslFetchDto>> map = queryFactory.from(likes)
-                .join(likes.post)
-                .where(likes.post.id.in(postIds))
-                .transform(groupBy(likes.post.id)
-                        .as(GroupBy.list(new QQuerydslFetchDto(likes.user.id.eq(userId)))));
+        Map<Long, List<QuerydslFetchDto>> map = queryFactory.from(likesEntity)
+                .join(likesEntity.post)
+                .where(likesEntity.post.id.in(postIds))
+                .transform(groupBy(likesEntity.post.id)
+                        .as(GroupBy.list(new QQuerydslFetchDto(likesEntity.user.id.eq(userId)))));
 
         map.keySet().forEach(k -> {
                     int size = map.get(k).size();
@@ -56,11 +56,11 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
 
     @Override
     public List<PostFetchDto> pagingPostsByLikes(final Long userId, final CustomCursorDto command) {
-        Map<Long, PostFetchDto> result = queryFactory.select(likes, postEntity)
-                .from(likes)
-                .join(postEntity).on(likes.post.eq(postEntity))
-                .join(likes.user).on(likes.user.id.eq(userId))
-                .join(shorts).on(likes.post.shorts.eq(shorts))
+        Map<Long, PostFetchDto> result = queryFactory.select(likesEntity, postEntity)
+                .from(likesEntity)
+                .join(postEntity).on(likesEntity.post.eq(postEntity))
+                .join(likesEntity.user).on(likesEntity.user.id.eq(userId))
+                .join(shorts).on(likesEntity.post.shorts.eq(shorts))
                 .where(filterByCursor(command))
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .where(postEntity.id.notIn(
@@ -77,7 +77,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                         new QPostFetchDto(postEntity.id,
                                 new QPostFetchDto_PostUserInformation(postEntity.user.id, postEntity.user.nickname, postEntity.user.profileImgUrl),
                                 new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
-                                likes.post.view, likes.post.postCategory, likes.post.isBlind)
+                                likesEntity.post.view, likesEntity.post.postCategory, likesEntity.post.isBlind)
                 ));
 
         return result.keySet().stream()
@@ -86,19 +86,19 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
     }
 
     private BooleanExpression filterByCursor(CustomCursorDto command) {
-        BooleanExpression defaultFilter = likes.post.id.lt(command.getLastId());
+        BooleanExpression defaultFilter = likesEntity.post.id.lt(command.getLastId());
         return switch (command.getSortOption()) {
-            case VIEW -> likes.post.view.loe(command.getSortValue()).and(defaultFilter);
-            case LIKE -> likes.count().loe(command.getSortValue()).and(defaultFilter);
+            case VIEW -> likesEntity.post.view.loe(command.getSortValue()).and(defaultFilter);
+            case LIKE -> likesEntity.count().loe(command.getSortValue()).and(defaultFilter);
             default -> defaultFilter;
         };
     }
 
     private static OrderSpecifier orderByPostSortOption(PostSortOption postSortOption) {
         if (postSortOption == PostSortOption.LIKE) {
-            return likes.count().desc();
+            return likesEntity.count().desc();
         } else if (postSortOption == PostSortOption.VIEW) {
-            return likes.post.view.desc();
+            return likesEntity.post.view.desc();
         }
         return new OrderSpecifier(Order.ASC, NullExpression.DEFAULT, OrderSpecifier.NullHandling.Default);
     }

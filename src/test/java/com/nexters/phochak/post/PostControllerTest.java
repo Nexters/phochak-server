@@ -28,8 +28,7 @@ import java.util.List;
 import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -157,13 +156,35 @@ class PostControllerTest extends RestDocsApiTest {
 
         //when, then
         final ResultActions response = mockMvc.perform(
-                        RestDocumentationRequestBuilders
-                                .post("/v1/post/{postId}/view", postId)
+                        post("/v1/post/{postId}/view", postId)
                                 .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk());
 
         //doc
         DocumentGenerator.updatePostView(response);
+    }
+
+    @Test
+    @DisplayName("포착하기 요청 API - 포착하기 성공")
+    void addPhochak() throws Exception {
+        //given, when, then
+        final ResultActions response = Scenario.createPost().request().advance()
+                .addPhochak().request().getResponse();
+
+        //doc
+        DocumentGenerator.addPhochak(response);
+    }
+
+    @Test
+    @DisplayName("포착 취소하기 요청 API - 포착 취소하기 성공")
+    void cancelPhochak() throws Exception {
+        //given, when, then
+        final ResultActions response = Scenario.createPost().request().advance()
+                .addPhochak().request().advance()
+                .cancelPhochak().request().getResponse();
+
+        //doc
+        DocumentGenerator.cancelPhochak(response);
     }
 
 }

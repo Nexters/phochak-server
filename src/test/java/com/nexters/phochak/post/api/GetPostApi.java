@@ -52,6 +52,7 @@ public class GetPostApi {
                                 .param("sortOption", customCursorDto.getSortOption().name())
                                 .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
                                 .param("lastId", String.valueOf(customCursorDto.getLastId()))
+                                .param("filter", customCursorDto.getFilter().name())
                                 .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk());
 

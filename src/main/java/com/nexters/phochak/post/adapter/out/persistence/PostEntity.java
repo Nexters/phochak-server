@@ -65,7 +65,7 @@ public class PostEntity extends BaseTime {
     private boolean isBlind;
 
     @OneToMany(mappedBy = "post")
-    private List<Likes> likes;
+    private List<LikesEntity> likes;
 
     @OneToMany(mappedBy = "post")
     private List<Hashtag> hashtags;
@@ -83,7 +83,7 @@ public class PostEntity extends BaseTime {
     }
 
 
-    public PostEntity(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind, final List<Likes> likes, final List<Hashtag> hashtags) {
+    public PostEntity(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind, final List<LikesEntity> likes, final List<Hashtag> hashtags) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
