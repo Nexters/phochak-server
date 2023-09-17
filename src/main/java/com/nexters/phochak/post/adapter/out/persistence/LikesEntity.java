@@ -24,7 +24,7 @@ import java.util.Objects;
 @Table(indexes =
         {@Index(name = "idx01_likes", columnList = "post_id"),
         @Index(name="idx02_unique_likes", columnList = "USER_ID, POST_ID", unique = true)})
-public class Likes extends BaseTime {
+public class LikesEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -39,11 +39,11 @@ public class Likes extends BaseTime {
     @JoinColumn(name="POST_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private PostEntity post;
 
-    public Likes() {
+    public LikesEntity() {
     }
 
     @Builder
-    public Likes(UserEntity user, PostEntity post) {
+    public LikesEntity(UserEntity user, PostEntity post) {
         this.user = user;
         this.post = post;
     }

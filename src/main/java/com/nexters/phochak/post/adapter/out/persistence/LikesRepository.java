@@ -5,7 +5,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface LikesRepository extends JpaRepository<Likes, Long>, LikesCustomRepository {
+public interface LikesRepository extends JpaRepository<LikesEntity, Long>, LikesCustomRepository {
     boolean existsByUserAndPost(UserEntity user, PostEntity postEntity);
-    Optional<Likes> findByUserAndPost(UserEntity user, PostEntity postEntity);
+    Optional<LikesEntity> findByUserAndPost(UserEntity user, PostEntity postEntity);
 }
