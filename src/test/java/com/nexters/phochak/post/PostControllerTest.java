@@ -147,4 +147,34 @@ class PostControllerTest extends RestDocsApiTest {
         DocumentGenerator.hashtagAutocomplete(response);
     }
 
+
+    @Test
+    @DisplayName("포스트 조회수 업데이트 요청 API - 성공")
+    void updatePostView() throws Exception {
+        Long postId = 1L;
+        Scenario.createPost().request();
+
+        mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .post("/v1/post/{postId}/view", postId)
+                                .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk());
+//                .andDo(document("post/view",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("postId").description("(필수) 게시글 id")
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.NULL).description("응답 내용")
+//                        )
+//                ));
+    }
+
 }
