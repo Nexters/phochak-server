@@ -5,7 +5,7 @@ import com.nexters.phochak.post.application.port.in.PostFetchDto;
 
 import java.util.List;
 
-public interface GetFeedPagePort {
+public interface LoadFeedPagePort {
     List<PostFetchDto> searchPagingByHashtag(Long userId, CustomCursorDto customCursorDto);
 
     List<PostFetchDto> pagingPostsByLikes(Long userId, CustomCursorDto customCursorDto);

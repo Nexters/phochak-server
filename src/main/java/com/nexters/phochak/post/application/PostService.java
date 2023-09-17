@@ -4,7 +4,6 @@ import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
-import com.nexters.phochak.post.adapter.out.persistence.LikesRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
@@ -20,8 +19,8 @@ import com.nexters.phochak.post.application.port.out.DeleteHashtagPort;
 import com.nexters.phochak.post.application.port.out.DeleteMediaPort;
 import com.nexters.phochak.post.application.port.out.DeletePostPort;
 import com.nexters.phochak.post.application.port.out.GeneratePresignedUrlPort;
-import com.nexters.phochak.post.application.port.out.GetFeedPagePort;
 import com.nexters.phochak.post.application.port.out.GetHashtagAutocompletePort;
+import com.nexters.phochak.post.application.port.out.LoadFeedPagePort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
@@ -49,6 +48,7 @@ public class PostService implements PostUseCase {
     private final LikesUseCase likesUseCase;
     private final ShortsUseCase shortsUseCase;
     private final LoadPostPort loadPostPort;
+    private final LoadFeedPagePort loadFeedPagePort;
     private final LoadUserPort loadUserPort;
     private final SavePostPort savePostPort;
     private final DeletePostPort deletePostPort;
@@ -60,9 +60,7 @@ public class PostService implements PostUseCase {
     private final PostRepository postRepository;
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
-    private final LikesRepository likesRepository;
     private final DeleteHashtagPort deleteHashtagsPort;
-    private final GetFeedPagePort getFeedPagePort;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
@@ -111,9 +109,9 @@ public class PostService implements PostUseCase {
     @Transactional(readOnly = true)
     public List<PostPageResponseDto> getPostPage(final Long userId, final CustomCursorDto customCursorDto) {
         final List<PostFetchDto> result = switch (customCursorDto.getFilter()) {
-            case SEARCH -> hashtagRepository.searchPagingByHashtag(userId, customCursorDto);
-            case LIKED -> likesRepository.pagingPostsByLikes(userId, customCursorDto);
-            default -> postRepository.pagingPost(userId, customCursorDto);
+            case SEARCH -> loadFeedPagePort.searchPagingByHashtag(userId, customCursorDto);
+            case LIKED -> loadFeedPagePort.pagingPostsByLikes(userId, customCursorDto);
+            default -> loadFeedPagePort.pagingPost(userId, customCursorDto);
         };
         return getNextCursorPage(userId, result);
     }
