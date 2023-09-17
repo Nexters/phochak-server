@@ -197,6 +197,7 @@ class PostControllerPagingTest extends RestDocsApiTest {
     @Test
     @DisplayName("포스트 목록 조회 API - 내가 좋아요한 영상")
     void getPostList_liked() throws Exception {
+        //given, when
         final ResultActions response = Scenario.createPost().uploadKey("test1").request().advance()
                 .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test1").request().advance()
                 .addPhochak().postId(1L).request().advance()
@@ -212,44 +213,14 @@ class PostControllerPagingTest extends RestDocsApiTest {
                 .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test5").request().advance()
                 .getPostList().postFilter(PostFilter.LIKED).pageSize(5).request().getResponse();
 
+        //then
         response.andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(3));
 
-//                response.andDo(document("post/list/liked",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestFields(
-//                                fieldWithPath("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
-//                                fieldWithPath("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)"),
-//                                fieldWithPath("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-//                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-//                                fieldWithPath("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
-//                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
-//                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
-//                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-//                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
-//                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
-//                                fieldWithPath("data[].shorts.state").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태(OK, FAIL, IN_PROGRESS)"),
-//                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
-//                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
-//                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
-//                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
-//                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
-//                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-//                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
-//                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
-//                        )
-//                ));
+        //docs
+        DocumentGenerator.getPostList_liked(response);
     }
-//
+
+    //
 //    @Test
 //    @DisplayName("포스트 목록 조회 API - 해시태그 검색")
 //    void getPostList_searched() throws Exception {
