@@ -7,6 +7,7 @@ import com.nexters.phochak.common.Scenario;
 import com.nexters.phochak.common.TestUtil;
 import com.nexters.phochak.post.adapter.in.web.PostController;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
+import com.nexters.phochak.post.adapter.out.persistence.PostFilter;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.shorts.EncodingStatusEnum;
 import com.nexters.phochak.shorts.presentation.ShortsController;
@@ -193,54 +194,27 @@ class PostControllerPagingTest extends RestDocsApiTest {
 //                ));
 //    }
 //
-//    @Test
-//    @DisplayName("포스트 목록 조회 API - 내가 좋아요한 영상")
-//    void getPostList_liked() throws Exception {
-//        CustomCursorDto customCursorDto = CustomCursorDto.builder()
-//                .pageSize(3)
-//                .sortOption(PostSortOption.LIKE)
-//                .filter(PostFilter.LIKED)
-//                .lastId(20L)
-//                .sortValue(75)
-//                .build();
-//
-//        List<String> hashtags = List.of("좋아요한", "게시글");
-//
-//        PostFetchDto.PostUserInformation newUser = PostFetchDto.PostUserInformation.builder()
-//                .id(4L)
-//                .nickname("newUser")
-//                .profileImgUrl("profileImage")
-//                .build();
-//
-//        PostPageResponseDto post3 = PostPageResponseDto.builder()
-//                .id(20L)
-//                .user(newUser)
-//                .shorts(shorts)
-//                .view(1000)
-//                .category(PostCategoryEnum.CAFE)
-//                .like(120)
-//                .isLiked(Boolean.TRUE)
-//                .hashtags(hashtags)
-//                .isBlind(Boolean.FALSE)
-//                .build();
-//
-//        List<PostPageResponseDto> result = List.of(post3, post1);
-//
-//
-//        when(postUseCase.getNextCursorPage(any())).thenReturn(result);
-//
-//        mockMvc.perform(
-//                        RestDocumentationRequestBuilders
-//                                .get("/v1/post/list")
-//                                .param("sortValue", String.valueOf(customCursorDto.getSortValue()))
-//                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
-//                                .param("sortOption", customCursorDto.getSortOption().name())
-//                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
-//                                .param("filter", customCursorDto.getFilter().name())
-//                                .header(AUTHORIZATION_HEADER, "access token")
-//                )
-//                .andExpect(status().isOk())
-//                .andDo(document("post/list/liked",
+    @Test
+    @DisplayName("포스트 목록 조회 API - 내가 좋아요한 영상")
+    void getPostList_liked() throws Exception {
+        final ResultActions response = Scenario.createPost().uploadKey("test1").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test1").request().advance()
+                .addPhochak().postId(1L).request().advance()
+                .createPost().uploadKey("test2").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test2").request().advance()
+                .addPhochak().postId(2L).request().advance()
+                .createPost().uploadKey("test3").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test3").request().advance()
+                .addPhochak().postId(3L).request().advance()
+                .createPost().uploadKey("test4").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test4").request().advance()
+                .createPost().uploadKey("test5").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test5").request().advance()
+                .getPostList().postFilter(PostFilter.LIKED).pageSize(5).request().getResponse();
+
+        response.andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(3));
+
+//                response.andDo(document("post/list/liked",
 //                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
 //                        preprocessResponse(prettyPrint()),
 //                        requestFields(
@@ -274,7 +248,7 @@ class PostControllerPagingTest extends RestDocsApiTest {
 //                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
 //                        )
 //                ));
-//    }
+    }
 //
 //    @Test
 //    @DisplayName("포스트 목록 조회 API - 해시태그 검색")
