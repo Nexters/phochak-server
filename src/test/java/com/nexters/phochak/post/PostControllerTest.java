@@ -167,13 +167,9 @@ class PostControllerTest extends RestDocsApiTest {
     @Test
     @DisplayName("포착하기 요청 API - 포착하기 성공")
     void addPhochak() throws Exception {
-        Scenario.createPost().request();
-        final Long postId = 1L;
-
-        //when, then
-        final ResultActions response = mockMvc.perform(post("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
+        //given, when, then
+        final ResultActions response = Scenario.createPost().request().advance()
+                .addPhochak().request().getResponse();
 
         //doc
         DocumentGenerator.addPhochak(response);
@@ -182,20 +178,13 @@ class PostControllerTest extends RestDocsApiTest {
     @Test
     @DisplayName("포착 취소하기 요청 API - 포착 취소하기 성공")
     void cancelPhochak() throws Exception {
-        Scenario.createPost().request();
-        final Long postId = 1L;
-        mockMvc.perform(post("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
-
-        //when, then
-        final ResultActions response = mockMvc.perform(delete("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
-                .andExpect(status().isOk())
-                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
+        //given, when, then
+        final ResultActions response = Scenario.createPost().request().advance()
+                .addPhochak().request().advance()
+                .cancelPhochak().request().getResponse();
 
         //doc
         DocumentGenerator.cancelPhochak(response);
-
     }
 
 }
