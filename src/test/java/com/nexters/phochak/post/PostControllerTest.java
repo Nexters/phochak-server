@@ -120,7 +120,7 @@ class PostControllerTest extends RestDocsApiTest {
 
     @Test
     @DisplayName("포스트 API - 해시태그 자동완성")
-    void hastagAutocomplete() throws Exception {
+    void hashtagAutocomplete() throws Exception {
         //given
         Scenario.createPost().uploadKey("post1").hashtagList(List.of("해시", "해시게시글하나에종복")).postCategoryEnum(PostCategoryEnum.CAFE).request().advance().
         createPost().uploadKey("post2").hashtagList(List.of("해시태", "tag")).postCategoryEnum(PostCategoryEnum.CAFE).request().advance().
@@ -142,22 +142,9 @@ class PostControllerTest extends RestDocsApiTest {
 
         //then
         response.andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(3));
-//                result.andDo(document("post/hashtag/autocomplete",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestFields(
-//                                fieldWithPath("hashtag").description("(필수) 검색할 해시태그").optional(),
-//                                fieldWithPath("resultSize").description("(필수) 검색 결과 크기").optional()
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("자동완성 해시태그 리스트")
-//                        )
-//                ));
+
+        //doc
+        DocumentGenerator.hashtagAutocomplete(response);
     }
+
 }
