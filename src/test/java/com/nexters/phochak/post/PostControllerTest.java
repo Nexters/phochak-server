@@ -28,8 +28,7 @@ import java.util.List;
 import static com.nexters.phochak.auth.AuthAspect.AUTHORIZATION_HEADER;
 import static com.nexters.phochak.common.exception.ResCode.OK;
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.delete;
-import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.put;
+import static org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
@@ -157,8 +156,7 @@ class PostControllerTest extends RestDocsApiTest {
 
         //when, then
         final ResultActions response = mockMvc.perform(
-                        RestDocumentationRequestBuilders
-                                .post("/v1/post/{postId}/view", postId)
+                        post("/v1/post/{postId}/view", postId)
                                 .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk());
 
@@ -166,4 +164,60 @@ class PostControllerTest extends RestDocsApiTest {
         DocumentGenerator.updatePostView(response);
     }
 
+    @Test
+    @DisplayName("포착하기 요청 API - 포착하기 성공")
+    void addPhochak() throws Exception {
+        Scenario.createPost().request();
+        final Long postId = 1L;
+
+        //when, then
+        mockMvc.perform(post("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
+//                .andDo(document("post/{postId}/likes/post",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("postId").description("(필수) 해당 게시글 Id")
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+//                        )
+//                ));
+    }
+
+    @Test
+    @DisplayName("포착 취소하기 요청 API - 포착 취소하기 성공")
+    void cancelPhochak() throws Exception {
+        Scenario.createPost().request();
+        final Long postId = 1L;
+
+        //when, then
+        mockMvc.perform(delete("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
+//                .andDo(document("post/{postId}/likes/delete",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        pathParameters(
+//                                parameterWithName("postId").description("(필수) 해당 게시글 Id")
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+//                        )
+//                ));
+
+    }
 }
