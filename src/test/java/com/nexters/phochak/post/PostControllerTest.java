@@ -18,8 +18,10 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.restdocs.RestDocumentationContextProvider;
+import org.springframework.restdocs.mockmvc.RestDocumentationRequestBuilders;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
 import java.util.List;
 
@@ -116,4 +118,46 @@ class PostControllerTest extends RestDocsApiTest {
         DocumentGenerator.deletePost(response);
     }
 
+    @Test
+    @DisplayName("포스트 API - 해시태그 자동완성")
+    void hastagAutocomplete() throws Exception {
+        //given
+        Scenario.createPost().uploadKey("post1").hashtagList(List.of("해시", "해시게시글하나에종복")).postCategoryEnum(PostCategoryEnum.CAFE).request().advance().
+        createPost().uploadKey("post2").hashtagList(List.of("해시태", "tag")).postCategoryEnum(PostCategoryEnum.CAFE).request().advance().
+        createPost().uploadKey("post3").hashtagList(List.of("해시태그123", "tagtag")).postCategoryEnum(PostCategoryEnum.CAFE).request().advance().
+        createPost().uploadKey("post4").hashtagList(List.of("없음")).postCategoryEnum(PostCategoryEnum.CAFE).request().advance();
+
+        String hashtag = "해시";
+        int resultSize = 3;
+
+        //when
+        final ResultActions response = mockMvc.perform(
+                        RestDocumentationRequestBuilders
+                                .get("/v1/post/hashtag/autocomplete")
+                                .param("hashtag", hashtag)
+                                .param("resultSize", String.valueOf(resultSize))
+                                .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken)
+                )
+                .andExpect(status().isOk());
+
+        //then
+        response.andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(3));
+//                result.andDo(document("post/hashtag/autocomplete",
+//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+//                        preprocessResponse(prettyPrint()),
+//                        requestFields(
+//                                fieldWithPath("hashtag").description("(필수) 검색할 해시태그").optional(),
+//                                fieldWithPath("resultSize").description("(필수) 검색 결과 크기").optional()
+//                        ),
+//                        requestHeaders(
+//                                headerWithName(AUTHORIZATION_HEADER)
+//                                        .description("(필수) JWT Access Token")
+//                        ),
+//                        responseFields(
+//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+//                                fieldWithPath("data").type(JsonFieldType.ARRAY).description("자동완성 해시태그 리스트")
+//                        )
+//                ));
+    }
 }

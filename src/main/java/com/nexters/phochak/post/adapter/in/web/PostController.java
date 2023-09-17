@@ -78,12 +78,6 @@ public class PostController {
     }
 
     @Auth
-    @GetMapping("/hashtag/autocomplete")
-    public CommonResponseDto<List<String>> hashtagAutocomplete(@RequestParam String hashtag, @RequestParam int resultSize) {
-        return new CommonResponseDto<>(postUseCase.getHashtagAutocomplete(hashtag, resultSize));
-    }
-
-    @Auth
     @PutMapping("/{postId}")
     public CommonResponseDto<Void> updatePost(@RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto, @PathVariable Long postId) {
         final Long userId = UserContext.getContext();
@@ -130,4 +124,9 @@ public class PostController {
         return new CommonResponseDto<>();
     }
 
+    @Auth
+    @GetMapping("/hashtag/autocomplete")
+    public CommonResponseDto<List<String>> hashtagAutocomplete(@RequestParam String hashtag, @RequestParam int resultSize) {
+        return new CommonResponseDto<>(postUseCase.getHashtagAutocomplete(hashtag, resultSize));
+    }
 }
