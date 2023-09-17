@@ -21,6 +21,7 @@ import com.nexters.phochak.post.application.port.out.DeleteMediaPort;
 import com.nexters.phochak.post.application.port.out.DeletePostPort;
 import com.nexters.phochak.post.application.port.out.GeneratePresignedUrlPort;
 import com.nexters.phochak.post.application.port.out.GetFeedPagePort;
+import com.nexters.phochak.post.application.port.out.GetHashtagAutocompletePort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
@@ -33,8 +34,6 @@ import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -54,6 +53,7 @@ public class PostService implements PostUseCase {
     private final SavePostPort savePostPort;
     private final DeletePostPort deletePostPort;
     private final DeleteMediaPort deleteMediaPort;
+    private final GetHashtagAutocompletePort getHashtagAutocompletePort;
     private final GeneratePresignedUrlPort generatePresignedUrlPort;
 
     private final StorageBucketClient storageBucketClient;
@@ -140,8 +140,7 @@ public class PostService implements PostUseCase {
 
     @Override
     public List<String> getHashtagAutocomplete(final String hashtag, final int resultSize) {
-        final Pageable pageable = PageRequest.of(0, resultSize);
-        return hashtagRepository.findByHashtagStartsWith(hashtag, pageable);
+        return getHashtagAutocompletePort.search(hashtag, resultSize);
     }
 
     private List<PostPageResponseDto> createPostPageResponseDto(final Long userId, final List<PostFetchDto> postFetchDtos) {
