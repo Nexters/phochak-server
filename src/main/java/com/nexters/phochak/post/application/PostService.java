@@ -24,6 +24,7 @@ import com.nexters.phochak.post.application.port.out.LoadFeedPagePort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
+import com.nexters.phochak.post.application.port.out.UpdateViewPort;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
@@ -61,6 +62,7 @@ public class PostService implements PostUseCase {
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
     private final DeleteHashtagPort deleteHashtagsPort;
+    private final UpdateViewPort updateViewPort;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
@@ -117,12 +119,8 @@ public class PostService implements PostUseCase {
     }
 
     @Override
-    public int updateView(final Long postId) {
-        final int countOfUpdatedRow = postRepository.updateView(postId);
-        if (countOfUpdatedRow < 1) {
-            throw new PhochakException(ResCode.NOT_FOUND_POST);
-        }
-        return countOfUpdatedRow;
+    public void updateView(final Long postId) {
+        updateViewPort.increaseView(postId);
     }
 
     @Override

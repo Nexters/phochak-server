@@ -20,9 +20,10 @@ public interface PostUseCase {
 
     /**
      * 특정 게시글의 조회수를 올린다.
+     *
      * @param postId
      */
-    int updateView(Long postId);
+    void updateView(Long postId);
 
     void deleteAllPostByUser(UserEntity userEntity);
 
