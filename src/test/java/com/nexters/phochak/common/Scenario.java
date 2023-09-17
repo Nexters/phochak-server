@@ -1,6 +1,8 @@
 package com.nexters.phochak.common;
 
 import com.nexters.phochak.post.api.CreatePostApi;
+import com.nexters.phochak.post.api.GetPostApi;
+import com.nexters.phochak.shorts.api.EncodingCallbackApi;
 import com.nexters.phochak.user.api.IgnoreUserApi;
 import com.nexters.phochak.user.api.LoginApi;
 import org.springframework.test.web.servlet.ResultActions;
@@ -13,6 +15,14 @@ public class Scenario {
 
     public static CreatePostApi createPost() {
         return new CreatePostApi();
+    }
+
+    public EncodingCallbackApi encodingCallback() {
+        return new EncodingCallbackApi();
+    }
+
+    public GetPostApi getPostList() {
+        return new GetPostApi();
     }
 
     public static class NextScenarioStep {

@@ -16,7 +16,7 @@ public class LoadPostAdapter implements LoadPostPort {
 
     @Override
     public Post load(final Long postId) {
-        final PostEntity postEntity = postRepository.findById(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
+        final PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
         return postMapper.toDomain(postEntity);
     }
 }

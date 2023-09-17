@@ -58,35 +58,30 @@ public class NCPShortsUseCase implements ShortsUseCase {
     @Transactional
     @Override
     public void processPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
-        String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.getFilePath());
-        switch (encodingCallbackRequestDto.getStatus()) {
-            case "WAITING":
+        String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.filePath());
+        switch (encodingCallbackRequestDto.status()) {
+            case WAITING -> {
                 connectPost(uploadKey);
                 notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
-                break;
-            case "RUNNING":
-                break;
-            case "FAILURE":
+            }
+            case RUNNING -> {
+            }
+            case FAILURE -> {
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.FAIL);
                 notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
-                break;
-            case "COMPLETE":
+            }
+            case COMPLETE -> {
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
                 notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.OK);
-                break;
-            default:
-                log.error("NCPShortsService|Undefined encoding callback status message: {}",
-                        encodingCallbackRequestDto.getStatus());
+            }
+            default -> log.error("NCPShortsService|Undefined encoding callback status message: {}",
+                    encodingCallbackRequestDto.status());
         }
     }
 
     private void connectPost(String uploadKey) {
         Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
-        if (optionalShorts.isPresent()) {
-            // case: 포스트 생성이 먼저된 경우 -> 상태 변경
-            Shorts shorts = optionalShorts.get();
-            shorts.updateShortsState(ShortsStateEnum.OK);
-        } else {
+        if (optionalShorts.isEmpty()) {
             // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);

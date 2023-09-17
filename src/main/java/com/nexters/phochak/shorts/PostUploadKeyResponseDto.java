@@ -1,18 +1,6 @@
 package com.nexters.phochak.shorts;
 
-import lombok.Builder;
-import lombok.Getter;
+import java.net.URL;
 
-@Getter
-public class PostUploadKeyResponseDto {
-
-    private final String uploadUrl;
-
-    private final String uploadKey;
-
-    @Builder
-    public PostUploadKeyResponseDto(String uploadUrl, String uploadKey) {
-        this.uploadUrl = uploadUrl;
-        this.uploadKey = uploadKey;
-    }
+public record PostUploadKeyResponseDto(URL uploadUrl, String uploadKey) {
 }

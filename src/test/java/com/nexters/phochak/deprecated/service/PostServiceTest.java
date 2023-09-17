@@ -50,7 +50,7 @@ class PostServiceTest {
         PostUploadKeyResponseDto result = postService.generateUploadKey("mov");
 
         //then
-        assertThat(result.getUploadKey()).isNotNull();
+        assertThat(result.uploadKey()).isNotNull();
     }
 
     @Test

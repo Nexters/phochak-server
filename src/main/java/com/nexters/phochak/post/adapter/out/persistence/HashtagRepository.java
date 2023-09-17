@@ -21,4 +21,5 @@ public interface HashtagRepository extends JpaRepository<Hashtag, Long>, Hashtag
     @Query("select distinct h.tag from Hashtag h where h.tag like :hashtag% order by length(h.tag)")
     List<String> findByHashtagStartsWith(@Param("hashtag") String hashtag, Pageable pageable);
 
+    boolean existsByTag(String tag);
 }

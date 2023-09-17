@@ -1,12 +1,10 @@
 package com.nexters.phochak.post.application;
 
-import com.nexters.phochak.auth.UserContext;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
-import com.nexters.phochak.post.adapter.out.persistence.PostFetchCommand;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.HashtagUseCase;
@@ -17,9 +15,16 @@ import com.nexters.phochak.post.application.port.in.PostFetchDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.post.application.port.out.DeleteHashtagPort;
+import com.nexters.phochak.post.application.port.out.DeleteMediaPort;
+import com.nexters.phochak.post.application.port.out.DeletePostPort;
+import com.nexters.phochak.post.application.port.out.GeneratePresignedUrlPort;
+import com.nexters.phochak.post.application.port.out.GetHashtagAutocompletePort;
+import com.nexters.phochak.post.application.port.out.LoadFeedPagePort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
+import com.nexters.phochak.post.application.port.out.UpdateViewPort;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
@@ -27,18 +32,15 @@ import com.nexters.phochak.shorts.application.ShortsUseCase;
 import com.nexters.phochak.shorts.domain.ShortsRepository;
 import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageRequest;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.net.URL;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -46,98 +48,86 @@ public class PostService implements PostUseCase {
     private final HashtagUseCase hashtagUseCase;
     private final LikesUseCase likesUseCase;
     private final ShortsUseCase shortsUseCase;
-    private final StorageBucketClient storageBucketClient;
     private final LoadPostPort loadPostPort;
+    private final LoadFeedPagePort loadFeedPagePort;
     private final LoadUserPort loadUserPort;
     private final SavePostPort savePostPort;
+    private final DeletePostPort deletePostPort;
+    private final DeleteMediaPort deleteMediaPort;
+    private final GetHashtagAutocompletePort getHashtagAutocompletePort;
+    private final GeneratePresignedUrlPort generatePresignedUrlPort;
 
-    private final UserRepository userRepository;
+    private final StorageBucketClient storageBucketClient;
     private final PostRepository postRepository;
     private final HashtagRepository hashtagRepository;
     private final ShortsRepository shortsRepository;
+    private final DeleteHashtagPort deleteHashtagsPort;
+    private final UpdateViewPort updateViewPort;
 
     @Override
-    public PostUploadKeyResponseDto generateUploadKey(String fileExtension) {
-        String uploadKey = generateObjectUploadKey();
-        String objectName = uploadKey + "." + fileExtension.toLowerCase();
-        return PostUploadKeyResponseDto.builder()
-                .uploadKey(uploadKey)
-                .uploadUrl(storageBucketClient.generatePresignedUrl(objectName).toString())
-                .build();
+    public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
+        final String uploadKey = UUID.randomUUID().toString();
+        final URL url = generatePresignedUrlPort.generate(uploadKey, fileExtension);
+        return new PostUploadKeyResponseDto(url, uploadKey);
     }
 
     @Override
     @Transactional
-    public void create(Long userId, PostCreateRequestDto postCreateRequestDto) {
-        User user = loadUserPort.load(userId);
-        Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.getCategory()));
+    public void create(final Long userId, final PostCreateRequestDto postCreateRequestDto) {
+        final User user = loadUserPort.load(userId);
+        final Post post = new Post(user, PostCategoryEnum.nameOf(postCreateRequestDto.category()));
+        shortsUseCase.connectShorts(post, postCreateRequestDto.uploadKey());
         savePostPort.save(post);
-        hashtagUseCase.saveHashtags(post, postCreateRequestDto.getHashtags());
-        shortsUseCase.connectShorts(post, postCreateRequestDto.getUploadKey());
+        hashtagUseCase.saveHashtags(post, postCreateRequestDto.hashtags());
     }
 
     @Override
     @Transactional
-    public void update(Long userId, Long postId, PostUpdateRequestDto postUpdateRequestDto) {
-        User user = loadUserPort.load(userId);
-        Post post = loadPostPort.load(postId);
+    public void update(final Long userId, final Long postId, final PostUpdateRequestDto postUpdateRequestDto) {
+        final User user = loadUserPort.load(userId);
+        final Post post = loadPostPort.load(postId);
         if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.getCategory()));
-        hashtagUseCase.updateAll(post, postUpdateRequestDto.getHashtags());
+        post.updateContent(PostCategoryEnum.nameOf(postUpdateRequestDto.category()));
+        hashtagUseCase.updateAll(post, postUpdateRequestDto.hashtags());
         savePostPort.save(post);
     }
 
     @Override
     @Transactional
-    public void delete(Long userId, Long postId) {
-        UserEntity userEntity = userRepository.getReferenceById(userId);
-        PostEntity postEntity = postRepository.findPostFetchJoin(postId).orElseThrow(() -> new PhochakException(ResCode.NOT_FOUND_POST));
-        if (!postEntity.getUser().equals(userEntity)) {
+    public void delete(final Long userId, final Long postId) {
+        final User user = loadUserPort.load(userId);
+        final Post post = loadPostPort.load(postId);
+        if (!post.getUser().equals(user)) {
             throw new PhochakException(ResCode.NOT_POST_OWNER);
         }
-        String objectKey = postEntity.getShorts().getUploadKey();
-        hashtagRepository.deleteAllByPostId(postEntity.getId());
-        postRepository.delete(postEntity);
-        storageBucketClient.removeShortsObject(List.of(objectKey));
+        deleteHashtagsPort.deleteAllByPost(post);
+        deletePostPort.delete(post);
+        deleteMediaPort.deleteShortsMedia(post);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(CustomCursorDto customCursorDto) {
-        final Long userId = UserContext.CONTEXT.get();
-
-        PostFetchCommand command = PostFetchCommand.of(customCursorDto, userId);
-
-        return createPostPageResponseDto(command);
+    public List<PostPageResponseDto> getPostPage(final Long userId, final CustomCursorDto customCursorDto) {
+        final List<PostFetchDto> result = switch (customCursorDto.getFilter()) {
+            case SEARCH -> loadFeedPagePort.searchPagingByHashtag(userId, customCursorDto);
+            case LIKED -> loadFeedPagePort.pagingPostsByLikes(userId, customCursorDto);
+            default -> loadFeedPagePort.pagingPost(userId, customCursorDto);
+        };
+        return getNextCursorPage(userId, result);
     }
 
     @Override
-    @Transactional(readOnly = true)
-    public List<PostPageResponseDto> getNextCursorPage(CustomCursorDto customCursorDto, String hashtag) {
-        final Long userId = UserContext.CONTEXT.get();
-
-        PostFetchCommand command = PostFetchCommand.of(customCursorDto, userId, hashtag);
-
-        return createPostPageResponseDto(command);
+    public void updateView(final Long postId) {
+        updateViewPort.increaseView(postId);
     }
 
     @Override
-    public int updateView(Long postId) {
-        int countOfUpdatedRow = postRepository.updateView(postId);
-
-        if (countOfUpdatedRow < 1) {
-            throw new PhochakException(ResCode.NOT_FOUND_POST);
-        }
-        return countOfUpdatedRow;
-    }
-
-    @Override
-    public void deleteAllPostByUser(UserEntity userEntity) {
-        List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
-        List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).collect(Collectors.toList());
-        List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).collect(Collectors.toList());
+    public void deleteAllPostByUser(final UserEntity userEntity) {
+        final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
+        final List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).toList();
+        final List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).toList();
         postRepository.deleteAllByUser(userEntity);
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);
@@ -145,35 +135,25 @@ public class PostService implements PostUseCase {
     }
 
     @Override
-    public List<String> getHashtagAutocomplete(String hashtag, int resultSize) {
-        Pageable pageable = PageRequest.of(0, resultSize);
-        return hashtagRepository.findByHashtagStartsWith(hashtag, pageable);
+    public List<String> getHashtagAutocomplete(final String hashtag, final int resultSize) {
+        return getHashtagAutocompletePort.search(hashtag, resultSize);
     }
 
-    private List<PostPageResponseDto> createPostPageResponseDto(PostFetchCommand command) {
-        return switch (command.getFilter()) {
-            case SEARCH ->
-                    getNextCursorPage(command.getUserId(), hashtagRepository.findSearchedPageByCommmand(command));
-            case LIKED -> getNextCursorPage(command.getUserId(), likesUseCase.findLikedPostsByCommand(command));
-            default -> getNextCursorPage(command.getUserId(), postRepository.findNextPageByCommmand(command));
-        };
-    }
-
-    private List<PostPageResponseDto> createPostPageResponseDto(Long userId, List<PostFetchDto> postFetchDtos) {
-        List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).collect(Collectors.toList());
-        Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagUseCase.findHashtagsOfPosts(postIds);
-        Map<Long, LikesFetchDto> likesFetchDtos = likesUseCase.checkIsLikedPost(postIds, userId);
+    private List<PostPageResponseDto> createPostPageResponseDto(final Long userId, final List<PostFetchDto> postFetchDtos) {
+        final List<Long> postIds = postFetchDtos.stream().map(PostFetchDto::getId).toList();
+        final Map<Long, HashtagFetchDto> hashtagFetchDtos = hashtagUseCase.findHashtagsOfPosts(postIds);
+        final Map<Long, LikesFetchDto> likesFetchDtos = likesUseCase.checkIsLikedPost(postIds, userId);
 
         return postFetchDtos.stream()
-                .map(p -> PostPageResponseDto.of(p, hashtagFetchDtos.get(p.getId()), likesFetchDtos.get(p.getId())))
-                .collect(Collectors.toList());
+                .map(p -> PostPageResponseDto.of(
+                        p,
+                        hashtagFetchDtos.get(p.getId()),
+                        likesFetchDtos.get(p.getId()))
+                ).toList();
     }
 
-    private List<PostPageResponseDto> getNextCursorPage(Long userId, List<PostFetchDto> postFetchDtos) {
+    private List<PostPageResponseDto> getNextCursorPage(final Long userId, final List<PostFetchDto> postFetchDtos) {
         return createPostPageResponseDto(userId, postFetchDtos);
     }
 
-    private String generateObjectUploadKey() {
-        return UUID.randomUUID().toString();
-    }
 }

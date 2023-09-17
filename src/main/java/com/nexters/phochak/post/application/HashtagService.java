@@ -49,6 +49,7 @@ public class HashtagService implements HashtagUseCase {
         saveHashtags(post, stringHashtagList);
     }
 
+    //TODO: 도메인 로직으로 분리
     private static void validateHashtag(List<String> stringHashtagList) {
         Pattern pattern = Pattern.compile("[a-zA-Z0-9ㄱ-ㅎㅏ-ㅣ가-힣_]{1,20}$");
         for(String tag : stringHashtagList) {

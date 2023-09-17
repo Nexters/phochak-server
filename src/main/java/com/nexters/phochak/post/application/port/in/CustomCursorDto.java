@@ -23,6 +23,7 @@ public class CustomCursorDto {
     private PostFilter filter;
     private Long targetUserId;
     private PostCategoryEnum category;
+    private String hashtag;
 
     @Builder
     public CustomCursorDto(Long lastId, Integer pageSize, PostSortOption sortOption, Integer sortValue, PostFilter filter, Long targetUserId, PostCategoryEnum category) {
@@ -43,5 +44,13 @@ public class CustomCursorDto {
                 throw new PhochakException(ResCode.NOT_FOUND_SORT_VALUE);
             }
         }
+    }
+
+    public void setHashtag(final String hashtag) {
+        this.hashtag = hashtag;
+    }
+
+    public boolean hasUploadedFilter() {
+        return Objects.equals(filter, PostFilter.UPLOADED);
     }
 }

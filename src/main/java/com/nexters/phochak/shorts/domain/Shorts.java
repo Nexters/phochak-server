@@ -22,7 +22,7 @@ public class Shorts {
 
     @JsonProperty("state")
     @Enumerated(EnumType.STRING)
-    @Column(nullable = false, unique = false)
+    @Column(nullable = false)
     private ShortsStateEnum shortsStateEnum;
 
     @Column(nullable = false, unique = true)

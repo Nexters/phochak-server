@@ -47,7 +47,7 @@ public class PostController {
     @Auth
     @PostMapping
     public CommonResponseDto<Void> createPost(@RequestBody @Valid PostCreateRequestDto postCreateRequestDto) {
-        Long userId = UserContext.getContext();
+        final Long userId = UserContext.getContext();
         postUseCase.create(userId, postCreateRequestDto);
         return new CommonResponseDto<>();
     }
@@ -55,7 +55,8 @@ public class PostController {
     @Auth
     @GetMapping("/list")
     public CommonPageResponseDto<PostPageResponseDto> getPostList(@Valid CustomCursorDto customCursorDto) {
-        List<PostPageResponseDto> nextCursorPage = postUseCase.getNextCursorPage(customCursorDto);
+        final Long userId = UserContext.getContext();
+        final List<PostPageResponseDto> nextCursorPage = postUseCase.getPostPage(userId, customCursorDto);
         if (nextCursorPage.size() < customCursorDto.getPageSize()) {
             return new CommonPageResponseDto<>(nextCursorPage, true);
         }
@@ -64,8 +65,12 @@ public class PostController {
 
     @Auth
     @GetMapping("/list/search")
-    public CommonPageResponseDto<PostPageResponseDto> getPostListBySearchHashtag(@Valid CustomCursorDto customCursorDto, @RequestParam(required = false) String hashtag) {
-        List<PostPageResponseDto> nextCursorPage = postUseCase.getNextCursorPage(customCursorDto, hashtag);
+    public CommonPageResponseDto<PostPageResponseDto> getPostListBySearchHashtag(
+            @Valid CustomCursorDto customCursorDto,
+            @RequestParam(required = false) String hashtag) {
+        final Long userId = UserContext.getContext();
+        customCursorDto.setHashtag(hashtag);
+        final List<PostPageResponseDto> nextCursorPage = postUseCase.getPostPage(userId, customCursorDto);
         if (nextCursorPage.size() < customCursorDto.getPageSize()) {
             return new CommonPageResponseDto<>(nextCursorPage, true);
         }
@@ -73,15 +78,9 @@ public class PostController {
     }
 
     @Auth
-    @GetMapping("/hashtag/autocomplete")
-    public CommonResponseDto<List<String>> hashtagAutocomplete(@RequestParam String hashtag, @RequestParam int resultSize) {
-        return new CommonResponseDto<>(postUseCase.getHashtagAutocomplete(hashtag, resultSize));
-    }
-
-    @Auth
     @PutMapping("/{postId}")
     public CommonResponseDto<Void> updatePost(@RequestBody @Valid PostUpdateRequestDto postUpdateRequestDto, @PathVariable Long postId) {
-        Long userId = UserContext.getContext();
+        final Long userId = UserContext.getContext();
         postUseCase.update(userId, postId, postUpdateRequestDto);
         return new CommonResponseDto<>();
     }
@@ -89,7 +88,7 @@ public class PostController {
     @Auth
     @DeleteMapping("/{postId}")
     public CommonResponseDto<Void> deletePost(@PathVariable Long postId) {
-        Long userId = UserContext.getContext();
+        final Long userId = UserContext.getContext();
         postUseCase.delete(userId, postId);
         return new CommonResponseDto<>();
     }
@@ -97,7 +96,7 @@ public class PostController {
     @Auth
     @PostMapping("/{postId}/report")
     public CommonResponseDto<Void> reportPost(@PathVariable Long postId) {
-        Long userId = UserContext.getContext();
+        final Long userId = UserContext.getContext();
         reportPostUseCase.processReport(userId, postId);
         return new CommonResponseDto<>();
     }
@@ -112,7 +111,7 @@ public class PostController {
     @Auth
     @PostMapping("/{postId}/likes")
     public CommonResponseDto<Void> addPhochak(@PathVariable Long postId) {
-        Long userId = UserContext.getContext();
+        final Long userId = UserContext.getContext();
         likesUseCase.addPhochak(userId, postId);
         return new CommonResponseDto<>();
     }
@@ -120,9 +119,14 @@ public class PostController {
     @Auth
     @DeleteMapping("/{postId}/likes")
     public CommonResponseDto<Void> cancelPhochak(@PathVariable Long postId) {
-        Long userId = UserContext.getContext();
+        final Long userId = UserContext.getContext();
         likesUseCase.cancelPhochak(userId, postId);
         return new CommonResponseDto<>();
     }
 
+    @Auth
+    @GetMapping("/hashtag/autocomplete")
+    public CommonResponseDto<List<String>> hashtagAutocomplete(@RequestParam String hashtag, @RequestParam int resultSize) {
+        return new CommonResponseDto<>(postUseCase.getHashtagAutocomplete(hashtag, resultSize));
+    }
 }
