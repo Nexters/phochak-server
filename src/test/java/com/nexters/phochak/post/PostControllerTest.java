@@ -171,25 +171,12 @@ class PostControllerTest extends RestDocsApiTest {
         final Long postId = 1L;
 
         //when, then
-        mockMvc.perform(post("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+        final ResultActions response = mockMvc.perform(post("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
-//                .andDo(document("post/{postId}/likes/post",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("postId").description("(필수) 해당 게시글 Id")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
-//                        )
-//                ));
+
+        //doc
+        DocumentGenerator.addPhochak(response);
     }
 
     @Test
@@ -197,27 +184,18 @@ class PostControllerTest extends RestDocsApiTest {
     void cancelPhochak() throws Exception {
         Scenario.createPost().request();
         final Long postId = 1L;
-
-        //when, then
-        mockMvc.perform(delete("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+        mockMvc.perform(post("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
-//                .andDo(document("post/{postId}/likes/delete",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        pathParameters(
-//                                parameterWithName("postId").description("(필수) 해당 게시글 Id")
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("data").type(JsonFieldType.NULL).description("null")
-//                        )
-//                ));
+
+        //when, then
+        final ResultActions response = mockMvc.perform(delete("/v1/post/{postId}/likes/", postId).header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.status.resCode").value(OK.getCode()));
+
+        //doc
+        DocumentGenerator.cancelPhochak(response);
 
     }
+
 }

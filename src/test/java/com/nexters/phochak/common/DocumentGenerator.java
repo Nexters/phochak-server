@@ -376,4 +376,42 @@ public class DocumentGenerator {
                         )
                 ));
     }
+
+    public static void addPhochak(final ResultActions response) throws Exception {
+        response.andDo(document("post/{postId}/likes/post",
+                    preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                    preprocessResponse(prettyPrint()),
+                    pathParameters(
+                            parameterWithName("postId").description("(필수) 해당 게시글 Id")
+                    ),
+                    requestHeaders(
+                            headerWithName(AUTHORIZATION_HEADER)
+                                    .description("(필수) JWT Access Token")
+                    ),
+                    responseFields(
+                            fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                            fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                            fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                    )
+            ));
+    }
+
+    public static void cancelPhochak(final ResultActions response) throws Exception {
+        response.andDo(document("post/{postId}/likes/delete",
+                preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
+                preprocessResponse(prettyPrint()),
+                pathParameters(
+                        parameterWithName("postId").description("(필수) 해당 게시글 Id")
+                ),
+                requestHeaders(
+                        headerWithName(AUTHORIZATION_HEADER)
+                                .description("(필수) JWT Access Token")
+                ),
+                responseFields(
+                        fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
+                        fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
+                        fieldWithPath("data").type(JsonFieldType.NULL).description("null")
+                )
+        ));
+    }
 }
