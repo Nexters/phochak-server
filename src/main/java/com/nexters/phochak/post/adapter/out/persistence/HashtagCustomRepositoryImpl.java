@@ -15,7 +15,7 @@ import lombok.RequiredArgsConstructor;
 import java.util.List;
 import java.util.Map;
 
-import static com.nexters.phochak.post.adapter.out.persistence.QHashtag.hashtag;
+import static com.nexters.phochak.post.adapter.out.persistence.QHashtagEntity.hashtagEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
 import static com.nexters.phochak.user.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
@@ -29,10 +29,10 @@ public class HashtagCustomRepositoryImpl implements HashtagCustomRepository {
 
     @Override
     public Map<Long, HashtagFetchDto> findHashTagsOfPost(List<Long> postIds) {
-        return queryFactory.from(hashtag)
-                .where(hashtag.post.id.in(postIds))
-                .transform(groupBy(hashtag.post.id)
-                        .as(new QHashtagFetchDto(list(hashtag.tag))));
+        return queryFactory.from(hashtagEntity)
+                .where(hashtagEntity.post.id.in(postIds))
+                .transform(groupBy(hashtagEntity.post.id)
+                        .as(new QHashtagFetchDto(list(hashtagEntity.tag))));
     }
 
     @Override

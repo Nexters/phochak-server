@@ -33,6 +33,7 @@ public class PostMapper {
                 postEntity.getPostCategory(),
                 postEntity.isBlind(),
                 postEntity.getLikes(),
-                postEntity.getHashtagEntities());
+                postEntity
+                        .getHashtags());
     }
 }
