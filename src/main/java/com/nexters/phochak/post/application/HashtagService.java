@@ -2,7 +2,7 @@ package com.nexters.phochak.post.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagEntity;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostMapper;
@@ -24,18 +24,18 @@ public class HashtagService implements HashtagUseCase {
     private final PostMapper postMapper;
 
     @Override
-    public List<Hashtag> saveHashtags(Post post, List<String> stringHashtagList) {
+    public List<HashtagEntity> saveHashtags(Post post, List<String> stringHashtagList) {
         if (stringHashtagList.isEmpty()) {
             return Collections.emptyList();
         }
         validateHashtag(stringHashtagList);
-        List<Hashtag> hashtagList = stringHashtagList.stream().map(stringHashtag ->
-                Hashtag.builder()
+        List<HashtagEntity> hashtagEntityList = stringHashtagList.stream().map(stringHashtag ->
+                HashtagEntity.builder()
                         .post(postMapper.toEntity(post))
                         .tag(stringHashtag)
                         .build()
         ).toList();
-        return hashtagRepository.saveAll(hashtagList);
+        return hashtagRepository.saveAll(hashtagEntityList);
     }
 
     @Override

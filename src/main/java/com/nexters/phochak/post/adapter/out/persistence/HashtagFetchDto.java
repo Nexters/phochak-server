@@ -12,9 +12,9 @@ import java.util.stream.Collectors;
 public class HashtagFetchDto {
     List<String> hashtags;
 
-    public static HashtagFetchDto from(List<Hashtag> hashtag) {
-        List<String> hashtags = hashtag.stream()
-                .map(Hashtag::getTag)
+    public static HashtagFetchDto from(List<HashtagEntity> hashtagEntity) {
+        List<String> hashtags = hashtagEntity.stream()
+                .map(HashtagEntity::getTag)
                 .collect(Collectors.toList());
 
         return HashtagFetchDto.builder()

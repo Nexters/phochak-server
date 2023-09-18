@@ -5,7 +5,7 @@ import com.nexters.phochak.common.docs.RestDocs;
 import com.nexters.phochak.common.exception.CustomExceptionHandler;
 import com.nexters.phochak.post.adapter.in.web.PostController;
 import com.nexters.phochak.post.adapter.out.api.ReportNotificationFeignClient;
-import com.nexters.phochak.post.adapter.out.persistence.Hashtag;
+import com.nexters.phochak.post.adapter.out.persistence.HashtagEntity;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
@@ -192,8 +192,8 @@ class PostNcpIntegrationTest extends RestDocs {
         postRepository.save(postEntity);
         Long postId = postEntity.getId();
 
-        List<Hashtag> hashtags = List.of(new Hashtag(postEntity, "hashtag1"), new Hashtag(postEntity, "hashtag2"), new Hashtag(postEntity, "hashtag3"));
-        hashtagRepository.saveAll(hashtags);
+        List<HashtagEntity> hashtagEntities = List.of(new HashtagEntity(postEntity, "hashtag1"), new HashtagEntity(postEntity, "hashtag2"), new HashtagEntity(postEntity, "hashtag3"));
+        hashtagRepository.saveAll(hashtagEntities);
 
         em.flush();
         em.clear();
@@ -252,8 +252,8 @@ class PostNcpIntegrationTest extends RestDocs {
         postRepository.save(postEntity);
         Long postId = postEntity.getId();
 
-        List<Hashtag> hashtags = List.of(new Hashtag(postEntity, "hashtag1"), new Hashtag(postEntity, "hashtag2"), new Hashtag(postEntity, "hashtag3"));
-        hashtagRepository.saveAll(hashtags);
+        List<HashtagEntity> hashtagEntities = List.of(new HashtagEntity(postEntity, "hashtag1"), new HashtagEntity(postEntity, "hashtag2"), new HashtagEntity(postEntity, "hashtag3"));
+        hashtagRepository.saveAll(hashtagEntities);
 
         em.flush();
         em.clear();

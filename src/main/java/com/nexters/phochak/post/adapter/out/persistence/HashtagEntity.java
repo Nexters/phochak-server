@@ -21,7 +21,7 @@ import lombok.Getter;
 @Table(indexes =
         {@Index(name = "idx01_hashtag", columnList = "TAG"),
         @Index(name = "idx02_hashtag", columnList = "POST_ID")})
-public class Hashtag {
+public class HashtagEntity {
     public static final int HASHTAG_MAX_SIZE = 20;
 
     @Id
@@ -37,11 +37,11 @@ public class Hashtag {
     @Size(min = 1, max = HASHTAG_MAX_SIZE)
     private String tag;
 
-    public Hashtag() {
+    public HashtagEntity() {
     }
 
     @Builder
-    public Hashtag(PostEntity post, String tag) {
+    public HashtagEntity(PostEntity post, String tag) {
         this.post = post;
         this.tag = tag;
     }
