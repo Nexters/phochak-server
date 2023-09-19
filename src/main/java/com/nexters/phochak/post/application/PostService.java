@@ -21,6 +21,7 @@ import com.nexters.phochak.post.application.port.out.GetHashtagAutocompletePort;
 import com.nexters.phochak.post.application.port.out.LoadFeedPagePort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
+import com.nexters.phochak.post.application.port.out.RemoveShortsObjectPort;
 import com.nexters.phochak.post.application.port.out.SavePostPort;
 import com.nexters.phochak.post.application.port.out.UpdateViewPort;
 import com.nexters.phochak.post.domain.Post;
@@ -54,11 +55,7 @@ public class PostService implements PostUseCase {
     private final DeleteHashtagPort deleteHashtagsPort;
     private final UpdateViewPort updateViewPort;
     private final DeleteShortsPort deleteShortsPort;
-
-//    private final StorageBucketClient storageBucketClient;
-//    private final PostRepository postRepository;
-//    private final HashtagRepository hashtagRepository;
-//    private final ShortsRepository shortsRepository;
+    private final RemoveShortsObjectPort removeShortsObjectPort;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
@@ -126,7 +123,7 @@ public class PostService implements PostUseCase {
         deletePostPort.deleteAllByUser(user);
         deleteShortsPort.deleteAllIn(postList);
         deleteHashtagsPort.deleteAllByPostIdIn(postList);
-        storageBucketClient.removeShortsObject(shortsKeyList);
+        removeShortsObjectPort.remove(postList);
     }
 
     @Override
