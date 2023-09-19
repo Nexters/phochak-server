@@ -241,7 +241,8 @@ public class DocumentGenerator {
                         parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
                         parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
                         parameterWithName("lastId").description("(선택) 초기 요청에서는 필요하지 않음").optional(),
-                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
+                        parameterWithName("hashtag").description("(선택) 검색할 해시태그").optional()
                 ),
                 requestHeaders(
                         headerWithName(AUTHORIZATION_HEADER)
@@ -277,7 +278,8 @@ public class DocumentGenerator {
                         parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
                         parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
                         parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
+                        parameterWithName("hashtag").description("(선택) 검색할 해시태그").optional()
                 ),
                 requestHeaders(
                         headerWithName(AUTHORIZATION_HEADER)
@@ -313,7 +315,8 @@ public class DocumentGenerator {
                         parameterWithName("sortOption").description("(필수) 게시글 정렬 기준 (LIKE/LATEST/VIEW)"),
                         parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
                         parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
-                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
+                        parameterWithName("hashtag").description("(선택) 검색할 해시태그").optional()
                 ),
                 requestHeaders(
                         headerWithName(AUTHORIZATION_HEADER)
@@ -427,7 +430,8 @@ public class DocumentGenerator {
                         parameterWithName("sortValue").description("(sortOption이 LATEST인 경우를 제외하고 필수) 마지막으로 받은 페이지의 마지막 게시글의 정렬 기준 값(LIKE면 좋아요 수, VIEW면 조회수)").optional(),
                         parameterWithName("lastId").description("(필수) 마지막으로 받은 게시글 id"),
                         parameterWithName("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)")
+                        parameterWithName("filter").description("(선택) 마이페이지 필터 조건 (UPLOADED: 내가 업로드한 동영상/LIKED: 내가 좋아요한 동영상)"),
+                        parameterWithName("hashtag").description("(선택) 검색할 해시태그").optional()
                 ),
                 requestHeaders(
                         headerWithName(AUTHORIZATION_HEADER)
