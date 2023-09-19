@@ -3,7 +3,6 @@ package com.nexters.phochak.post.application;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
-import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.HashtagUseCase;
 import com.nexters.phochak.post.application.port.in.LikesFetchDto;
@@ -16,6 +15,7 @@ import com.nexters.phochak.post.application.port.in.PostUseCase;
 import com.nexters.phochak.post.application.port.out.DeleteHashtagPort;
 import com.nexters.phochak.post.application.port.out.DeleteMediaPort;
 import com.nexters.phochak.post.application.port.out.DeletePostPort;
+import com.nexters.phochak.post.application.port.out.DeleteShortsPort;
 import com.nexters.phochak.post.application.port.out.GeneratePresignedUrlPort;
 import com.nexters.phochak.post.application.port.out.GetHashtagAutocompletePort;
 import com.nexters.phochak.post.application.port.out.LoadFeedPagePort;
@@ -53,6 +53,7 @@ public class PostService implements PostUseCase {
     private final GeneratePresignedUrlPort generatePresignedUrlPort;
     private final DeleteHashtagPort deleteHashtagsPort;
     private final UpdateViewPort updateViewPort;
+    private final DeleteShortsPort deleteShortsPort;
 
 //    private final StorageBucketClient storageBucketClient;
 //    private final PostRepository postRepository;
@@ -120,12 +121,11 @@ public class PostService implements PostUseCase {
 
     @Override
     public void deleteAllPost(final Long userId) {
-        final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
-        final List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).toList();
-        final List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).toList();
-        postRepository.deleteAllByUser(userId);
-        shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
-        hashtagRepository.deleteAllByPostIdIn(postIdList);
+        final User user = loadUserPort.load(userId);
+        List<Post> postList = loadPostPort.loadAllPostByUser(user);
+        deletePostPort.deleteAllByUser(user);
+        deleteShortsPort.deleteAllIn(postList);
+        deleteHashtagsPort.deleteAllByPostIdIn(postList);
         storageBucketClient.removeShortsObject(shortsKeyList);
     }
 

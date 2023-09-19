@@ -1,6 +1,7 @@
 package com.nexters.phochak.post.adapter.out.web;
 
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.user.adapter.out.web.DeleteAllPostEvent;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.event.EventListener;
 import org.springframework.scheduling.annotation.Async;
@@ -14,7 +15,7 @@ public class DeleteAllPostEventListener {
 
     @Async
     @EventListener
-    public void deletion(final Long userId) {
-        postUseCase.deleteAllPost(userId);
+    public void deletion(final DeleteAllPostEvent event) {
+        postUseCase.deleteAllPost(event.id());
     }
 }
