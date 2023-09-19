@@ -8,19 +8,22 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class LikesMapper {
-
-    private final UserMapper userMapper;
     private final PostMapper postMapper;
+    private final UserMapper userMapper;
 
-    public LikesEntity toEntity(final Likes likes) {
+    public LikesEntity toEntity(Likes like) {
         return new LikesEntity(
-                userMapper.toEntity(likes.getUser()),
-                postMapper.toEntity(likes.getPost()));
+                userMapper.toEntity(like.getUser()),
+                postMapper.toEntity(like.getPost())
+        );
     }
 
-    public Likes toDomain(final LikesEntity likesEntity) {
+    public Likes toDomain(LikesEntity likeEntity) {
         return new Likes(
-                userMapper.toDomain(likesEntity.getUser()),
-                postMapper.toDomain(likesEntity.getPost()));
+                likeEntity.getId(),
+                postMapper.toDomain(likeEntity.getPost()),
+                userMapper.toDomain(likeEntity.getUser())
+        );
     }
+
 }

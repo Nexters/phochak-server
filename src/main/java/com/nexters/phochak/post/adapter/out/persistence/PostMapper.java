@@ -9,6 +9,7 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PostMapper {
     private final UserMapper userMapper;
+
     public PostEntity toEntity(Post post) {
         return new PostEntity(
                 post.getId(),
@@ -17,10 +18,7 @@ public class PostMapper {
                 post.getReportPost(),
                 post.getView(),
                 post.getPostCategory(),
-                post.isBlind(),
-                post.getLikes(),
-                post.getHashtagEntities()
-        );
+                post.isBlind());
     }
 
     public Post toDomain(PostEntity postEntity) {
@@ -31,9 +29,6 @@ public class PostMapper {
                 postEntity.getReportPost(),
                 postEntity.getView(),
                 postEntity.getPostCategory(),
-                postEntity.isBlind(),
-                postEntity.getLikes(),
-                postEntity
-                        .getHashtags());
+                postEntity.isBlind());
     }
 }
