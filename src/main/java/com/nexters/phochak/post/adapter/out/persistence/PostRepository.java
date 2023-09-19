@@ -21,8 +21,8 @@ public interface PostRepository extends JpaRepository<PostEntity, Long>, PostCus
     int updateView(@Param("postId") Long postId);
 
     @Modifying
-    @Query("DELETE from PostEntity p WHERE p.user = :userEntity")
-    void deleteAllByUser(@Param("user") UserEntity userEntity);
+    @Query("DELETE from PostEntity p WHERE p.user.id = :userId")
+    void deleteAllByUserId(@Param("userId") Long userId);
 
     @Query("select p from PostEntity p left join fetch p.shorts where p.user = :userEntity")
     List<PostEntity> findAllPostByUserFetchJoin(@Param("user") UserEntity userEntity);

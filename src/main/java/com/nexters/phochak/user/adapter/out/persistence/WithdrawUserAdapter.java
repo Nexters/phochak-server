@@ -1,7 +1,5 @@
-package com.nexters.phochak.user.adapter.out.persistent;
+package com.nexters.phochak.user.adapter.out.persistence;
 
-import com.nexters.phochak.user.adapter.out.persistence.UserMapper;
-import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.application.port.WithdrawUserPort;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
