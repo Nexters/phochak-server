@@ -17,6 +17,7 @@ public class GetPostApi {
     private PostFilter postFilter = PostFilter.NONE;
     private int pageSize = 2;
     private Long lastId = null;
+    private String hashtag = null;
 
     public GetPostApi postSortOption(final PostSortOption postSortOption) {
         this.postSortOption = postSortOption;
@@ -38,12 +39,18 @@ public class GetPostApi {
         return this;
     }
 
+    public GetPostApi hashtag(final String hashtag) {
+        this.hashtag = hashtag;
+        return this;
+    }
+
     public Scenario.NextScenarioStep request() throws Exception {
         CustomCursorDto customCursorDto = CustomCursorDto.builder()
                 .sortOption(postSortOption)
                 .filter(postFilter)
                 .pageSize(pageSize)
                 .lastId(lastId)
+                .hashtag(hashtag)
                 .build();
 
         final ResultActions response = TestUtil.mockMvc.perform(
@@ -53,6 +60,7 @@ public class GetPostApi {
                                 .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
                                 .param("lastId", String.valueOf(customCursorDto.getLastId()))
                                 .param("filter", customCursorDto.getFilter().name())
+                                .param("hashtag", customCursorDto.getHashtag())
                                 .header(AUTHORIZATION_HEADER, TestUtil.TestUser.accessToken))
                 .andExpect(status().isOk());
 

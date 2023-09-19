@@ -20,6 +20,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 
+import java.util.List;
+
 class PostControllerPagingTest extends RestDocsApiTest {
     @Autowired
     PostController postController;
@@ -220,84 +222,29 @@ class PostControllerPagingTest extends RestDocsApiTest {
         DocumentGenerator.getPostList_liked(response);
     }
 
-    //
-//    @Test
-//    @DisplayName("포스트 목록 조회 API - 해시태그 검색")
-//    void getPostList_searched() throws Exception {
-//        CustomCursorDto customCursorDto = CustomCursorDto.builder()
-//                .pageSize(3)
-//                .lastId(20L)
-//                .category(PostCategoryEnum.CAFE)
-//                .build();
-//
-//        List<String> hashtags = List.of("해시태그1", "해시태그2");
-//
-//        PostFetchDto.PostUserInformation newUser = PostFetchDto.PostUserInformation.builder()
-//                .id(4L)
-//                .nickname("newUser")
-//                .profileImgUrl("profileImage")
-//                .build();
-//
-//        PostPageResponseDto post3 = PostPageResponseDto.builder()
-//                .id(20L)
-//                .user(newUser)
-//                .shorts(shorts)
-//                .view(1000)
-//                .category(PostCategoryEnum.CAFE)
-//                .like(120)
-//                .isLiked(Boolean.TRUE)
-//                .hashtags(hashtags)
-//                .isBlind(Boolean.FALSE)
-//                .build();
-//
-//        List<PostPageResponseDto> result = List.of(post3, post1);
-//
-//
-//        when(postUseCase.getNextCursorPage(any(), anyString())).thenReturn(result);
-//
-//        mockMvc.perform(
-//                        RestDocumentationRequestBuilders
-//                                .get("/v1/post/list/search")
-//                                .param("lastId", String.valueOf(customCursorDto.getLastId()))
-//                                .param("pageSize", String.valueOf(customCursorDto.getPageSize()))
-//                                .param("hashtag", String.valueOf(hashtags.get(1)))
-//                                .param("category", String.valueOf(customCursorDto.getCategory()))
-//                                .header(AUTHORIZATION_HEADER, "access token")
-//                )
-//                .andExpect(status().isOk())
-//                .andDo(document("post/list/search",
-//                        preprocessRequest(modifyUris().scheme("http").host("101.101.209.228").removePort(), prettyPrint()),
-//                        preprocessResponse(prettyPrint()),
-//                        requestFields(
-//                                fieldWithPath("lastId").description("(선택) 마지막으로 받은 게시글 id"),
-//                                fieldWithPath("pageSize").description("(선택) 페이지 크기(default: 5)").optional(),
-//                                fieldWithPath("hashtag").description("(선택) 검색할 해시태그").optional(),
-//                                fieldWithPath("category").description("(선택) 게시글 카테고리 ex) CAFE").optional()
-//                        ),
-//                        requestHeaders(
-//                                headerWithName(AUTHORIZATION_HEADER)
-//                                        .description("(필수) JWT Access Token")
-//                        ),
-//                        responseFields(
-//                                fieldWithPath("status.resCode").type(JsonFieldType.STRING).description("응답 코드"),
-//                                fieldWithPath("status.resMessage").type(JsonFieldType.STRING).description("응답 메시지"),
-//                                fieldWithPath("isLastPage").type(JsonFieldType.BOOLEAN).description("마지막 페이지 여부"),
-//                                fieldWithPath("data[].id").type(JsonFieldType.NUMBER).description("게시글 id"),
-//                                fieldWithPath("data[].user.id").type(JsonFieldType.NUMBER).description("유저 id"),
-//                                fieldWithPath("data[].user.nickname").type(JsonFieldType.STRING).description("유저 닉네임"),
-//                                fieldWithPath("data[].user.profileImgUrl").type(JsonFieldType.STRING).description("유저 프로필 이미지 링크"),
-//                                fieldWithPath("data[].shorts.id").type(JsonFieldType.NUMBER).description("영상 id"),
-//                                fieldWithPath("data[].shorts.state").type(JsonFieldType.STRING).description("현재 shorts 인코딩 상태(OK, FAIL, IN_PROGRESS)"),
-//                                fieldWithPath("data[].shorts.thumbnailUrl").type(JsonFieldType.STRING).description("영상 썸네일 이미지 링크"),
-//                                fieldWithPath("data[].shorts.shortsUrl").type(JsonFieldType.STRING).description("영상 링크"),
-//                                fieldWithPath("data[].hashtags").type(JsonFieldType.ARRAY).description("해시태그 목록"),
-//                                fieldWithPath("data[].view").type(JsonFieldType.NUMBER).description("조회수"),
-//                                fieldWithPath("data[].category").type(JsonFieldType.STRING).description("게시글 카테고리"),
-//                                fieldWithPath("data[].like").type(JsonFieldType.NUMBER).description("좋아요 수"),
-//                                fieldWithPath("data[].isLiked").type(JsonFieldType.BOOLEAN).description("조회한 유저의 좋아요 여부"),
-//                                fieldWithPath("data[].isBlind").type(JsonFieldType.BOOLEAN).description("해당 게시글의 신고 누적 여부")
-//                        )
-//                ));
-//    }
+
+    @Test
+    @DisplayName("포스트 목록 조회 API - 해시태그 검색")
+    void getPostList_searched() throws Exception {
+
+        //given, when
+        final ResultActions response = Scenario.createPost().hashtagList(List.of("태그")).uploadKey("test1").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test1").request().advance()
+                .createPost().hashtagList(List.of("태그")).uploadKey("test2").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test2").request().advance()
+                .createPost().hashtagList(List.of("태그")).uploadKey("test3").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test3").request().advance()
+                .createPost().uploadKey("test4").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test4").request().advance()
+                .createPost().uploadKey("test5").request().advance()
+                .encodingCallback().status(EncodingStatusEnum.COMPLETE).filePathByUploadKey("test5").request().advance()
+                .getPostList().hashtag("태그").postFilter(PostFilter.SEARCH).pageSize(5).request().getResponse();
+
+        //then
+        response.andExpect(MockMvcResultMatchers.jsonPath("$.data.size()").value(3));
+
+        //docs
+        DocumentGenerator.getPostList_searched(response);
+    }
 
 }
