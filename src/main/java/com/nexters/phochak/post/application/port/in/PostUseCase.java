@@ -1,7 +1,6 @@
 package com.nexters.phochak.post.application.port.in;
 
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 
 import java.util.List;
 
@@ -25,7 +24,7 @@ public interface PostUseCase {
      */
     void updateView(Long postId);
 
-    void deleteAllPostByUser(UserEntity userEntity);
+    void deleteAllPost(Long userId);
 
     List<String> getHashtagAutocomplete(String hashtag, int size);
 }

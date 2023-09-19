@@ -27,7 +27,6 @@ import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.shorts.application.ShortsUseCase;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -120,12 +119,11 @@ public class PostService implements PostUseCase {
     }
 
     @Override
-    public void deleteAllPostByUser(final UserEntity userEntity) {
-//        final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
-        final
+    public void deleteAllPost(final Long userId) {
+        final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
         final List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).toList();
         final List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).toList();
-        postRepository.deleteAllByUser(userEntity);
+        postRepository.deleteAllByUser(userId);
         shortsRepository.deleteAllByUploadKeyIn(shortsKeyList);
         hashtagRepository.deleteAllByPostIdIn(postIdList);
         storageBucketClient.removeShortsObject(shortsKeyList);
