@@ -11,13 +11,13 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(of = "id")
 public class User {
     private Long id;
-    private final FcmDeviceTokenEntity fcmDeviceTokenEntity;
-    private final OAuthProviderEnum provider;
-    private final String providerId;
+    private FcmDeviceTokenEntity fcmDeviceTokenEntity;
+    private OAuthProviderEnum provider;
+    private String providerId;
     private String nickname;
-    private final String profileImgUrl;
-    private final Boolean isBlocked;
-    private final LocalDateTime leaveDate;
+    private String profileImgUrl;
+    private Boolean isBlocked;
+    private LocalDateTime leaveDate;
 
     public User(final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
@@ -60,4 +60,11 @@ public class User {
         this.nickname = nickname;
     }
 
+    public void withdraw() {
+        this.nickname = null;
+        this.providerId = null;
+        this.provider = null;
+        this.profileImgUrl = null;
+        this.leaveDate = LocalDateTime.now();
+    }
 }

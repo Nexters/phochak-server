@@ -2,16 +2,14 @@ package com.nexters.phochak.user.application;
 
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.post.application.port.in.PostUseCase;
-import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserRepository;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
+import com.nexters.phochak.user.application.port.WithdrawUserPort;
 import com.nexters.phochak.user.application.port.in.LoginRequestDto;
 import com.nexters.phochak.user.application.port.in.OAuthUserInformation;
 import com.nexters.phochak.user.application.port.in.UserCheckResponseDto;
 import com.nexters.phochak.user.application.port.in.UserInfoResponseDto;
 import com.nexters.phochak.user.application.port.in.UserUseCase;
 import com.nexters.phochak.user.application.port.out.CreateUserPort;
+import com.nexters.phochak.user.application.port.out.DeleteAllPostPort;
 import com.nexters.phochak.user.application.port.out.FindIgnoredUserPort;
 import com.nexters.phochak.user.application.port.out.FindUserPort;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
@@ -31,15 +29,14 @@ import java.util.Map;
 @RequiredArgsConstructor
 public class UserService implements UserUseCase {
 
+    private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
     private final FindUserPort findUserPort;
     private final CreateUserPort createUserPort;
     private final FindIgnoredUserPort findIgnoredUserPort;
     private final UpdateUserNicknamePort updateUserNicknamePort;
-    private final UserRepository userRepository;
-    private final PostUseCase postUseCase;
-    private final Map<OAuthProviderEnum, OAuthRequestPort> oAuthRequestPortMap;
-    private final IgnoredUserRepository ignoredUserRepository;
     private final NotificationTokenRegisterPort notificationTokenRegisterPort;
+    private final WithdrawUserPort withdrawUserPort;
+    private final DeleteAllPostPort deleteAllPostPort;
 
     @Override
     public Long login(final String provider, final LoginRequestDto requestDto) {
@@ -79,9 +76,9 @@ public class UserService implements UserUseCase {
 
     @Override
     public void withdraw(Long userId) {
-        UserEntity userEntity = userRepository.getBy(userId);
-        userEntity.withdrawInformation();
-        postUseCase.deleteAllPostByUser(userEntity);
+        final User user = findUserPort.load(userId);
+        withdrawUserPort.withdraw(user);
+        deleteAllPostPort.deleteAllPostByUser(user);
     }
 
     private OAuthRequestPort getProperProviderPort(final String provider) {

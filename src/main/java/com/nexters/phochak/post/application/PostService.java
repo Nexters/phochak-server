@@ -3,9 +3,7 @@ package com.nexters.phochak.post.application;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
 import com.nexters.phochak.post.adapter.out.persistence.HashtagFetchDto;
-import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
-import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
 import com.nexters.phochak.post.application.port.in.HashtagUseCase;
 import com.nexters.phochak.post.application.port.in.LikesFetchDto;
@@ -29,8 +27,6 @@ import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import com.nexters.phochak.shorts.application.ShortsUseCase;
-import com.nexters.phochak.shorts.domain.ShortsRepository;
-import com.nexters.phochak.shorts.presentation.StorageBucketClient;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.domain.User;
 import lombok.RequiredArgsConstructor;
@@ -56,13 +52,13 @@ public class PostService implements PostUseCase {
     private final DeleteMediaPort deleteMediaPort;
     private final GetHashtagAutocompletePort getHashtagAutocompletePort;
     private final GeneratePresignedUrlPort generatePresignedUrlPort;
-
-    private final StorageBucketClient storageBucketClient;
-    private final PostRepository postRepository;
-    private final HashtagRepository hashtagRepository;
-    private final ShortsRepository shortsRepository;
     private final DeleteHashtagPort deleteHashtagsPort;
     private final UpdateViewPort updateViewPort;
+
+//    private final StorageBucketClient storageBucketClient;
+//    private final PostRepository postRepository;
+//    private final HashtagRepository hashtagRepository;
+//    private final ShortsRepository shortsRepository;
 
     @Override
     public PostUploadKeyResponseDto generateUploadKey(final String fileExtension) {
@@ -125,7 +121,8 @@ public class PostService implements PostUseCase {
 
     @Override
     public void deleteAllPostByUser(final UserEntity userEntity) {
-        final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
+//        final List<PostEntity> postEntityList = postRepository.findAllPostByUserFetchJoin(userEntity);
+        final
         final List<Long> postIdList = postEntityList.stream().map(PostEntity::getId).toList();
         final List<String> shortsKeyList = postEntityList.stream().map(post -> post.getShorts().getUploadKey()).toList();
         postRepository.deleteAllByUser(userEntity);
