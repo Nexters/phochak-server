@@ -35,4 +35,8 @@ public class Hashtag {
             throw new PhochakException(ResCode.INVALID_INPUT, "해시태그 형식이 올바르지 않습니다.");
         }
     }
+
+    public void assignId(final Long id) {
+        this.id = id;
+    }
 }

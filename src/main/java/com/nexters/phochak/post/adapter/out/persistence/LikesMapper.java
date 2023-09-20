@@ -19,11 +19,10 @@ public class LikesMapper {
     }
 
     public Likes toDomain(LikesEntity likeEntity) {
-        final Likes likes = new Likes(
+        return new Likes(
+                likeEntity.getId(),
                 userMapper.toDomain(likeEntity.getUser()),
                 postMapper.toDomain(likeEntity.getPost()));
-        likes.assignId(likeEntity.getId());
-        return likes;
     }
 
 }

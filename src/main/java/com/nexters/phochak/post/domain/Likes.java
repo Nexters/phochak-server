@@ -16,6 +16,12 @@ public class Likes {
         this.post = post;
     }
 
+    public Likes(final Long id, final User user, final Post post) {
+        this.id = id;
+        this.user = user;
+        this.post = post;
+    }
+
     private static void validateConstructor(final User user, final Post post) {
         Assert.notNull(user, "user must not be null");
         Assert.notNull(post, "post must not be null");

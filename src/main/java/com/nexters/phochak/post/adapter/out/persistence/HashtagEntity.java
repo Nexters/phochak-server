@@ -13,8 +13,9 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
+
+import static com.nexters.phochak.post.domain.Hashtag.HASHTAG_MAX_SIZE;
 
 @Getter
 @Entity
@@ -22,7 +23,6 @@ import lombok.Getter;
         {@Index(name = "idx01_hashtag", columnList = "TAG"),
         @Index(name = "idx02_hashtag", columnList = "POST_ID")})
 public class HashtagEntity {
-    public static final int HASHTAG_MAX_SIZE = 20;
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -40,7 +40,6 @@ public class HashtagEntity {
     public HashtagEntity() {
     }
 
-    @Builder
     public HashtagEntity(PostEntity post, String tag) {
         this.post = post;
         this.tag = tag;
