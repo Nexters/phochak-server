@@ -41,9 +41,9 @@ public class ShortsEntity {
     }
 
     @Builder
-    public ShortsEntity(Long id, String uploadKey, String shortsUrl, String thumbnailUrl) {
+    public ShortsEntity(Long id, ShortsStateEnum shortsStateEnum, String uploadKey, String shortsUrl, String thumbnailUrl) {
         this.id = id;
-        this.shortsStateEnum = ShortsStateEnum.IN_PROGRESS;
+        this.shortsStateEnum = shortsStateEnum;
         this.uploadKey = uploadKey;
         this.shortsUrl = shortsUrl;
         this.thumbnailUrl = thumbnailUrl;

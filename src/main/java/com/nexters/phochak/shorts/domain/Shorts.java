@@ -1,5 +1,8 @@
 package com.nexters.phochak.shorts.domain;
 
+import lombok.Getter;
+
+@Getter
 public class Shorts {
 
     private Long id;
