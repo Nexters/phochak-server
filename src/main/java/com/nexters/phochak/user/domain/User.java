@@ -3,6 +3,7 @@ package com.nexters.phochak.user.domain;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
@@ -18,6 +19,26 @@ public class User {
     private Boolean isBlocked;
     private LocalDateTime leaveDate;
 
+    public static final int NICKNAME_MAX_SIZE = 10;
+
+    public User(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+        validateConstructor(provider, providerId, nickname, profileImgUrl);
+        this.provider = provider;
+        this.providerId = providerId;
+        this.nickname = nickname;
+        this.profileImgUrl = profileImgUrl;
+    }
+
+    private static void validateConstructor(final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl) {
+        Assert.notNull(provider, "provider must not be null");
+        Assert.notNull(providerId, "providerId must not be null");
+        Assert.notNull(nickname, "nickname must not be null");
+        if (nickname.length() > 10) {
+            throw new IllegalArgumentException("nickname must be less than 10 characters");
+        }
+        Assert.notNull(profileImgUrl, "profileImgUrl must not be null");
+    }
+
     public User(final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
         this.provider = provider;
@@ -30,10 +51,6 @@ public class User {
 
     public void assignId(Long generatedId) {
         this.id = generatedId;
-    }
-
-    public void updateNickname(final String nickname) {
-        this.nickname = nickname;
     }
 
     public void withdraw() {
