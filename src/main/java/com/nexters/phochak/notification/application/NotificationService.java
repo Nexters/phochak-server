@@ -1,11 +1,9 @@
 package com.nexters.phochak.notification.application;
 
-import com.nexters.phochak.notification.adapter.out.api.NotificationClient;
-import com.nexters.phochak.notification.adapter.out.api.NotificationFormDto;
-import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenRepository;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.notification.application.port.out.RegisterFcmDeviceTokenPort;
 import com.nexters.phochak.notification.application.port.out.RegisterTokenRequest;
+import com.nexters.phochak.notification.application.port.out.SendNotificationPort;
 import com.nexters.phochak.notification.domain.FcmDeviceToken;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
@@ -18,9 +16,10 @@ import java.util.List;
 @Slf4j
 @Service
 public class NotificationService implements NotificationUsecase {
-    private final FcmDeviceTokenRepository fcmDeviceTokenRepository;
+//    private final FcmDeviceTokenRepository fcmDeviceTokenRepository;
     private final RegisterFcmDeviceTokenPort registerFcmDeviceTokenPort;
-    private final NotificationClient notificationClient;
+    private final SendNotificationPort sendNotificaitonPort;
+//    private final NotificationClient notificationClient;
 
     @Override
     public void registryFcmDeviceToken(RegisterTokenRequest registerTokenRequest) {
@@ -31,7 +30,7 @@ public class NotificationService implements NotificationUsecase {
         registerFcmDeviceTokenPort.saveOrUpdate(fcmDeviceToken);
     }
 
-    @Override //TODO shorts Service 로 이관 필요
+    @Override
     public void postEncodeState(String uploadKey, ShortsStateEnum shortsStateEnum) {
         List<Object[]> queryResult = fcmDeviceTokenRepository.findDeviceTokenAndPostIdByUploadKey(uploadKey);
 
@@ -45,15 +44,8 @@ public class NotificationService implements NotificationUsecase {
         String deviceToken = queryResult.get(0)[0].toString();
         Long postId = Long.valueOf(String.valueOf(queryResult.get(0)[1]));
 
-        notificationClient.postToClient(getEncodeStateMessage(postId, shortsStateEnum), deviceToken);
+        sendNotificaitonPort.postToClient(postId, shortsStateEnum, deviceToken);
     }
 
-    private NotificationFormDto getEncodeStateMessage(Long postId, ShortsStateEnum shortsStateEnum) {
-        return NotificationFormDto.builder()
-                .title("게시글 업로드 상태")
-                .content("게시글 업로드 상태")
-                .type(shortsStateEnum.toString())
-                .target(postId.toString())
-                .build();
-    }
+
 }
