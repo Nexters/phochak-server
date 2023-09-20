@@ -1,7 +1,7 @@
 package com.nexters.phochak.post.domain;
 
 import com.nexters.phochak.post.adapter.out.persistence.ReportPostEntity;
-import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
+import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.user.domain.User;
 import lombok.Getter;
 import org.springframework.util.Assert;
@@ -16,15 +16,15 @@ public class Post {
     private Long view = 0L;
     private boolean isBlind = false;
     private User user;
-    private ShortsEntity shortsEntity;
+    private Shorts shorts;
     private List<ReportPostEntity> reportPostEntity = new ArrayList<>();
     private List<Likes> likes = new ArrayList<>();
     private List<Hashtag> hashtagList = new ArrayList<>();
 
-    public Post(final Long id, final User user, final ShortsEntity shortsEntity, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
+    public Post(final Long id, final User user, final Shorts shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
         this.id = id;
         this.user = user;
-        this.shortsEntity = shortsEntity;
+        this.shorts = shorts;
         this.reportPostEntity = reportPostEntity;
         this.view = view;
         this.postCategory = postCategory;
@@ -42,8 +42,8 @@ public class Post {
         this.id = id;
     }
 
-    public void setShortsEntity(final ShortsEntity shortsEntity) {
-        this.shortsEntity = shortsEntity;
+    public void setShortsEntity(final Shorts shorts) {
+        this.shorts = shorts;
     }
 
     public void updateContent(final PostCategoryEnum postCategoryEnum) {

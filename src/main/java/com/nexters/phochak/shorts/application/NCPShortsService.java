@@ -7,6 +7,9 @@ import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
 import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.shorts.application.port.in.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.application.port.in.ShortsUseCase;
+import com.nexters.phochak.shorts.application.port.out.LoadShortsPort;
+import com.nexters.phochak.shorts.application.port.out.SaveShortsPort;
+import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -20,31 +23,24 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NCPShortsService implements ShortsUseCase {
 
+    private final NotificationUsecase notificationUsecase;
     private final ShortsRepository shortsRepository;
     private final NCPStorageProperties ncpStorageProperties;
-    private final NotificationUsecase notificationUsecase;
+    private final LoadShortsPort loadShortsPort;
+    private final SaveShortsPort saveShortsPort;
 
     @Override
     public void connectShorts(Post post, String uploadKey) {
-        Optional<ShortsEntity> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
-
-        if (optionalShorts.isPresent()) {
-            // case: 인코딩이 먼저 끝나있는 경우
-            ShortsEntity shortsEntity = optionalShorts.get();
-            shortsEntity.updateShortsState(ShortsStateEnum.OK);
-            post.setShortsEntity(shortsEntity);
-        } else {
-            // case: 인코딩이 끝나지 않은 경우
+        Shorts shorts = loadShortsPort.findByUploadKey(uploadKey);
+        if (shorts != null) { // case: 인코딩이 먼저 끝나있는 경우
+            shorts.updateShortsState(ShortsStateEnum.OK);
+        } else { // case: 인코딩이 끝나지 않은 경우
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);
-            ShortsEntity shortsEntity = ShortsEntity.builder()
-                    .uploadKey(uploadKey)
-                    .shortsUrl(shortsFileName)
-                    .thumbnailUrl(thumbnailFileName)
-                    .build();
-            shortsRepository.save(shortsEntity);
-            post.setShortsEntity(shortsEntity);
+            shorts = new Shorts(ShortsStateEnum.IN_PROGRESS, uploadKey, shortsFileName, thumbnailFileName);
         }
+        post.setShortsEntity(shorts);
+        saveShortsPort.save(shorts);
     }
 
     /**
