@@ -21,7 +21,7 @@ public class ReportPostNotifyService implements ReportNotifyService {
 
     @Async
     @Override
-    public void notifyReportedPost(Long postId, Long userId, Long reportCount) {
+    public void notifyReportedPost(Long postId, Long userId, int reportCount) {
         try {
             String message = generateReportMessage(userId, postId, reportCount);
             SlackMessageFormDto test = SlackMessageFormDto.builder()

@@ -4,5 +4,5 @@ import org.springframework.scheduling.annotation.Async;
 
 public interface ReportNotifyService {
     @Async
-    void notifyReportedPost(Long postId, Long userId, Long reportCount);
+    void notifyReportedPost(Long postId, Long userId, int reportCount);
 }

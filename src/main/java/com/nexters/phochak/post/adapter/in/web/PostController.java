@@ -2,7 +2,6 @@ package com.nexters.phochak.post.adapter.in.web;
 
 import com.nexters.phochak.auth.Auth;
 import com.nexters.phochak.auth.UserContext;
-import com.nexters.phochak.post.application.port.ReportPostUseCase;
 import com.nexters.phochak.post.application.port.in.CommonPageResponseDto;
 import com.nexters.phochak.post.application.port.in.CommonResponseDto;
 import com.nexters.phochak.post.application.port.in.CustomCursorDto;
@@ -11,6 +10,7 @@ import com.nexters.phochak.post.application.port.in.PostCreateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
+import com.nexters.phochak.post.application.port.in.ReportPostUseCase;
 import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
