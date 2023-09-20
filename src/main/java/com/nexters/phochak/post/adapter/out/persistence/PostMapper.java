@@ -15,7 +15,7 @@ public class PostMapper {
                 post.getId(),
                 userMapper.toEntity(post.getUser()),
                 post.getShorts(),
-                post.getReportPost(),
+                post.getReportPostEntity(),
                 post.getView(),
                 post.getPostCategory(),
                 post.isBlind());
@@ -26,7 +26,7 @@ public class PostMapper {
                 postEntity.getId(),
                 userMapper.toDomain(postEntity.getUser()),
                 postEntity.getShorts(),
-                postEntity.getReportPost(),
+                postEntity.getReportPostEntity(),
                 postEntity.getView(),
                 postEntity.getPostCategory(),
                 postEntity.isBlind());

@@ -34,7 +34,6 @@ import java.util.List;
         {@Index(name = "idx01_post", columnList = "view, post_id"),
         @Index(name = "idx02_post", columnList = "user_id")})
 public class PostEntity extends BaseTime {
-    private static final Long BLOCK_CRITERIA = 5L;
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -50,7 +49,7 @@ public class PostEntity extends BaseTime {
     private Shorts shorts;
 
     @OneToMany(mappedBy = "post")
-    private List<ReportPost> reportPost;
+    private List<ReportPostEntity> reportPostEntity;
 
     @Column(name = "VIEW", nullable = false)
     @ColumnDefault("0")
@@ -83,11 +82,11 @@ public class PostEntity extends BaseTime {
     }
 
 
-    public PostEntity(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
+    public PostEntity(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
-        this.reportPost = reportPost;
+        this.reportPostEntity = reportPostEntity;
         this.view = view;
         this.postCategory = postCategory;
         this.isBlind = isBlind;
@@ -97,13 +96,4 @@ public class PostEntity extends BaseTime {
         this.shorts = shorts;
     }
 
-    public void blindPostIfRequired(Long reportCount) {
-        if (reportCount >= BLOCK_CRITERIA) {
-            this.isBlind = true;
-        }
-    }
-
-    public void updateContent(PostCategoryEnum postCategory) {
-        this.postCategory = postCategory;
-    }
 }

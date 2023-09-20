@@ -4,10 +4,12 @@ import com.auth0.jwt.JWT;
 import com.nexters.phochak.common.config.property.JwtProperties;
 import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.common.exception.ResCode;
-import com.nexters.phochak.user.adapter.out.persistence.RefreshTokenRepository;
+import com.nexters.phochak.user.adapter.out.persistence.ExpireRefreshTokenPort;
 import com.nexters.phochak.user.application.port.in.JwtResponseDto;
 import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;
 import com.nexters.phochak.user.application.port.in.ReissueTokenRequestDto;
+import com.nexters.phochak.user.application.port.out.FindAccessTokenPort;
+import com.nexters.phochak.user.application.port.out.SaveRefreshTokenPort;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.Jwts;
@@ -27,14 +29,20 @@ import java.util.Map;
 @Service
 public class JwtTokenService implements JwtTokenUseCase {
 
-    private final RefreshTokenRepository refreshTokenRepository;
     private final String secretKey;
     private final long accessTokenExpireLength;
     private final long refreshTokenExpireLength;
+    private final SaveRefreshTokenPort saveRefreshTokenPort;
+    private final FindAccessTokenPort findAccessTokenPort;
+    private final ExpireRefreshTokenPort expireRefreshTokenPort;
 
-    public JwtTokenService(RefreshTokenRepository refreshTokenRepository,
-                           JwtProperties jwtProperties) {
-        this.refreshTokenRepository = refreshTokenRepository;
+    public JwtTokenService(final SaveRefreshTokenPort saveRefreshTokenPort,
+                           final FindAccessTokenPort findAccessTokenPort,
+                           final ExpireRefreshTokenPort expireRefreshTokenPort,
+                           final JwtProperties jwtProperties) {
+        this.saveRefreshTokenPort = saveRefreshTokenPort;
+        this.findAccessTokenPort = findAccessTokenPort;
+        this.expireRefreshTokenPort = expireRefreshTokenPort;
         this.secretKey = jwtProperties.getSecretKey();
         this.accessTokenExpireLength = jwtProperties.getAccessTokenExpireLength();
         this.refreshTokenExpireLength = jwtProperties.getRefreshTokenExpireLength();
@@ -44,7 +52,7 @@ public class JwtTokenService implements JwtTokenUseCase {
     public JwtResponseDto issueToken(Long userId) {
         TokenVo accessToken = generateToken(userId, accessTokenExpireLength);
         TokenVo refreshToken = generateToken(userId, refreshTokenExpireLength);
-        refreshTokenRepository.saveWithAccessToken(refreshToken.getTokenString(), accessToken.getTokenString());
+        saveRefreshTokenPort.save(accessToken, refreshToken);
         return JwtResponseDto.builder()
                 .accessToken(createTokenStringForResponse(accessToken))
                 .expiresIn(accessToken.getExpiresIn())
@@ -81,8 +89,8 @@ public class JwtTokenService implements JwtTokenUseCase {
 
         //해당 요청 들어오면 RT 항상 만료 시킴
         //redis에서 RT과 매칭되는 AT 있는지 확인 (삭제 후 return 결과로 판단)
-        String accessToken = refreshTokenRepository.findAccessToken(currentRefreshToken);
-        refreshTokenRepository.expire(currentRefreshToken);
+        String accessToken = findAccessTokenPort.find(currentRefreshToken);
+        expireRefreshTokenPort.expire(currentRefreshToken);
 
         if (!currentAccessToken.equals(accessToken)) {
             log.warn("JwtTokenServiceImpl|RT and AT are not matched: RT({})", currentRefreshToken);
@@ -102,7 +110,7 @@ public class JwtTokenService implements JwtTokenUseCase {
     public void logout(String refreshToken) {
         refreshToken = parseOnlyTokenFromRequest(refreshToken);
         validateJwt(refreshToken);
-        refreshTokenRepository.expire(refreshToken);
+        expireRefreshTokenPort.expire(refreshToken);
     }
 
     @Override

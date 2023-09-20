@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Map;
 
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
-import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
+import static com.nexters.phochak.post.adapter.out.persistence.QReportPostEntity.reportPostEntity;
 import static com.nexters.phochak.user.adapter.out.persistence.QIgnoredUserEntity.ignoredUserEntity;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
@@ -44,9 +44,9 @@ public class PostCustomRepositoryImpl implements PostCustomRepository {
                 )) //본인이 ignore한 게시글 제거
                 .where(postEntity.id.notIn(
                         JPAExpressions
-                                .select(reportPost.post.id)
-                                .from(reportPost)
-                                .where(reportPost.reporter.id.eq(userId))
+                                .select(reportPostEntity.post.id)
+                                .from(reportPostEntity)
+                                .where(reportPostEntity.reporter.id.eq(userId))
                 )) // 본인이 신고한 게시글 제거
                 .where(postEntity.shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .limit(command.getPageSize())

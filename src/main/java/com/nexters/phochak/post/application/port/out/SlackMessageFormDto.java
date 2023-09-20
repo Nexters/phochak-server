@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification.application.port.out;
+package com.nexters.phochak.post.application.port.out;
 
 import lombok.Builder;
 import lombok.Getter;

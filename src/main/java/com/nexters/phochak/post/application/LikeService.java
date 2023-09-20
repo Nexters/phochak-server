@@ -1,9 +1,9 @@
 package com.nexters.phochak.post.application;
 
-import com.nexters.phochak.post.adapter.out.persistence.LikesRepository;
 import com.nexters.phochak.post.application.port.in.LikesFetchDto;
 import com.nexters.phochak.post.application.port.in.LikesUseCase;
 import com.nexters.phochak.post.application.port.out.CancelLikesPort;
+import com.nexters.phochak.post.application.port.out.CheckLikedPort;
 import com.nexters.phochak.post.application.port.out.LoadLikesPort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
@@ -22,12 +22,12 @@ import java.util.Map;
 @RequiredArgsConstructor
 @Service
 public class LikeService implements LikesUseCase {
-    private final LikesRepository likesRepository;
     private final LoadUserPort loadUserPort;
     private final LoadPostPort loadPostPort;
     private final SaveLikesPort saveLikesPort;
     private final CancelLikesPort cancelLikesPort;
     private final LoadLikesPort loadLikesPort;
+    private final CheckLikedPort checkLikedPort;
 
     @Override
     public void addPhochak(final Long userId, final Long postId) {
@@ -48,7 +48,7 @@ public class LikeService implements LikesUseCase {
     @Transactional(readOnly = true)
     @Override
     public Map<Long, LikesFetchDto> checkIsLikedPost(List<Long> postIds, Long userId) {
-        return likesRepository.checkIsLikedPost(postIds, userId);
+        return checkLikedPort.checkIsLikedPostList(postIds, userId);
     }
 
 }

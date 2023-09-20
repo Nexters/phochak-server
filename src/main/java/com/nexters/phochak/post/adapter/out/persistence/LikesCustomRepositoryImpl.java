@@ -22,7 +22,7 @@ import java.util.Map;
 
 import static com.nexters.phochak.post.adapter.out.persistence.QLikesEntity.likesEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
-import static com.nexters.phochak.post.adapter.out.persistence.QReportPost.reportPost;
+import static com.nexters.phochak.post.adapter.out.persistence.QReportPostEntity.reportPostEntity;
 import static com.nexters.phochak.shorts.domain.QShorts.shorts;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
@@ -65,9 +65,9 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .where(postEntity.id.notIn(
                         JPAExpressions
-                                .select(reportPost.post.id)
-                                .from(reportPost)
-                                .where(reportPost.reporter.id.eq(userId))
+                                .select(reportPostEntity.post.id)
+                                .from(reportPostEntity)
+                                .where(reportPostEntity.reporter.id.eq(userId))
                 )) // 본인이 신고한 게시글 제거
                 .limit(command.getPageSize())
                 .orderBy(orderByPostSortOption(command.getSortOption())) // 커서 정렬 조건

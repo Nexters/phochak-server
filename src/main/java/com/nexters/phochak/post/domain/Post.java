@@ -1,6 +1,6 @@
 package com.nexters.phochak.post.domain;
 
-import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPostEntity;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.user.domain.User;
 import lombok.Getter;
@@ -17,15 +17,15 @@ public class Post {
     private boolean isBlind = false;
     private User user;
     private Shorts shorts;
-    private List<ReportPost> reportPost = new ArrayList<>();
+    private List<ReportPostEntity> reportPostEntity = new ArrayList<>();
     private List<Likes> likes = new ArrayList<>();
     private List<Hashtag> hashtagList = new ArrayList<>();
 
-    public Post(final Long id, final User user, final Shorts shorts, final List<ReportPost> reportPost, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
+    public Post(final Long id, final User user, final Shorts shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
-        this.reportPost = reportPost;
+        this.reportPostEntity = reportPostEntity;
         this.view = view;
         this.postCategory = postCategory;
         this.isBlind = isBlind;
@@ -52,5 +52,9 @@ public class Post {
 
     public void setHashtagList(final List<Hashtag> hashtagList) {
         this.hashtagList = hashtagList;
+    }
+
+    public void blind() {
+        this.isBlind = true;
     }
 }

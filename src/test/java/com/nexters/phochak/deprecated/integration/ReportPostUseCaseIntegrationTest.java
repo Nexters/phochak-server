@@ -4,9 +4,9 @@ import com.nexters.phochak.common.exception.PhochakException;
 import com.nexters.phochak.post.adapter.out.api.ReportNotificationFeignClient;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
-import com.nexters.phochak.post.adapter.out.persistence.ReportPost;
+import com.nexters.phochak.post.adapter.out.persistence.ReportPostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.ReportPostRepository;
-import com.nexters.phochak.post.application.port.ReportPostUseCase;
+import com.nexters.phochak.post.application.port.in.ReportPostUseCase;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
@@ -75,7 +75,7 @@ class ReportPostUseCaseIntegrationTest {
         reportPostUseCase.processReport(userId, postId);
 
         // then
-        assertThat(reportPostRepository.countByPost_Id(postEntity.getId())).isEqualTo(1);
+        assertThat(reportPostRepository.countByPostId(postEntity.getId())).isEqualTo(1);
     }
 
     @Test
@@ -87,7 +87,7 @@ class ReportPostUseCaseIntegrationTest {
         reportPostUseCase.processReport(userId, postId);
 
         // when & then
-        assertThat(reportPostRepository.countByPost_Id(postEntity.getId())).isEqualTo(1);
+        assertThat(reportPostRepository.countByPostId(postEntity.getId())).isEqualTo(1);
         assertThatThrownBy(() -> reportPostUseCase.processReport(userId, postId))
                 .isInstanceOf(PhochakException.class);
     }
@@ -104,7 +104,7 @@ class ReportPostUseCaseIntegrationTest {
                     .providerId("providerId" + i)
                     .provider(OAuthProviderEnum.KAKAO)
                     .build());
-            reportPostRepository.save(ReportPost.builder()
+            reportPostRepository.save(ReportPostEntity.builder()
                     .post(postEntity)
                     .reporter(reporter)
                     .build());

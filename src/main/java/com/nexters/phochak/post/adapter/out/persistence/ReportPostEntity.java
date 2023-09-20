@@ -20,7 +20,7 @@ import lombok.Getter;
 @Getter
 @Entity
 @Table(indexes = {@Index(name = "idx01_unique_report_post", columnList = "USER_ID, POST_ID", unique = true)})
-public class ReportPost extends BaseTime {
+public class ReportPostEntity extends BaseTime {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -35,11 +35,11 @@ public class ReportPost extends BaseTime {
     @JoinColumn(name = "POST_ID", nullable = false, foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private PostEntity post;
 
-    public ReportPost() {
+    public ReportPostEntity() {
     }
 
     @Builder
-    public ReportPost(Long id, UserEntity reporter, PostEntity post) {
+    public ReportPostEntity(Long id, UserEntity reporter, PostEntity post) {
         this.id = id;
         this.reporter = reporter;
         this.post = post;

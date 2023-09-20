@@ -4,8 +4,6 @@ import com.nexters.phochak.post.domain.Post;
 
 import java.util.List;
 
-public interface DeleteHashtagPort {
-    void deleteAllByPost(Post post);
-
-    void deleteAllByPostIdIn(List<Post> postList);
+public interface RemoveShortsObjectPort {
+    void remove(List<Post> postList);
 }
