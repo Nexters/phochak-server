@@ -1,6 +1,7 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.post.domain.Post;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsMapper;
 import com.nexters.phochak.user.adapter.out.persistence.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -9,12 +10,13 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class PostMapper {
     private final UserMapper userMapper;
+    private final ShortsMapper shortsMapper;
 
     public PostEntity toEntity(Post post) {
         return new PostEntity(
                 post.getId(),
                 userMapper.toEntity(post.getUser()),
-                post.getShortsEntity(),
+                shortsMapper.toEntity(post.getShorts()),
                 post.getReportPostEntity(),
                 post.getView(),
                 post.getPostCategory(),
@@ -25,7 +27,7 @@ public class PostMapper {
         return new Post(
                 postEntity.getId(),
                 userMapper.toDomain(postEntity.getUser()),
-                postEntity.getShorts(),
+                shortsMapper.toDomain(postEntity.getShorts()),
                 postEntity.getReportPostEntity(),
                 postEntity.getView(),
                 postEntity.getPostCategory(),

@@ -16,7 +16,7 @@ public class DeleteShortsAdapter implements DeleteShortsPort {
 
     @Override
     public void deleteAllIn(final List<Post> postList) {
-        final List<String> uploadKeyList = postList.stream().map(post -> post.getShortsEntity().getUploadKey()).toList();
+        final List<String> uploadKeyList = postList.stream().map(post -> post.getShorts().getUploadKey()).toList();
         shortsRepository.deleteAllByUploadKeyIn(uploadKeyList);
     }
 }

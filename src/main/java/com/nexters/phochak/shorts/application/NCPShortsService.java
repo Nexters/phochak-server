@@ -1,13 +1,13 @@
 package com.nexters.phochak.shorts.application;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
-import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
 import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.shorts.application.port.in.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.application.port.in.ShortsUseCase;
 import com.nexters.phochak.shorts.application.port.out.LoadShortsPort;
+import com.nexters.phochak.shorts.application.port.out.NotifyEncodingStatePort;
 import com.nexters.phochak.shorts.application.port.out.SaveShortsPort;
 import com.nexters.phochak.shorts.domain.Shorts;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
@@ -23,24 +23,29 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class NCPShortsService implements ShortsUseCase {
 
-    private final NotificationUsecase notificationUsecase;
     private final ShortsRepository shortsRepository;
     private final NCPStorageProperties ncpStorageProperties;
     private final LoadShortsPort loadShortsPort;
     private final SaveShortsPort saveShortsPort;
+    private final NotifyEncodingStatePort notifyEncodingStatePort;
 
+    /**
+     * 인코딩 성공 순서와 게시글 생성의 순서는 모듈 상태에 따라서 달라질 수 있습니다.
+     * 인코딩이 먼저 끝나는 경우: 인코딩 콜백이 먼저 들어온 경우입니다. shorts 객체를 생성합니다.
+     * 게시글이 먼저 생성되는 경우: 일반적인 케이스입니다. 상태값만 변경합니다.
+     */
     @Override
     public void connectShorts(Post post, String uploadKey) {
         Shorts shorts = loadShortsPort.findByUploadKey(uploadKey);
-        if (shorts != null) { // case: 인코딩이 먼저 끝나있는 경우
+        if (shorts != null) {
             shorts.updateShortsState(ShortsStateEnum.OK);
-        } else { // case: 인코딩이 끝나지 않은 경우
+        } else {
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);
             shorts = new Shorts(ShortsStateEnum.IN_PROGRESS, uploadKey, shortsFileName, thumbnailFileName);
         }
-        post.setShortsEntity(shorts);
         saveShortsPort.save(shorts);
+        post.setShorts(shorts);
     }
 
     /**
@@ -59,17 +64,17 @@ public class NCPShortsService implements ShortsUseCase {
         switch (encodingCallbackRequestDto.status()) {
             case WAITING -> {
                 connectPost(uploadKey);
-                notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
+                notifyEncodingStatePort.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
             }
             case RUNNING -> {
             }
             case FAILURE -> {
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.FAIL);
-                notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
+                notifyEncodingStatePort.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
             }
             case COMPLETE -> {
                 shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
-                notificationUsecase.postEncodeState(uploadKey, ShortsStateEnum.OK);
+                notifyEncodingStatePort.postEncodeState(uploadKey, ShortsStateEnum.OK);
             }
             default -> log.error("NCPShortsService|Undefined encoding callback status message: {}",
                     encodingCallbackRequestDto.status());

@@ -17,7 +17,7 @@ public class RemoveShortsObjectAdapter implements RemoveShortsObjectPort {
     @Override
     public void remove(final List<Post> postList) {
         List<String> objectKeyList = postList.stream()
-                .map(post -> post.getShortsEntity().getUploadKey())
+                .map(post -> post.getShorts().getUploadKey())
                 .toList();
         storageBucketClient.removeShortsObject(objectKeyList);
     }

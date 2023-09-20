@@ -42,7 +42,7 @@ public class Post {
         this.id = id;
     }
 
-    public void setShortsEntity(final Shorts shorts) {
+    public void setShorts(final Shorts shorts) {
         this.shorts = shorts;
     }
 
