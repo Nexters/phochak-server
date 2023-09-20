@@ -1,9 +1,8 @@
-package com.nexters.phochak.notification.application;
+package com.nexters.phochak.post.adapter.out.api;
 
 import com.nexters.phochak.common.config.property.SlackReportProperties;
-import com.nexters.phochak.notification.application.port.out.ReportNotifyService;
-import com.nexters.phochak.notification.application.port.out.SlackMessageFormDto;
-import com.nexters.phochak.post.adapter.out.api.ReportNotificationFeignClient;
+import com.nexters.phochak.post.application.port.out.ReportNotifyPort;
+import com.nexters.phochak.post.application.port.out.SlackMessageFormDto;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.scheduling.annotation.Async;
@@ -15,13 +14,13 @@ import org.springframework.transaction.annotation.Transactional;
 @Transactional(propagation = Propagation.REQUIRES_NEW)
 @RequiredArgsConstructor
 @Service
-public class ReportPostNotifyService implements ReportNotifyService {
+public class ReportPostNotifyAdapter implements ReportNotifyPort {
     private final ReportNotificationFeignClient slackPostReportFeignClient;
     private final SlackReportProperties slackReportProperties;
 
     @Async
     @Override
-    public void notifyReportedPost(Long postId, Long userId, int reportCount) {
+    public void send(Long postId, Long userId, int reportCount) {
         try {
             String message = generateReportMessage(userId, postId, reportCount);
             SlackMessageFormDto test = SlackMessageFormDto.builder()

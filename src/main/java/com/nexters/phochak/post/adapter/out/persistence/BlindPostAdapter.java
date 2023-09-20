@@ -15,7 +15,7 @@ public class BlindPostAdapter implements BlindPostPort {
 
     @Override
     @Transactional
-    public void blind(final Post post) {
+    public void blindPost(final Post post) {
         post.blind();
         final PostEntity postEntity = postMapper.toEntity(post);
         postRepository.save(postEntity);

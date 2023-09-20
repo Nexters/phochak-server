@@ -96,13 +96,4 @@ public class PostEntity extends BaseTime {
         this.shorts = shorts;
     }
 
-    public void blindPostIfRequired(Long reportCount) {
-        if (reportCount >= BLOCK_CRITERIA) {
-            this.isBlind = true;
-        }
-    }
-
-    public void updateContent(PostCategoryEnum postCategory) {
-        this.postCategory = postCategory;
-    }
 }
