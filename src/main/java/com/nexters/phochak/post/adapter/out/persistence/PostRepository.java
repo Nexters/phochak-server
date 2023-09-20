@@ -1,6 +1,6 @@
 package com.nexters.phochak.post.adapter.out.persistence;
 
-import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PostRepository extends JpaRepository<PostEntity, Long>, PostCustomRepository {
-    Optional<PostEntity> findByShorts(Shorts shorts);
+    Optional<PostEntity> findByShorts(ShortsEntity shortsEntity);
 
     @Query("select p from PostEntity p left join fetch p.shorts where p.id = :postId")
     Optional<PostEntity> findPostFetchJoin(@Param("postId") Long postId);

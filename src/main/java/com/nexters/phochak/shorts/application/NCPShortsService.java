@@ -3,7 +3,7 @@ package com.nexters.phochak.shorts.application;
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
 import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.shorts.application.port.in.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.application.port.in.ShortsUseCase;
@@ -26,24 +26,24 @@ public class NCPShortsService implements ShortsUseCase {
 
     @Override
     public void connectShorts(Post post, String uploadKey) {
-        Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
+        Optional<ShortsEntity> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
 
         if (optionalShorts.isPresent()) {
             // case: 인코딩이 먼저 끝나있는 경우
-            Shorts shorts = optionalShorts.get();
-            shorts.updateShortsState(ShortsStateEnum.OK);
-            post.setShorts(shorts);
+            ShortsEntity shortsEntity = optionalShorts.get();
+            shortsEntity.updateShortsState(ShortsStateEnum.OK);
+            post.setShortsEntity(shortsEntity);
         } else {
             // case: 인코딩이 끝나지 않은 경우
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);
-            Shorts shorts = Shorts.builder()
+            ShortsEntity shortsEntity = ShortsEntity.builder()
                     .uploadKey(uploadKey)
                     .shortsUrl(shortsFileName)
                     .thumbnailUrl(thumbnailFileName)
                     .build();
-            shortsRepository.save(shorts);
-            post.setShorts(shorts);
+            shortsRepository.save(shortsEntity);
+            post.setShortsEntity(shortsEntity);
         }
     }
 
@@ -81,17 +81,17 @@ public class NCPShortsService implements ShortsUseCase {
     }
 
     private void connectPost(String uploadKey) {
-        Optional<Shorts> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
+        Optional<ShortsEntity> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
         if (optionalShorts.isEmpty()) {
             // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
             String shortsFileName = generateShortsFileName(uploadKey);
             String thumbnailFileName = generateThumbnailsFileName(uploadKey);
-            Shorts shorts = Shorts.builder()
+            ShortsEntity shortsEntity = ShortsEntity.builder()
                     .uploadKey(uploadKey)
                     .shortsUrl(shortsFileName)
                     .thumbnailUrl(thumbnailFileName)
                     .build();
-            shortsRepository.save(shorts);
+            shortsRepository.save(shortsEntity);
         }
     }
 

@@ -2,7 +2,7 @@ package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import jakarta.persistence.Column;
 import jakarta.persistence.ConstraintMode;
@@ -46,7 +46,7 @@ public class PostEntity extends BaseTime {
 
     @OneToOne(fetch = FetchType.LAZY, orphanRemoval = true)
     @JoinColumn(name = "SHORTS_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
-    private Shorts shorts;
+    private ShortsEntity shorts;
 
     @OneToMany(mappedBy = "post")
     private List<ReportPostEntity> reportPostEntity;
@@ -73,7 +73,7 @@ public class PostEntity extends BaseTime {
     }
 
     @Builder
-    public PostEntity(UserEntity userEntity, Shorts shorts, PostCategoryEnum postCategory) {
+    public PostEntity(UserEntity userEntity, ShortsEntity shorts, PostCategoryEnum postCategory) {
         this.user = userEntity;
         this.shorts = shorts;
         this.postCategory = postCategory;
@@ -82,7 +82,7 @@ public class PostEntity extends BaseTime {
     }
 
 
-    public PostEntity(final Long id, final UserEntity user, final Shorts shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
+    public PostEntity(final Long id, final UserEntity user, final ShortsEntity shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
@@ -92,7 +92,7 @@ public class PostEntity extends BaseTime {
         this.isBlind = isBlind;
     }
 
-    public void setShorts(Shorts shorts) {
+    public void setShorts(ShortsEntity shorts) {
         this.shorts = shorts;
     }
 

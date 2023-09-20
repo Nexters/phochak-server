@@ -9,12 +9,14 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Table;
 import lombok.Builder;
 import lombok.Getter;
 
 @Entity
 @Getter
-public class Shorts {
+@Table(name="SHORTS")
+public class ShortsEntity {
 
     @Id
     @GeneratedValue(strategy= GenerationType.IDENTITY)
@@ -35,11 +37,11 @@ public class Shorts {
     @Column(nullable = false, unique = true)
     private String thumbnailUrl;
 
-    public Shorts() {
+    public ShortsEntity() {
     }
 
     @Builder
-    public Shorts(Long id, String uploadKey, String shortsUrl, String thumbnailUrl) {
+    public ShortsEntity(Long id, String uploadKey, String shortsUrl, String thumbnailUrl) {
         this.id = id;
         this.shortsStateEnum = ShortsStateEnum.IN_PROGRESS;
         this.uploadKey = uploadKey;

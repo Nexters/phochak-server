@@ -15,7 +15,7 @@ public class DeleteMediaAdapter implements DeleteMediaPort {
 
     @Override
     public void deleteShortsMedia(final Post post) {
-        String objectKey = post.getShorts().getUploadKey();
+        String objectKey = post.getShortsEntity().getUploadKey();
         storageBucketClient.removeShortsObject(List.of(objectKey));
     }
 }

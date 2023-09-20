@@ -12,7 +12,7 @@ import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.adapter.out.persistence.ReportPostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
 import com.nexters.phochak.shorts.adapter.out.api.NCPStorageClient;
-import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
 import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
@@ -177,15 +177,15 @@ class PostNcpIntegrationTest extends RestDocs {
         //given
         UserEntity userEntity = userRepository.findByNickname("nickname").get();
 
-        Shorts shorts = Shorts.builder()
+        ShortsEntity shortsEntity = ShortsEntity.builder()
                 .thumbnailUrl("test")
                 .shortsUrl("test")
                 .uploadKey("test")
                 .build();
-        shortsRepository.save(shorts);
+        shortsRepository.save(shortsEntity);
 
         PostEntity postEntity = PostEntity.builder()
-                .shorts(shorts)
+                .shorts(shortsEntity)
                 .postCategory(PostCategoryEnum.TOUR)
                 .userEntity(userEntity)
                 .build();
@@ -237,15 +237,15 @@ class PostNcpIntegrationTest extends RestDocs {
         //given
         UserEntity userEntity = userRepository.findByNickname("nickname").get();
 
-        Shorts shorts = Shorts.builder()
+        ShortsEntity shortsEntity = ShortsEntity.builder()
                 .thumbnailUrl("test")
                 .shortsUrl("test")
                 .uploadKey("test")
                 .build();
-        shortsRepository.save(shorts);
+        shortsRepository.save(shortsEntity);
 
         PostEntity postEntity = PostEntity.builder()
-                        .shorts(shorts)
+                        .shorts(shortsEntity)
                         .postCategory(PostCategoryEnum.TOUR)
                         .userEntity(userEntity)
                         .build();
@@ -373,15 +373,15 @@ class PostNcpIntegrationTest extends RestDocs {
     void reportPost() throws Exception {
         UserEntity userEntity = userRepository.findByNickname("nickname").get();
 
-        Shorts shorts = Shorts.builder()
+        ShortsEntity shortsEntity = ShortsEntity.builder()
                 .thumbnailUrl("test")
                 .shortsUrl("test")
                 .uploadKey("test")
                 .build();
-        shortsRepository.save(shorts);
+        shortsRepository.save(shortsEntity);
 
         PostEntity postEntity = PostEntity.builder()
-                .shorts(shorts)
+                .shorts(shortsEntity)
                 .postCategory(PostCategoryEnum.TOUR)
                 .userEntity(userEntity)
                 .build();

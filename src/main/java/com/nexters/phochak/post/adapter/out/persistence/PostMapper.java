@@ -14,7 +14,7 @@ public class PostMapper {
         return new PostEntity(
                 post.getId(),
                 userMapper.toEntity(post.getUser()),
-                post.getShorts(),
+                post.getShortsEntity(),
                 post.getReportPostEntity(),
                 post.getView(),
                 post.getPostCategory(),

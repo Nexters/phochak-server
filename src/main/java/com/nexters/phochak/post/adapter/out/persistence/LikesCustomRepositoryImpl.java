@@ -23,7 +23,7 @@ import java.util.Map;
 import static com.nexters.phochak.post.adapter.out.persistence.QLikesEntity.likesEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QPostEntity.postEntity;
 import static com.nexters.phochak.post.adapter.out.persistence.QReportPostEntity.reportPostEntity;
-import static com.nexters.phochak.shorts.domain.QShorts.shorts;
+import static com.nexters.phochak.shorts.adapter.out.persistence.QShortsEntity.shortsEntity;
 import static com.querydsl.core.group.GroupBy.groupBy;
 
 @RequiredArgsConstructor
@@ -60,9 +60,9 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .from(likesEntity)
                 .join(postEntity).on(likesEntity.post.eq(postEntity))
                 .join(likesEntity.user).on(likesEntity.user.id.eq(userId))
-                .join(shorts).on(likesEntity.post.shorts.eq(shorts))
+                .join(shortsEntity).on(likesEntity.post.shorts.eq(shortsEntity))
                 .where(filterByCursor(command))
-                .where(shorts.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
+                .where(shortsEntity.shortsStateEnum.eq(ShortsStateEnum.OK)) // shorts의 인코딩이 완료된 게시글
                 .where(postEntity.id.notIn(
                         JPAExpressions
                                 .select(reportPostEntity.post.id)
@@ -76,7 +76,7 @@ public class LikesCustomRepositoryImpl implements LikesCustomRepository {
                 .transform(groupBy(postEntity.id).as(
                         new QPostFetchDto(postEntity.id,
                                 new QPostFetchDto_PostUserInformation(postEntity.user.id, postEntity.user.nickname, postEntity.user.profileImgUrl),
-                                new QPostFetchDto_PostShortsInformation(shorts.id, shorts.shortsStateEnum, shorts.shortsUrl, shorts.thumbnailUrl),
+                                new QPostFetchDto_PostShortsInformation(shortsEntity.id, shortsEntity.shortsStateEnum, shortsEntity.shortsUrl, shortsEntity.thumbnailUrl),
                                 likesEntity.post.view, likesEntity.post.postCategory, likesEntity.post.isBlind)
                 ));
 
