@@ -10,7 +10,7 @@ import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.shorts.domain.ShortsRepository;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;

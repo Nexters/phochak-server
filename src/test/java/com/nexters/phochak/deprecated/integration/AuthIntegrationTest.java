@@ -8,9 +8,9 @@ import com.nexters.phochak.post.adapter.out.persistence.HashtagRepository;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.shorts.domain.ShortsRepository;
-import com.nexters.phochak.shorts.presentation.NCPStorageClient;
+import com.nexters.phochak.shorts.adapter.out.api.NCPStorageClient;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.user.adapter.in.web.UserController;
 import com.nexters.phochak.user.adapter.out.persistence.RefreshTokenRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
@@ -239,15 +239,15 @@ public class AuthIntegrationTest extends RestDocs {
         UserEntity userEntity = userRepository.findById(globalUserId).get();
 
         for (int i=0; i < 10; i++) {
-            Shorts shorts = Shorts.builder()
+            ShortsEntity shortsEntity = ShortsEntity.builder()
                     .thumbnailUrl("test" + i)
                     .shortsUrl("test" + i)
                     .uploadKey("test" + i)
                     .build();
-            shortsRepository.save(shorts);
+            shortsRepository.save(shortsEntity);
 
             PostEntity postEntity = PostEntity.builder()
-                    .shorts(shorts)
+                    .shorts(shortsEntity)
                     .postCategory(PostCategoryEnum.TOUR)
                     .userEntity(userEntity)
                     .build();

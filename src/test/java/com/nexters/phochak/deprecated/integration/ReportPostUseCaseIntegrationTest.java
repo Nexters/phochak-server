@@ -8,7 +8,8 @@ import com.nexters.phochak.post.adapter.out.persistence.ReportPostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.ReportPostRepository;
 import com.nexters.phochak.post.application.port.in.ReportPostUseCase;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.shorts.domain.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
+import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -57,8 +58,8 @@ class ReportPostUseCaseIntegrationTest {
                 .nickname("report")
                 .profileImgUrl("testImage")
                 .build();
-        Shorts shorts = new Shorts(1L, "upload key", "shorts", "thumbnail");
-        postEntity = new PostEntity(userEntity, shorts, PostCategoryEnum.CAFE);
+        ShortsEntity shortsEntity = new ShortsEntity(1L, ShortsStateEnum.OK, "upload key", "shorts", "thumbnail");
+        postEntity = new PostEntity(userEntity, shortsEntity, PostCategoryEnum.CAFE);
 
         userRepository.save(userEntity);
         postRepository.save(postEntity);

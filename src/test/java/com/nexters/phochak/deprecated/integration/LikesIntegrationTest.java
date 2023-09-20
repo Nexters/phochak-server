@@ -9,8 +9,8 @@
 //import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 //import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 //import com.nexters.phochak.post.domain.PostCategoryEnum;
-//import com.nexters.phochak.shorts.domain.Shorts;
-//import com.nexters.phochak.shorts.domain.ShortsRepository;
+//import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+//import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 //import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 //import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 //import com.nexters.phochak.user.application.port.in.JwtTokenUseCase;

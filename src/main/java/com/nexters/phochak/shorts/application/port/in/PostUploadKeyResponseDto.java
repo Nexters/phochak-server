@@ -1,4 +1,4 @@
-package com.nexters.phochak.shorts;
+package com.nexters.phochak.shorts.application.port.in;
 
 import java.net.URL;
 

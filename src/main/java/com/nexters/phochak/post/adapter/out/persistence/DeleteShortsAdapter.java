@@ -2,7 +2,7 @@ package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.post.application.port.out.DeleteShortsPort;
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.shorts.domain.ShortsRepository;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

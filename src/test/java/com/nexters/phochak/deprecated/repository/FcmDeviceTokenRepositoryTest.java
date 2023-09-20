@@ -6,8 +6,8 @@ import com.nexters.phochak.notification.domain.OperatingSystem;
 import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.PostRepository;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.shorts.domain.ShortsRepository;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -52,15 +52,15 @@ class FcmDeviceTokenRepositoryTest {
                 .build();
         userRepository.save(userEntity);
 
-        Shorts shorts = Shorts.builder()
+        ShortsEntity shortsEntity = ShortsEntity.builder()
                 .uploadKey("uploadKey")
                 .shortsUrl("url")
                 .thumbnailUrl("url")
                 .build();
-        shortsRepository.save(shorts);
+        shortsRepository.save(shortsEntity);
 
         PostEntity postEntity = PostEntity.builder()
-                .shorts(shorts)
+                .shorts(shortsEntity)
                 .postCategory(PostCategoryEnum.TOUR)
                 .userEntity(userEntity)
                 .build();

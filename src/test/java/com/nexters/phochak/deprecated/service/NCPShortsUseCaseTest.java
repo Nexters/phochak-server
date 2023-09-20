@@ -4,10 +4,10 @@
 //import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 //import com.nexters.phochak.post.adapter.out.persistence.PostEntity;
 //import com.nexters.phochak.post.domain.PostCategoryEnum;
-//import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
+//import com.nexters.phochak.shorts.application.port.in.EncodingCallbackRequestDto;
 //import com.nexters.phochak.shorts.application.NCPShortsUseCase;
-//import com.nexters.phochak.shorts.domain.Shorts;
-//import com.nexters.phochak.shorts.domain.ShortsRepository;
+//import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+//import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 //import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 //import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 //import org.junit.jupiter.api.BeforeEach;

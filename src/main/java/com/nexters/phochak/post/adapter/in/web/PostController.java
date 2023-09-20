@@ -11,7 +11,7 @@ import com.nexters.phochak.post.application.port.in.PostPageResponseDto;
 import com.nexters.phochak.post.application.port.in.PostUpdateRequestDto;
 import com.nexters.phochak.post.application.port.in.PostUseCase;
 import com.nexters.phochak.post.application.port.in.ReportPostUseCase;
-import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
+import com.nexters.phochak.shorts.application.port.in.PostUploadKeyResponseDto;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
