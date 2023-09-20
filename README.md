@@ -26,12 +26,6 @@
 <a href="https://github.com/Nexters/phochak-iOS"> 🍎 iOS Github </a>
 <a href="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
 
-### 리팩토링
-
-<a href="document/refactoring_1_0_0.md"> ⚙️ Ver 1.0 리팩토링 일지 (23.8) </a>
-
-<br/>
-
 ## Back-end Members
 
 |[김세영](https://github.com/seyoung755)|[천진우](https://github.com/JinuCheon)|
@@ -42,3 +36,44 @@
 ## Infrastructure
 
 <img src="https://user-images.githubusercontent.com/76773202/231319152-7b8d0164-51b0-4134-9fdc-c6d319c2845f.png" width="100%">
+
+
+## Branch Rule
+
+![스크린샷 2023-09-20 오후 1 32 12](https://github.com/Nexters/phochak-server/assets/76773202/1ab7ba7a-b44e-4f40-abf7-1e2d1bdc843e)
+
+- Release: 운영 서버에 배포
+- Develop: 개발 서버에 배포
+- Feature: 기능 개발
+
+## Co-Work Flow
+1. Issue 생성
+2. feature 개발
+3. Pull Request
+4. 리뷰
+5. Squash Merge 
+
+## Test Rule
+
+<a href="https://github.com/Nexters/phochak-server/blob/develop/src/test/java/com/nexters/phochak/post/PostControllerTest.java"> 🔗 시나리오 테스트 예시 </a>
+
+
+[9.1 수정]
+기존 테스트들은 사실상 재사용 불가능하며 가독성이 좋지 않은 테스트라서, 모든 테스트를 다음 규칙으로 재작성합니다.
+
+
+단, 리팩토링 이후에 기존 테스트도 잘 돌아가야하며, 최종 확인 이후 PR 직전에 삭제합니다.
+- 시나리오 기반 테스트로 중복 최소화하고 가독성을 가져가기
+- Rest Docs Test, JUnit(AssertJ) 활용
+- 다음 테스트코드 작성 기준을 준수하기
+    - Presentation Layer: Rest Docs, Integration Test, Only Happy Test
+    - Application Layer: Unit Test, Happy Test, Fail Test
+    - Domain Layer: Unit Test, Happy Test, Fail Test
+    - Query: 직접 정의한 쿼리 Happy Test
+
+## Documentation Rule
+<a href="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
+
+Rest Docs 를 활용합니다.
+
+컨트롤러 통합 테스트 -> ActionResult 를 DocumentGenerator.java(Util 클래스)에 추상화.
