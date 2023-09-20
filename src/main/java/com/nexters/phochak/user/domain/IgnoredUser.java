@@ -1,6 +1,5 @@
 package com.nexters.phochak.user.domain;
 
-import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserEntity;
 import lombok.Getter;
 
 @Getter
@@ -13,10 +12,4 @@ public class IgnoredUser {
         this.ignoredUser = ignoredUser;
     }
 
-    public static IgnoredUser toDomain(final IgnoredUserEntity entity) {
-        return new IgnoredUser(
-                User.toDomain(entity.getIgnoredUserRelation().getUser()),
-                User.toDomain(entity.getIgnoredUserRelation().getIgnoredUser())
-        );
-    }
 }

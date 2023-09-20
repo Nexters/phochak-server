@@ -78,16 +78,4 @@ public class UserEntity extends BaseTime {
     public void modifyNickname(String nickname) {
         this.nickname = nickname;
     }
-
-    public void withdrawInformation() {
-        this.nickname = null;
-        this.providerId = null;
-        this.provider = null;
-        this.profileImgUrl = null;
-        this.leaveDate = LocalDateTime.now();
-    }
-
-    public void block() {
-        this.isBlocked = true;
-    }
 }
