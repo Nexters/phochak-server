@@ -29,4 +29,12 @@ public class Shorts {
     public void updateShortsState(final ShortsStateEnum shortsStateEnum) {
         this.shortsStateEnum = shortsStateEnum;
     }
+
+    public void successEncoding() {
+        this.shortsStateEnum = ShortsStateEnum.OK;
+    }
+
+    public void failEncoding() {
+        this.shortsStateEnum = ShortsStateEnum.FAIL;
+    }
 }

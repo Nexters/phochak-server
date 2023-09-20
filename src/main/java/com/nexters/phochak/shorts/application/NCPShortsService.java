@@ -57,28 +57,29 @@ public class NCPShortsService implements ShortsUseCase {
     @Override
     public void processPost(EncodingCallbackRequestDto encodingCallbackRequestDto) {
         String uploadKey = getKeyFromFilePath(encodingCallbackRequestDto.filePath());
+        final Shorts shorts = loadShortsPort.findByUploadKey(uploadKey);
         switch (encodingCallbackRequestDto.status()) {
             case WAITING -> {
-                connectPost(uploadKey);
+                connectPost(shorts, uploadKey);
                 notifyEncodingStatePort.postEncodeState(uploadKey, ShortsStateEnum.IN_PROGRESS);
             }
             case RUNNING -> {
             }
             case FAILURE -> {
-                shortsRepository.updateShortState(uploadKey, ShortsStateEnum.FAIL);
+                shorts.failEncoding();
                 notifyEncodingStatePort.postEncodeState(uploadKey, ShortsStateEnum.FAIL);
             }
             case COMPLETE -> {
-                shortsRepository.updateShortState(uploadKey, ShortsStateEnum.OK);
+                shorts.successEncoding();
                 notifyEncodingStatePort.postEncodeState(uploadKey, ShortsStateEnum.OK);
             }
             default -> log.error("NCPShortsService|Undefined encoding callback status message: {}",
                     encodingCallbackRequestDto.status());
         }
+        saveShortsPort.save(shorts);
     }
 
-    private void connectPost(String uploadKey) {
-        Shorts shorts = loadShortsPort.findByUploadKey(uploadKey);
+    private void connectPost(Shorts shorts, String uploadKey) {
         if (shorts == null) {
             final String shortsFileName = generateShortsFileName(uploadKey);
             final String thumbnailFileName = generateThumbnailsFileName(uploadKey);

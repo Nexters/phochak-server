@@ -18,5 +18,6 @@ public class SaveShortsAdapter implements SaveShortsPort {
     public void save(final Shorts shorts) {
         final ShortsEntity entity = shortsMapper.toEntity(shorts);
         shortsRepository.save(entity);
+        shorts.assignId(entity.getId());
     }
 }
