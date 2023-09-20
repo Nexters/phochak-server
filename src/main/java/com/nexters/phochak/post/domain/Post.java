@@ -32,10 +32,14 @@ public class Post {
     }
 
     public Post(final User user, final PostCategoryEnum postCategory) {
-        Assert.notNull(user, "user must not be null");
-        Assert.notNull(postCategory, "postCategory must not be null");
+        validateConstructor(user, postCategory);
         this.user = user;
         this.postCategory = postCategory;
+    }
+
+    private static void validateConstructor(final User user, final PostCategoryEnum postCategory) {
+        Assert.notNull(user, "user must not be null");
+        Assert.notNull(postCategory, "postCategory must not be null");
     }
 
     public void assignId(final Long id) {
