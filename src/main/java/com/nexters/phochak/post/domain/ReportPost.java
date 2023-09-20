@@ -2,6 +2,7 @@ package com.nexters.phochak.post.domain;
 
 import com.nexters.phochak.user.domain.User;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 @Getter
 public class ReportPost {
@@ -11,8 +12,14 @@ public class ReportPost {
     private static final Long BLOCK_CRITERIA = 5L;
 
     public ReportPost(final User user, final Post post) {
+        validateConstructor(user, post);
         this.user = user;
         this.post = post;
+    }
+
+    private static void validateConstructor(final User user, final Post post) {
+        Assert.notNull(user, "user must not be null");
+        Assert.notNull(post, "post must not be null");
     }
 
     public void assignId(final Long id) {

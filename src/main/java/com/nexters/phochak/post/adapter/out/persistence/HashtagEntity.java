@@ -40,7 +40,8 @@ public class HashtagEntity {
     public HashtagEntity() {
     }
 
-    public HashtagEntity(PostEntity post, String tag) {
+    public HashtagEntity(Long id, PostEntity post, String tag) {
+        this.id = id;
         this.post = post;
         this.tag = tag;
     }

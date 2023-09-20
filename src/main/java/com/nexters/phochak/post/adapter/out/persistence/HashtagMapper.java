@@ -12,6 +12,7 @@ public class HashtagMapper {
 
     public HashtagEntity toEntity(final Hashtag hashtag) {
         return new HashtagEntity(
+                hashtag.getId(),
                 postMapper.toEntity(hashtag.getPost()),
                 hashtag.getTag());
     }
