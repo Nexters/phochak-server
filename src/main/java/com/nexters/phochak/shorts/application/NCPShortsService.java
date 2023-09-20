@@ -2,8 +2,6 @@ package com.nexters.phochak.shorts.application;
 
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.shorts.adapter.out.persistence.ShortsEntity;
-import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
 import com.nexters.phochak.shorts.application.port.in.EncodingCallbackRequestDto;
 import com.nexters.phochak.shorts.application.port.in.ShortsUseCase;
 import com.nexters.phochak.shorts.application.port.out.LoadShortsPort;
@@ -16,18 +14,16 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.Optional;
-
 @Slf4j
 @Service
 @RequiredArgsConstructor
 public class NCPShortsService implements ShortsUseCase {
 
-    private final ShortsRepository shortsRepository;
-    private final NCPStorageProperties ncpStorageProperties;
+//    private final ShortsRepository shortsRepository;
     private final LoadShortsPort loadShortsPort;
     private final SaveShortsPort saveShortsPort;
     private final NotifyEncodingStatePort notifyEncodingStatePort;
+    private final NCPStorageProperties ncpStorageProperties;
 
     /**
      * 인코딩 성공 순서와 게시글 생성의 순서는 모듈 상태에 따라서 달라질 수 있습니다.
@@ -82,17 +78,12 @@ public class NCPShortsService implements ShortsUseCase {
     }
 
     private void connectPost(String uploadKey) {
-        Optional<ShortsEntity> optionalShorts = shortsRepository.findByUploadKey(uploadKey);
-        if (optionalShorts.isEmpty()) {
-            // case: 포스트 생성이 되지 않은 경우 -> shorts 만 미리 생성
-            String shortsFileName = generateShortsFileName(uploadKey);
-            String thumbnailFileName = generateThumbnailsFileName(uploadKey);
-            ShortsEntity shortsEntity = ShortsEntity.builder()
-                    .uploadKey(uploadKey)
-                    .shortsUrl(shortsFileName)
-                    .thumbnailUrl(thumbnailFileName)
-                    .build();
-            shortsRepository.save(shortsEntity);
+        Shorts shorts = loadShortsPort.findByUploadKey(uploadKey);
+        if (shorts == null) {
+            final String shortsFileName = generateShortsFileName(uploadKey);
+            final String thumbnailFileName = generateThumbnailsFileName(uploadKey);
+            shorts = new Shorts(ShortsStateEnum.IN_PROGRESS, uploadKey, shortsFileName, thumbnailFileName);
+            saveShortsPort.save(shorts);
         }
     }
 
