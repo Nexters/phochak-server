@@ -3,9 +3,10 @@ package com.nexters.phochak.shorts.application;
 import com.nexters.phochak.common.config.property.NCPStorageProperties;
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
-import com.nexters.phochak.shorts.domain.Shorts;
-import com.nexters.phochak.shorts.domain.ShortsRepository;
+import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.ShortsRepository;
+import com.nexters.phochak.shorts.application.port.in.EncodingCallbackRequestDto;
+import com.nexters.phochak.shorts.application.port.in.ShortsUseCase;
 import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -17,7 +18,7 @@ import java.util.Optional;
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class NCPShortsUseCase implements ShortsUseCase {
+public class NCPShortsService implements ShortsUseCase {
 
     private final ShortsRepository shortsRepository;
     private final NCPStorageProperties ncpStorageProperties;

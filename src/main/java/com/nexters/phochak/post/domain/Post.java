@@ -1,7 +1,7 @@
 package com.nexters.phochak.post.domain;
 
 import com.nexters.phochak.post.adapter.out.persistence.ReportPostEntity;
-import com.nexters.phochak.shorts.domain.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
 import com.nexters.phochak.user.domain.User;
 import lombok.Getter;
 import org.springframework.util.Assert;

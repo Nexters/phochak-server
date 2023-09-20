@@ -1,7 +1,6 @@
-package com.nexters.phochak.shorts.application;
+package com.nexters.phochak.shorts.application.port.in;
 
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.shorts.EncodingCallbackRequestDto;
 
 public interface ShortsUseCase {
 

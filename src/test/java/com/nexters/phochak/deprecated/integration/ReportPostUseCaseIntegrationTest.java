@@ -8,7 +8,7 @@ import com.nexters.phochak.post.adapter.out.persistence.ReportPostEntity;
 import com.nexters.phochak.post.adapter.out.persistence.ReportPostRepository;
 import com.nexters.phochak.post.application.port.in.ReportPostUseCase;
 import com.nexters.phochak.post.domain.PostCategoryEnum;
-import com.nexters.phochak.shorts.domain.Shorts;
+import com.nexters.phochak.shorts.adapter.out.persistence.Shorts;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserRepository;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;

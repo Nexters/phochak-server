@@ -1,6 +1,6 @@
 package com.nexters.phochak.post.application.port.in;
 
-import com.nexters.phochak.shorts.PostUploadKeyResponseDto;
+import com.nexters.phochak.shorts.application.port.in.PostUploadKeyResponseDto;
 
 import java.util.List;
 

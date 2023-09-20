@@ -2,7 +2,7 @@ package com.nexters.phochak.post.adapter.out.persistence;
 
 import com.nexters.phochak.post.application.port.out.RemoveShortsObjectPort;
 import com.nexters.phochak.post.domain.Post;
-import com.nexters.phochak.shorts.presentation.StorageBucketClient;
+import com.nexters.phochak.shorts.adapter.out.api.StorageBucketClient;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

@@ -1,5 +1,6 @@
-package com.nexters.phochak.shorts.domain;
+package com.nexters.phochak.shorts.adapter.out.persistence;
 
+import com.nexters.phochak.shorts.domain.ShortsStateEnum;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +19,5 @@ public interface ShortsRepository extends JpaRepository<Shorts, Long> {
 
     @Modifying
     @Query("UPDATE Shorts s SET s.shortsStateEnum = :shortsStateEnum WHERE s.uploadKey = :uploadKey")
-    void updateShortState(@Param("uploadKey") String uploadKey, @Param("shortsStateEnum")ShortsStateEnum shortsStateEnum);
+    void updateShortState(@Param("uploadKey") String uploadKey, @Param("shortsStateEnum") ShortsStateEnum shortsStateEnum);
 }

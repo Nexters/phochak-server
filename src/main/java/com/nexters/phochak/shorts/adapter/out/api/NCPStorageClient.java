@@ -1,4 +1,4 @@
-package com.nexters.phochak.shorts.presentation;
+package com.nexters.phochak.shorts.adapter.out.api;
 
 import com.amazonaws.HttpMethod;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
