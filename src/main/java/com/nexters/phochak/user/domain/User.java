@@ -43,4 +43,8 @@ public class User {
         this.profileImgUrl = null;
         this.leaveDate = LocalDateTime.now();
     }
+
+    public void modifyNickname(final String nickname) {
+        this.nickname = nickname;
+    }
 }
