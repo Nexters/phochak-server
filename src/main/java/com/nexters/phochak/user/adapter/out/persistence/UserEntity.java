@@ -1,5 +1,6 @@
 package com.nexters.phochak.user.adapter.out.persistence;
 
+import com.google.common.annotations.VisibleForTesting;
 import com.nexters.phochak.common.domain.BaseTime;
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
@@ -55,7 +56,14 @@ public class UserEntity extends BaseTime {
     public UserEntity() {
     }
 
-    UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    UserEntity(final Long id,
+               final FcmDeviceTokenEntity fcmDeviceToken,
+               final OAuthProviderEnum provider,
+               final String providerId,
+               final String nickname,
+               final String profileImgUrl,
+               final Boolean isBlocked,
+               final LocalDateTime leaveDate) {
         this.id = id;
         this.fcmDeviceToken = fcmDeviceToken;
         this.provider = provider;
@@ -66,4 +74,15 @@ public class UserEntity extends BaseTime {
         this.leaveDate = leaveDate;
     }
 
+    @VisibleForTesting
+    public static UserEntity forTest(final Long id,
+                                final FcmDeviceTokenEntity fcmDeviceToken,
+                                final OAuthProviderEnum provider,
+                                final String providerId,
+                                final String nickname,
+                                final String profileImgUrl,
+                                final Boolean isBlocked,
+                                final LocalDateTime leaveDate) {
+        return new UserEntity(id, fcmDeviceToken, provider, providerId, nickname, profileImgUrl, isBlocked, leaveDate);
+    }
 }

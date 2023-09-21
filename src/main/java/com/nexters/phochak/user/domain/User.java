@@ -27,6 +27,7 @@ public class User {
         this.providerId = providerId;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
+        isBlocked = false;
     }
 
     private static void validateConstructor(final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl) {
@@ -36,7 +37,6 @@ public class User {
         if (nickname.length() > 10) {
             throw new IllegalArgumentException("nickname must be less than 10 characters");
         }
-        Assert.notNull(profileImgUrl, "profileImgUrl must not be null");
     }
 
     private User(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
