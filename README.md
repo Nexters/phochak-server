@@ -53,6 +53,14 @@
 4. 리뷰
 5. Squash Merge 
 
+
+## Documentation Rule
+<a href="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
+
+Rest Docs 를 활용합니다.
+
+컨트롤러 통합 테스트 -> ActionResult 를 DocumentGenerator.java(Util 클래스)에 추상화.
+
 ## Test Rule
 
 <a href="https://github.com/Nexters/phochak-server/blob/develop/src/test/java/com/nexters/phochak/post/PostControllerTest.java"> 🔗 시나리오 테스트 예시 </a>
@@ -71,9 +79,28 @@
     - Domain Layer: Unit Test, Happy Test, Fail Test
     - Query: 직접 정의한 쿼리 Happy Test
 
-## Documentation Rule
-<a href="http://phochak-lb-813451034.ap-northeast-2.elb.amazonaws.com/docs/index.html"> 📝 Rest API Sheet </a>
+## Constructor Convention
 
-Rest Docs 를 활용합니다.
+도메인 객체와 엔티티 객체를 구분하게 되면서, 다음 고민들을 하게 되었습니다.
 
-컨트롤러 통합 테스트 -> ActionResult 를 DocumentGenerator.java(Util 클래스)에 추상화.
+> 1. 도메인 객체의 생성자 공개를 최소화
+> 
+> 2. 엔티티 객체를 개발자가 직접 생성하지 못하도록 제한
+> 
+> 3. Mapper 클래스를 통해 도메인 객체와 엔티티 객체의 자유로운 매핑\
+    - <a href="https://github.com/Nexters/phochak-server/blob/develop/src/main/java/com/nexters/phochak/post/adapter/out/persistence/PostMapper.java"> 🔗 Mapper 클래스 예시 </a>
+
+그래서 고민하고 적용한 규칙은 다음과 같습니다
+
+#### 도메인 객체 생성자 규칙
+  - <a href="https://github.com/Nexters/phochak-server/blob/develop/src/main/java/com/nexters/phochak/post/domain/Post.java"> 🔗 도메인 객체 예시 </a>
+  - 실제 도메인 데이터 `create`를 위해서만 생성자를 제공합니다.
+  - 도메인 객체 생성 시에 Spring boot Assert 로 값을 검증합니다.
+  - Mapper를 위해 정적 팩토리 메소드 'forMapper'를 제공합니다.
+
+
+####  엔티티 객체 생성자 규칙
+  - <a href="https://github.com/Nexters/phochak-server/blob/develop/src/main/java/com/nexters/phochak/post/adapter/out/persistence/PostEntity.java"> 🔗 엔티티 객체 예시 </a>
+  - 오직 Mapper를 위한 생성자만 존재합니다. (개발자가 엔티티 객체를 직접 생성하지 못하게 제한합니다.)
+  - 엔티티를 직접 생성할 수 없도록 해당 생성자를 default 접근제어자로 설정했습니다.
+  - User 엔티티의 생성자는 테스트 편의를 위해 `@VisibleForTesting` 를 적용한 생성자를 열었습니다.
