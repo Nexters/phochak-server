@@ -1,11 +1,11 @@
 package com.nexters.phochak.post.application;
 
 import com.nexters.phochak.post.application.port.in.ReportPostUseCase;
-import com.nexters.phochak.post.application.port.out.BlindPostPort;
 import com.nexters.phochak.post.application.port.out.CountReportPort;
 import com.nexters.phochak.post.application.port.out.LoadPostPort;
 import com.nexters.phochak.post.application.port.out.LoadUserPort;
 import com.nexters.phochak.post.application.port.out.ReportNotifyPort;
+import com.nexters.phochak.post.application.port.out.SavePostPort;
 import com.nexters.phochak.post.application.port.out.SaveReportPostPort;
 import com.nexters.phochak.post.domain.Post;
 import com.nexters.phochak.post.domain.ReportPost;
@@ -21,7 +21,7 @@ public class ReportPostService implements ReportPostUseCase {
     private final LoadPostPort loadPostPort;
     private final LoadUserPort loadUserPort;
     private final SaveReportPostPort saveReportPostPort;
-    private final BlindPostPort blindPostPort;
+    private final SavePostPort savePostPort;
     private final CountReportPort countReportPort;
 
     @Override
@@ -34,9 +34,9 @@ public class ReportPostService implements ReportPostUseCase {
 
         int reportCount = countReportPort.count(post);
         if (reportPost.checkPenaltyToBlind(reportCount)) {
-            blindPostPort.blindPost(post);
+            post.blind();
         }
-
+        savePostPort.save(post);
         reportNotifyPort.send(postId, userId, reportCount);
     }
 }
