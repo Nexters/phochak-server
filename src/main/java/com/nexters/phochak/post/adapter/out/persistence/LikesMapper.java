@@ -13,13 +13,13 @@ public class LikesMapper {
 
     public LikesEntity toEntity(Likes like) {
         return new LikesEntity(
+                like.getId(),
                 userMapper.toEntity(like.getUser()),
-                postMapper.toEntity(like.getPost())
-        );
+                postMapper.toEntity(like.getPost()));
     }
 
     public Likes toDomain(LikesEntity likeEntity) {
-        return new Likes(
+        return Likes.forMapper(
                 likeEntity.getId(),
                 userMapper.toDomain(likeEntity.getUser()),
                 postMapper.toDomain(likeEntity.getPost()));

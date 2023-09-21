@@ -7,13 +7,12 @@ import org.springframework.stereotype.Component;
 public class ShortsMapper {
 
     public Shorts toDomain(final ShortsEntity shortsEntity) {
-        final Shorts shorts = new Shorts(
+        return Shorts.forMapper(
+                shortsEntity.getId(),
                 shortsEntity.getShortsStateEnum(),
                 shortsEntity.getUploadKey(),
                 shortsEntity.getShortsUrl(),
                 shortsEntity.getThumbnailUrl());
-        shorts.assignId(shortsEntity.getId());
-        return shorts;
     }
 
     public ShortsEntity toEntity(final Shorts shorts) {

@@ -22,6 +22,16 @@ public class ReportPost {
         Assert.notNull(post, "post must not be null");
     }
 
+    private ReportPost(final Long id, final User user, final Post post) {
+        this.id = id;
+        this.user = user;
+        this.post = post;
+    }
+
+    public static ReportPost forMapper(final Long id, final User user, final Post post) {
+        return new ReportPost(id, user, post);
+    }
+
     public void assignId(final Long id) {
         this.id = id;
     }

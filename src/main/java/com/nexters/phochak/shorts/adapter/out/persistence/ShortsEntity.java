@@ -39,7 +39,7 @@ public class ShortsEntity {
     public ShortsEntity() {
     }
 
-    public ShortsEntity(Long id, ShortsStateEnum shortsStateEnum, String uploadKey, String shortsUrl, String thumbnailUrl) {
+    ShortsEntity(Long id, ShortsStateEnum shortsStateEnum, String uploadKey, String shortsUrl, String thumbnailUrl) {
         this.id = id;
         this.shortsStateEnum = shortsStateEnum;
         this.uploadKey = uploadKey;

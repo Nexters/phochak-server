@@ -29,7 +29,7 @@ public class FcmDeviceTokenEntity extends BaseTime {
     @Column(nullable = false)
     private OperatingSystem operatingSystem;
 
-    public FcmDeviceTokenEntity(
+    FcmDeviceTokenEntity(
             final Long id,
             final UserEntity user,
             final String token,

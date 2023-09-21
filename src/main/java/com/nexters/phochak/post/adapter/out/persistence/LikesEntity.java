@@ -39,7 +39,8 @@ public class LikesEntity extends BaseTime {
     public LikesEntity() {
     }
 
-    public LikesEntity(UserEntity user, PostEntity post) {
+    LikesEntity(final Long id, final UserEntity user, final PostEntity post) {
+        this.id = id;
         this.user = user;
         this.post = post;
     }

@@ -18,10 +18,9 @@ public class HashtagMapper {
     }
 
     public Hashtag toDomain(final HashtagEntity hashtagEntity) {
-        final Hashtag hashtag = new Hashtag(
+        return Hashtag.forMapper(
+                hashtagEntity.getId(),
                 postMapper.toDomain(hashtagEntity.getPost()),
                 hashtagEntity.getTag());
-        hashtag.assignId(hashtagEntity.getId());
-        return hashtag;
     }
 }

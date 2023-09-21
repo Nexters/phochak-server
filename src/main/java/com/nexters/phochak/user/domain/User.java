@@ -39,7 +39,8 @@ public class User {
         Assert.notNull(profileImgUrl, "profileImgUrl must not be null");
     }
 
-    public User(final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    private User(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+        this.id = id;
         this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
         this.provider = provider;
         this.providerId = providerId;
@@ -47,6 +48,18 @@ public class User {
         this.profileImgUrl = profileImgUrl;
         this.isBlocked = isBlocked;
         this.leaveDate = leaveDate;
+    }
+
+    public static User forMapper(
+            final Long id,
+            final FcmDeviceTokenEntity fcmDeviceTokenEntity,
+            final OAuthProviderEnum provider,
+            final String providerId,
+            final String nickname,
+            final String profileImgUrl,
+            final Boolean isBlocked,
+            final LocalDateTime leaveDate) {
+        return new User(id, fcmDeviceTokenEntity, provider, providerId, nickname, profileImgUrl, isBlocked, leaveDate);
     }
 
     public void assignId(Long generatedId) {

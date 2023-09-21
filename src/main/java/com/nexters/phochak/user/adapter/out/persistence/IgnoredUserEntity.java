@@ -11,7 +11,7 @@ public class IgnoredUserEntity {
     @EmbeddedId
     private IgnoredUserEntityRelation ignoredUserRelation;
 
-    public IgnoredUserEntity(IgnoredUserEntityRelation ignoredUserRelation) {
+    IgnoredUserEntity(IgnoredUserEntityRelation ignoredUserRelation) {
         this.ignoredUserRelation = ignoredUserRelation;
     }
 

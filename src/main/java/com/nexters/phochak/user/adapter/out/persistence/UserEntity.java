@@ -55,7 +55,7 @@ public class UserEntity extends BaseTime {
     public UserEntity() {
     }
 
-    public UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.id = id;
         this.fcmDeviceToken = fcmDeviceToken;
         this.provider = provider;
@@ -66,10 +66,4 @@ public class UserEntity extends BaseTime {
         this.leaveDate = leaveDate;
     }
 
-    public UserEntity(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
-        this.provider = provider;
-        this.providerId = providerId;
-        this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
-    }
 }

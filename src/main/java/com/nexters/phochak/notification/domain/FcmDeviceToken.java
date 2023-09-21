@@ -24,6 +24,17 @@ public class FcmDeviceToken {
         Assert.notNull(operatingSystem, "operatingSystem must not be null");
     }
 
+    private FcmDeviceToken(final Long id, final User user, final String token, final OperatingSystem operatingSystem) {
+        this.id = id;
+        this.user = user;
+        this.token = token;
+        this.operatingSystem = operatingSystem;
+    }
+
+    public static FcmDeviceToken forMapper(final Long id, final User user, final String token, final OperatingSystem operatingSystem) {
+        return new FcmDeviceToken(id, user, token, operatingSystem);
+    }
+
     public void assignId(final Long id) {
         this.id = id;
     }

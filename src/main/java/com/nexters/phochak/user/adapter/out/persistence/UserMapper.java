@@ -7,7 +7,8 @@ import org.springframework.stereotype.Component;
 public class UserMapper {
 
     public User toDomain(final UserEntity userEntity) {
-        final User user = new User(
+        return User.forMapper(
+                userEntity.getId(),
                 userEntity.getFcmDeviceToken(),
                 userEntity.getProvider(),
                 userEntity.getProviderId(),
@@ -16,8 +17,6 @@ public class UserMapper {
                 userEntity.getIsBlocked(),
                 userEntity.getLeaveDate()
         );
-        user.assignId(userEntity.getId());
-        return user;
     }
 
     public UserEntity toEntity(final User user) {

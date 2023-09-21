@@ -37,7 +37,7 @@ public class ReportPostEntity extends BaseTime {
     public ReportPostEntity() {
     }
 
-    public ReportPostEntity(Long id, UserEntity reporter, PostEntity post) {
+    ReportPostEntity(Long id, UserEntity reporter, PostEntity post) {
         this.id = id;
         this.reporter = reporter;
         this.post = post;

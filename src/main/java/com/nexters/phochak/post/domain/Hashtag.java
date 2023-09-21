@@ -36,6 +36,16 @@ public class Hashtag {
         }
     }
 
+    private Hashtag(final Long id, final Post post, final String tag) {
+        this.id = id;
+        this.post = post;
+        this.tag = tag;
+    }
+
+    public static Hashtag forMapper(final Long id, final Post post, final String tag) {
+        return new Hashtag(id, post, tag);
+    }
+
     public void assignId(final Long id) {
         this.id = id;
     }

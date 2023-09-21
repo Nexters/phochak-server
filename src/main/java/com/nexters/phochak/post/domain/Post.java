@@ -21,16 +21,6 @@ public class Post {
     private List<Likes> likes = new ArrayList<>();
     private List<Hashtag> hashtagList = new ArrayList<>();
 
-    public Post(final Long id, final User user, final Shorts shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
-        this.id = id;
-        this.user = user;
-        this.shorts = shorts;
-        this.reportPostEntity = reportPostEntity;
-        this.view = view;
-        this.postCategory = postCategory;
-        this.isBlind = isBlind;
-    }
-
     public Post(final User user, final PostCategoryEnum postCategory) {
         validateConstructor(user, postCategory);
         this.user = user;
@@ -40,6 +30,27 @@ public class Post {
     private static void validateConstructor(final User user, final PostCategoryEnum postCategory) {
         Assert.notNull(user, "user must not be null");
         Assert.notNull(postCategory, "postCategory must not be null");
+    }
+
+    private Post(final Long id, final User user, final Shorts shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
+        this.id = id;
+        this.user = user;
+        this.shorts = shorts;
+        this.reportPostEntity = reportPostEntity;
+        this.view = view;
+        this.postCategory = postCategory;
+        this.isBlind = isBlind;
+    }
+
+    public static Post forMapper(
+            final Long id,
+            final User user,
+            final Shorts shorts,
+            final List<ReportPostEntity> reportPostEntity,
+            final Long view,
+            final PostCategoryEnum postCategory,
+            final boolean isBlind) {
+        return new Post(id, user, shorts, reportPostEntity, view, postCategory, isBlind);
     }
 
     public void assignId(final Long id) {
