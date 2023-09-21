@@ -1,7 +1,7 @@
 package com.nexters.phochak.user.domain;
 
-import com.nexters.phochak.user.adapter.out.persistence.IgnoredUserEntity;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 @Getter
 public class IgnoredUser {
@@ -9,14 +9,14 @@ public class IgnoredUser {
     private final User ignoredUser;
 
     public IgnoredUser(final User user, final User ignoredUser) {
+        validateConstructor(user, ignoredUser);
         this.user = user;
         this.ignoredUser = ignoredUser;
     }
 
-    public static IgnoredUser toDomain(final IgnoredUserEntity entity) {
-        return new IgnoredUser(
-                User.toDomain(entity.getIgnoredUserRelation().getUser()),
-                User.toDomain(entity.getIgnoredUserRelation().getIgnoredUser())
-        );
+    private static void validateConstructor(final User user, final User ignoredUser) {
+        Assert.notNull(user, "user must not be null");
+        Assert.notNull(ignoredUser, "ignoredUser must not be null");
     }
+
 }

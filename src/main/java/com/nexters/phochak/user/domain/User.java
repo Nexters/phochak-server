@@ -1,9 +1,9 @@
 package com.nexters.phochak.user.domain;
 
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
-import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
+import org.springframework.util.Assert;
 
 import java.time.LocalDateTime;
 
@@ -19,17 +19,27 @@ public class User {
     private Boolean isBlocked;
     private LocalDateTime leaveDate;
 
-    public User(final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
-        this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
+    public static final int NICKNAME_MAX_SIZE = 10;
+
+    public User(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
+        validateConstructor(provider, providerId, nickname, profileImgUrl);
         this.provider = provider;
         this.providerId = providerId;
         this.nickname = nickname;
         this.profileImgUrl = profileImgUrl;
-        this.isBlocked = isBlocked;
-        this.leaveDate = leaveDate;
+        isBlocked = false;
     }
 
-    public User(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    private static void validateConstructor(final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl) {
+        Assert.notNull(provider, "provider must not be null");
+        Assert.notNull(providerId, "providerId must not be null");
+        Assert.notNull(nickname, "nickname must not be null");
+        if (nickname.length() > 10) {
+            throw new IllegalArgumentException("nickname must be less than 10 characters");
+        }
+    }
+
+    private User(final Long id, final FcmDeviceTokenEntity fcmDeviceTokenEntity, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
         this.id = id;
         this.fcmDeviceTokenEntity = fcmDeviceTokenEntity;
         this.provider = provider;
@@ -40,24 +50,20 @@ public class User {
         this.leaveDate = leaveDate;
     }
 
+    public static User forMapper(
+            final Long id,
+            final FcmDeviceTokenEntity fcmDeviceTokenEntity,
+            final OAuthProviderEnum provider,
+            final String providerId,
+            final String nickname,
+            final String profileImgUrl,
+            final Boolean isBlocked,
+            final LocalDateTime leaveDate) {
+        return new User(id, fcmDeviceTokenEntity, provider, providerId, nickname, profileImgUrl, isBlocked, leaveDate);
+    }
+
     public void assignId(Long generatedId) {
         this.id = generatedId;
-    }
-
-    public static User toDomain(UserEntity userEntity) {
-        return new User(
-                userEntity.getId(),
-                userEntity.getFcmDeviceToken(),
-                userEntity.getProvider(),
-                userEntity.getProviderId(),
-                userEntity.getNickname(),
-                userEntity.getProfileImgUrl(),
-                userEntity.getIsBlocked(),
-                userEntity.getLeaveDate());
-    }
-
-    public void updateNickname(final String nickname) {
-        this.nickname = nickname;
     }
 
     public void withdraw() {
@@ -66,5 +72,9 @@ public class User {
         this.provider = null;
         this.profileImgUrl = null;
         this.leaveDate = LocalDateTime.now();
+    }
+
+    public void modifyNickname(final String nickname) {
+        this.nickname = nickname;
     }
 }

@@ -14,10 +14,7 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
-
-import java.util.Objects;
 
 @Getter
 @Entity
@@ -42,13 +39,9 @@ public class LikesEntity extends BaseTime {
     public LikesEntity() {
     }
 
-    @Builder
-    public LikesEntity(UserEntity user, PostEntity post) {
+    LikesEntity(final Long id, final UserEntity user, final PostEntity post) {
+        this.id = id;
         this.user = user;
         this.post = post;
-    }
-
-    public boolean hasLikesByUser(Long userId) {
-        return Objects.equals(this.user.getId(), userId);
     }
 }

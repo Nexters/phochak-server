@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 public class IgnoredUserMapper {
     private final UserMapper userMapper;
     public IgnoredUser toDomain(final IgnoredUserEntity entity) {
-        return IgnoredUser.toDomain(entity);
+        return new IgnoredUser(
+                userMapper.toDomain(entity.getIgnoredUserRelation().getUser()),
+                userMapper.toDomain(entity.getIgnoredUserRelation().getIgnoredUser())
+        );
     }
 
     public IgnoredUserEntity toEntity(final IgnoredUser domain) {

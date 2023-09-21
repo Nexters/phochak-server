@@ -2,7 +2,6 @@ package com.nexters.phochak.user.adapter.out.persistence;
 
 import jakarta.persistence.EmbeddedId;
 import jakarta.persistence.Entity;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -12,8 +11,7 @@ public class IgnoredUserEntity {
     @EmbeddedId
     private IgnoredUserEntityRelation ignoredUserRelation;
 
-    @Builder
-    public IgnoredUserEntity(IgnoredUserEntityRelation ignoredUserRelation) {
+    IgnoredUserEntity(IgnoredUserEntityRelation ignoredUserRelation) {
         this.ignoredUserRelation = ignoredUserRelation;
     }
 

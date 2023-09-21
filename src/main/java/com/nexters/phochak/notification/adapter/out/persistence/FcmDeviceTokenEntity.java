@@ -11,7 +11,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -30,8 +29,7 @@ public class FcmDeviceTokenEntity extends BaseTime {
     @Column(nullable = false)
     private OperatingSystem operatingSystem;
 
-    @Builder
-    public FcmDeviceTokenEntity(
+    FcmDeviceTokenEntity(
             final Long id,
             final UserEntity user,
             final String token,
@@ -45,7 +43,4 @@ public class FcmDeviceTokenEntity extends BaseTime {
     public FcmDeviceTokenEntity() {
     }
 
-    public void updateDeviceToken(String token) {
-        this.token = token;
-    }
 }

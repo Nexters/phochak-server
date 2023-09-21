@@ -10,7 +10,6 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 
 @Entity
@@ -40,16 +39,11 @@ public class ShortsEntity {
     public ShortsEntity() {
     }
 
-    @Builder
-    public ShortsEntity(Long id, ShortsStateEnum shortsStateEnum, String uploadKey, String shortsUrl, String thumbnailUrl) {
+    ShortsEntity(Long id, ShortsStateEnum shortsStateEnum, String uploadKey, String shortsUrl, String thumbnailUrl) {
         this.id = id;
         this.shortsStateEnum = shortsStateEnum;
         this.uploadKey = uploadKey;
         this.shortsUrl = shortsUrl;
         this.thumbnailUrl = thumbnailUrl;
-    }
-
-    public void updateShortsState(ShortsStateEnum shortsStateEnum) {
-        this.shortsStateEnum = shortsStateEnum;
     }
 }

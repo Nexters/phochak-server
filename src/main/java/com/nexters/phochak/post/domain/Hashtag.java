@@ -35,4 +35,18 @@ public class Hashtag {
             throw new PhochakException(ResCode.INVALID_INPUT, "해시태그 형식이 올바르지 않습니다.");
         }
     }
+
+    private Hashtag(final Long id, final Post post, final String tag) {
+        this.id = id;
+        this.post = post;
+        this.tag = tag;
+    }
+
+    public static Hashtag forMapper(final Long id, final Post post, final String tag) {
+        return new Hashtag(id, post, tag);
+    }
+
+    public void assignId(final Long id) {
+        this.id = id;
+    }
 }

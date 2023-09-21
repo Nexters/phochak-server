@@ -60,7 +60,7 @@ public class CreateUserQuery {
     }
 
     public Scenario.NextScenarioStep request() throws Exception {
-        UserEntity user = new UserEntity(
+        UserEntity user = UserEntity.forTest(
                 id,
                 fcmDeviceToken,
                 provider,

@@ -14,7 +14,6 @@ import jakarta.persistence.Index;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 
 @Getter
@@ -38,8 +37,7 @@ public class ReportPostEntity extends BaseTime {
     public ReportPostEntity() {
     }
 
-    @Builder
-    public ReportPostEntity(Long id, UserEntity reporter, PostEntity post) {
+    ReportPostEntity(Long id, UserEntity reporter, PostEntity post) {
         this.id = id;
         this.reporter = reporter;
         this.post = post;

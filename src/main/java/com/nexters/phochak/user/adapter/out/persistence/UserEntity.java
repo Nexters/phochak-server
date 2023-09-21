@@ -15,17 +15,18 @@ import jakarta.persistence.Id;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import jakarta.validation.constraints.Size;
-import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.type.YesNoConverter;
 
 import java.time.LocalDateTime;
 
+import static com.nexters.phochak.user.domain.User.NICKNAME_MAX_SIZE;
+
 @Getter
 @Entity
 @Table(name = "USERS")
 public class UserEntity extends BaseTime {
-    public static final int NICKNAME_MAX_SIZE = 10;
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "USER_ID")
@@ -55,9 +56,14 @@ public class UserEntity extends BaseTime {
     public UserEntity() {
     }
 
-    @Builder //TODO: 기존 테스트 삭제 이후 빌더 제거
-    @VisibleForTesting
-    public UserEntity(final Long id, final FcmDeviceTokenEntity fcmDeviceToken, final OAuthProviderEnum provider, final String providerId, final String nickname, final String profileImgUrl, final Boolean isBlocked, final LocalDateTime leaveDate) {
+    UserEntity(final Long id,
+               final FcmDeviceTokenEntity fcmDeviceToken,
+               final OAuthProviderEnum provider,
+               final String providerId,
+               final String nickname,
+               final String profileImgUrl,
+               final Boolean isBlocked,
+               final LocalDateTime leaveDate) {
         this.id = id;
         this.fcmDeviceToken = fcmDeviceToken;
         this.provider = provider;
@@ -68,26 +74,15 @@ public class UserEntity extends BaseTime {
         this.leaveDate = leaveDate;
     }
 
-    public UserEntity(OAuthProviderEnum provider, String providerId, String nickname, String profileImgUrl) {
-        this.provider = provider;
-        this.providerId = providerId;
-        this.nickname = nickname;
-        this.profileImgUrl = profileImgUrl;
-    }
-
-    public void modifyNickname(String nickname) {
-        this.nickname = nickname;
-    }
-
-    public void withdrawInformation() {
-        this.nickname = null;
-        this.providerId = null;
-        this.provider = null;
-        this.profileImgUrl = null;
-        this.leaveDate = LocalDateTime.now();
-    }
-
-    public void block() {
-        this.isBlocked = true;
+    @VisibleForTesting
+    public static UserEntity forTest(final Long id,
+                                final FcmDeviceTokenEntity fcmDeviceToken,
+                                final OAuthProviderEnum provider,
+                                final String providerId,
+                                final String nickname,
+                                final String profileImgUrl,
+                                final Boolean isBlocked,
+                                final LocalDateTime leaveDate) {
+        return new UserEntity(id, fcmDeviceToken, provider, providerId, nickname, profileImgUrl, isBlocked, leaveDate);
     }
 }

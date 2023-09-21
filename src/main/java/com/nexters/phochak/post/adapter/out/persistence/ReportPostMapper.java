@@ -16,17 +16,14 @@ public class ReportPostMapper {
         return new ReportPostEntity(
             reportPost.getId(),
             userMapper.toEntity(reportPost.getUser()),
-            postMapper.toEntity(reportPost.getPost())
-        );
+            postMapper.toEntity(reportPost.getPost()));
     }
 
     public ReportPost toDomain(final ReportPostEntity reportPostEntity) {
-        final ReportPost reportPost = new ReportPost(
+        return ReportPost.forMapper(
+                reportPostEntity.getId(),
                 userMapper.toDomain(reportPostEntity.getReporter()),
-                postMapper.toDomain(reportPostEntity.getPost())
-        );
-        reportPost.assignId(reportPostEntity.getId());
-        return reportPost;
+                postMapper.toDomain(reportPostEntity.getPost()));
     }
 
 }

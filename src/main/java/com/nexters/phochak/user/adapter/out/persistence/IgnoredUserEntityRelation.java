@@ -6,7 +6,6 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 
@@ -24,7 +23,6 @@ public class IgnoredUserEntityRelation implements Serializable {
     @JoinColumn(name="IGNORED_USER_ID", foreignKey = @ForeignKey(ConstraintMode.NO_CONSTRAINT))
     private UserEntity ignoredUser;
 
-    @Builder
     public IgnoredUserEntityRelation(UserEntity user, UserEntity ignoredUser) {
         this.user = user;
         this.ignoredUser = ignoredUser;

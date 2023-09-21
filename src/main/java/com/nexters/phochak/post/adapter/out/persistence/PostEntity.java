@@ -21,7 +21,6 @@ import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.type.YesNoConverter;
@@ -71,16 +70,6 @@ public class PostEntity extends BaseTime {
 
     public PostEntity() {
     }
-
-    @Builder
-    public PostEntity(UserEntity userEntity, ShortsEntity shorts, PostCategoryEnum postCategory) {
-        this.user = userEntity;
-        this.shorts = shorts;
-        this.postCategory = postCategory;
-        this.isBlind = false;
-        this.view = 0L;
-    }
-
 
     public PostEntity(final Long id, final UserEntity user, final ShortsEntity shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
         this.id = id;

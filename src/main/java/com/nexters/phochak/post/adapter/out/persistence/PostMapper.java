@@ -24,7 +24,7 @@ public class PostMapper {
     }
 
     public Post toDomain(PostEntity postEntity) {
-        return new Post(
+        return Post.forMapper(
                 postEntity.getId(),
                 userMapper.toDomain(postEntity.getUser()),
                 shortsMapper.toDomain(postEntity.getShorts()),

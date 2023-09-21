@@ -14,6 +14,7 @@ import com.nexters.phochak.user.application.port.out.FindIgnoredUserPort;
 import com.nexters.phochak.user.application.port.out.FindUserPort;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
 import com.nexters.phochak.user.application.port.out.OAuthRequestPort;
+import com.nexters.phochak.user.application.port.out.SaveUserPort;
 import com.nexters.phochak.user.application.port.out.UpdateUserNicknamePort;
 import com.nexters.phochak.user.domain.OAuthProviderEnum;
 import com.nexters.phochak.user.domain.User;
@@ -37,6 +38,7 @@ public class UserService implements UserUseCase {
     private final NotificationTokenRegisterPort notificationTokenRegisterPort;
     private final WithdrawUserPort withdrawUserPort;
     private final DeleteAllPostPort deleteAllPostPort;
+    private final SaveUserPort saveUserPort;
 
     @Override
     public Long login(final String provider, final LoginRequestDto requestDto) {
@@ -56,13 +58,13 @@ public class UserService implements UserUseCase {
 
 
     @Override
-    @Transactional
     public void modifyNickname(final Long userId, final String nickname) {
         if (updateUserNicknamePort.checkDuplicatedNickname(nickname)) {
             throw new PhochakException(ResCode.DUPLICATED_NICKNAME);
         }
         User user = findUserPort.load(userId);
-        updateUserNicknamePort.modifyNickname(user, nickname);
+        user.modifyNickname(nickname);
+        saveUserPort.save(user);
     }
 
     @Override

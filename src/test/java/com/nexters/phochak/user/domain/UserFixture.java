@@ -2,7 +2,6 @@ package com.nexters.phochak.user.domain;
 
 import com.nexters.phochak.notification.adapter.out.persistence.FcmDeviceTokenEntity;
 import com.nexters.phochak.user.adapter.out.persistence.UserEntity;
-import org.assertj.core.util.VisibleForTesting;
 
 import java.time.LocalDateTime;
 
@@ -61,9 +60,8 @@ public class UserFixture {
         return this;
     }
 
-    @VisibleForTesting
     public UserEntity build() {
-        return new UserEntity(
+        return UserEntity.forTest(
                 userId,
                 fcmToken,
                 provider,

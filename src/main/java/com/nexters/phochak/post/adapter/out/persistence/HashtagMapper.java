@@ -12,12 +12,14 @@ public class HashtagMapper {
 
     public HashtagEntity toEntity(final Hashtag hashtag) {
         return new HashtagEntity(
+                hashtag.getId(),
                 postMapper.toEntity(hashtag.getPost()),
                 hashtag.getTag());
     }
 
     public Hashtag toDomain(final HashtagEntity hashtagEntity) {
-        return new Hashtag(
+        return Hashtag.forMapper(
+                hashtagEntity.getId(),
                 postMapper.toDomain(hashtagEntity.getPost()),
                 hashtagEntity.getTag());
     }
