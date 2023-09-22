@@ -1,4 +1,4 @@
-package com.nexters.phochak.notification.adapter.out.web;
+package com.nexters.phochak.notification.adapter.in.event;
 
 import com.nexters.phochak.notification.application.port.out.NotificationUsecase;
 import com.nexters.phochak.shorts.adapter.out.web.NotifyEncodingStateEvent;

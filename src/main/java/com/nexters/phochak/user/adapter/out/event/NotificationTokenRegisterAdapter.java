@@ -1,4 +1,4 @@
-package com.nexters.phochak.user.adapter.out.web;
+package com.nexters.phochak.user.adapter.out.event;
 
 import com.nexters.phochak.notification.domain.OperatingSystem;
 import com.nexters.phochak.user.application.port.out.NotificationTokenRegisterPort;
