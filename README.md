@@ -103,4 +103,4 @@ Rest Docs 를 활용합니다.
   - <a href="https://github.com/Nexters/phochak-server/blob/develop/src/main/java/com/nexters/phochak/post/adapter/out/persistence/PostEntity.java"> 🔗 엔티티 객체 예시 </a>
   - 오직 Mapper를 위한 생성자만 존재합니다. (개발자가 엔티티 객체를 직접 생성하지 못하게 제한합니다.)
   - 엔티티를 직접 생성할 수 없도록 해당 생성자를 default 접근제어자로 설정했습니다.
-  - User 엔티티의 생성자는 테스트 편의를 위해 `@VisibleForTesting` 를 적용한 생성자를 열었습니다.
+  - User 엔티티의 생성자는 테스트 편의를 위해 `@VisibleForTesting` 를 적용한 생성자를 적용했습니다.

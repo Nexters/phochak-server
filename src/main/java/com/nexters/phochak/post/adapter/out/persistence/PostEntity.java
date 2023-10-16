@@ -71,7 +71,7 @@ public class PostEntity extends BaseTime {
     public PostEntity() {
     }
 
-    public PostEntity(final Long id, final UserEntity user, final ShortsEntity shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
+    PostEntity(final Long id, final UserEntity user, final ShortsEntity shorts, final List<ReportPostEntity> reportPostEntity, final Long view, final PostCategoryEnum postCategory, final boolean isBlind) {
         this.id = id;
         this.user = user;
         this.shorts = shorts;
